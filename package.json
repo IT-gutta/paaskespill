@@ -1,0 +1,19 @@
+{
+  "name": "socket-io-multiplayer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2",
+    "socket-io": "^1.0.0",
+    "socket.io": "^2.3.0"
+  }
+}

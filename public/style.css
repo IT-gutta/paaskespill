@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+}
+
+:root {
+    --abs__left: 430px;
+    --abs__bottom: -100px;
+
+}
+
+body {
+    position: relative;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    align-items: center;
+    background-image: url('../assets/bakgrunn1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Maven Pro', sans-serif;
+}
+canvas {
+    /* background: rgb(108, 197, 108); */
+    background: white;
+    box-shadow: 0px 0px 11px 10px rgb(0, 0, 0);
+    z-index: 10
+}
+
+button {
+    width: 100px;
+    height: 40px;
+    background: black;
+}
+
+.scoreboard {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    width: 80px;
+    height: 100%;
+    background: white;
+    margin-top: 10px;
+    bottom: 0;
+    right: -100px;
+}
+
+.scoreboard div {
+    margin: 5px;    
+}
+
+.content {
+    position: relative;
+    display: none;
+}
