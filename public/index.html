@@ -4,25 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://fonts.googleapis.com/css?family=Maven+Pro&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
     <script defer src="/socket.io/socket.io.js"></script>
-    <script src="snake.js" defer></script>
-    <script src="app.js" defer></script>
+    <script defer src="variables.js"></script>
+    <script defer src="app.js"></script>
 </head>
 <body>
-    <img id="hode" style="display: none;"src="assets/hode_rett.png">
-    <img id="hale_rett" style="display: none;"src="assets/hale_rett.png">
-    <img id="hale_vri" style="display: none;"src="assets/hale_vri.png">
-    <img id="hale_slutt" style="display: none;"src="assets/hale_slutt.png">
-    <img id="eple" style="display: none;"src="assets/eple.png">
+    <canvas></canvas>
     <form>
-        <input type="text" id="text" required>
+        <input type="text" name="username" id="textField">
         <input type="submit" value="Spill">
     </form>
-    <div class="content">
-        <canvas></canvas>
-        <div class="scoreboard"></div>
-    </div>
 </body>
 </html>

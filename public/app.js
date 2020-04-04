@@ -1,120 +1,34 @@
-const canvas = document.querySelector("canvas")
-const c = canvas.getContext("2d")
-const form = document.querySelector('form')
-const text = document.getElementById('text')
-const socket = io.connect('https://snake-multiplayer-hs.herokuapp.com/');
-const scoreboard = document.querySelector('.scoreboard')
-const content = document.querySelector('.content')
-
-
-let scale, cWidth, cHeight, cols, rows
-
-socket.on('welcome', data => {
-    console.log(data)
-    scale = data.scale
-    cWidth = data.cWidth
-    cHeight = data.cHeight
-    cols = data.cols
-    rows = data.rows
-    canvas.width = cWidth
-    canvas.height = cHeight
-})
-
-
-function ruter() {
-    for (let i = 0; i <= cols; i+=1) {
-        c.beginPath()
-        c.strokeStyle = "grey"
-        c.moveTo(i*scale, 0)
-        c.lineTo(i*scale, cHeight)
-        c.stroke()
-    }
-    for (let i = 0; i < rows; i+=1) {
-        c.beginPath()
-        c.strokeStyle = "grey"
-        c.moveTo(0, i*scale)
-        c.lineTo(cWidth, i*scale)
-        c.stroke()
-    }
-}
-
-ruter()
-
-
-
-
-
-function newSnake(snake, name) {
-    socket.emit('new-snake', snake, name)
-}
-
-function updateSnake(snake) {
-    socket.emit('update-snake', snake)
-}
-
-
-
-function fillScoreboard(users) {
-    topscores = []
-    for (let [key, snake] of Object.entries(users)) {
-        topscores.push({name: snake.name, score: snake.tail.length})
-    }
-    topscores.sort((a,b) => b.score - a.score)
-    scoreboard.innerHTML = ""
-    topscores.forEach((snake, i) => {
-        scoreboard.innerHTML += `<div> ${i+1}: ${snake.name} ${snake.score}`
-    })
-}
-
-
 form.onsubmit = e => {
     e.preventDefault()
-    form.style = "display: none;"
-    content.style = "display: block;"
-    ruter()
+    socket.emit('new-user', textField.value)
 
-    window.addEventListener('keydown', (e => {
-        if(e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "ArrowRight" || e.key == "ArrowLeft") {
-        let direction = e.key.replace('Arrow', '');
-        socket.emit('change-direction', direction)
+    socket.on('heartbeat', (map, users) => {
+        for (let [id, user] of Object.entries(users)) {
+            if(user.player.direction == "right") user.player.img = player_right
+            else user.player.img = player_left
+            console.log(user.player)
+            draw(map, user.player)
         }
-      }));
-    
-    window.addEventListener('keydown', (e => {
-        if(e.code == "Space") {
-        socket.emit('boost')
-        }
-      }));
-    
-    window.addEventListener('keydown', (e => {
-    if(e.key == "d") {
-        socket.emit('cheat')
-    }
-    }));
-    
-    socket.on('time-to-boost', data => {
-        console.log("TIME LEFT: " + data + "s")
     })
 
-    snake = new Snake()
-    newSnake(snake, text.value)
-    console.log(text.value)
+    window.addEventListener("keydown", e => {
+        if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32) socket.emit('keysD', e.keyCode)
+    })
 
-    socket.on('heartbeat', (users, fruit, deathfruits) => {
-        c.clearRect(0, 0, cWidth, cHeight)
-        ruter()
-        c.drawImage(eple, fruit.x, fruit.y, scale, scale)
-        deathfruits.forEach(fruit => c.drawImage(eple, fruit.x, fruit.y, scale, scale))
-        for (let [key, snake] of Object.entries(users)) {
-            if(snake.tail.length > 0){
-                drawTails(snake)
-            }
-            drawRotated(hode, snake.x, snake.y, snake.angle)
-            name(snake.x, snake.y, snake.name)
-        }
-        fillScoreboard(users)
+    window.addEventListener("keyup", e => {
+        if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
     })
 }
-    
 
-
+function draw(map, player){
+  c.clearRect(0,0,w,h)
+  c.drawImage(sky, 0, 0)
+  for(i=0; i<map.length; i++){
+      for(j=0; j<map[0].length; j++){
+          if(map[i][j]!=9){
+              c.drawImage(imgs[map[i][j]], 32*j, 32*i, 32, 32)
+          }
+      }
+  }
+  c.drawImage(player.img, player.x*32, player.y*32, 32, 64)
+}
