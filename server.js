@@ -22,11 +22,15 @@ const db = require('./modules/db')
 
 // functions
 const gameFunctions = require('./modules/gameFunctions')
+const usefulFunctions = require('./modules/usefulFunctions')
+const dbFunctions = require('./modules/dbFunctions')
 const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
-const objectIsEmpty = require('./modules/usefulFunctions').objectIsEmpty
-const userExists = require('./modules/usefulFunctions').userExists
+const objectIsEmpty = usefulFunctions.objectIsEmpty
+const userExists = usefulFunctions.userExists
+const getPlayerInfo = dbFunctions.getPlayerInfo
+const updatePlayerInfo = dbFunctions.updatePlayerInfo
 
 class Player {
   constructor(username) {
@@ -66,7 +70,13 @@ io.on('connection', socket => {
   console.log("connected: " + socket.id)
   
   socket.on('new-user', (username) => {
-    users[socket.id] = {player: new Player(username), controller: new Controller()}
+    if(!getPlayerInfo(username)) {
+      users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
+      updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
+    } else {
+      users[socket.id] = getPlayerInfo(username)
+    }
+    
     console.log('new user: ' + username)
     console.log('all users: ' + JSON.stringify(users))
   })
@@ -82,6 +92,7 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
+    updatePlayerInfo(socket[id].username)
     delete users[socket.id]
     console.log(socket.id + " disconnected.")
   })
