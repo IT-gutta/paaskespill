@@ -22,4 +22,3 @@
 
 8. slett branch:
     git branch -d branchName
-
