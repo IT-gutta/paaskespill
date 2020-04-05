@@ -44,3 +44,6 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 const w = window.innerWidth
 const h = window.innerHeight
+var clientX = 0
+var clientY = 0
+var users = {}

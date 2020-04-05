@@ -25,6 +25,20 @@ form.onsubmit = (e) => {
         window.addEventListener("keyup", e => {
             if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
         })
+
+        window.addEventListener("mousemove", e => {
+            clientX = e.clientX
+            clientY = e.clientY
+        })
+
+        window.addEventListener("mousedown", e => {
+            if(e.button == 0 || e.button == 2){
+                socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
+                console.log(1)
+            } 
+        })
+
+        
 }
 
 function draw(map, users){

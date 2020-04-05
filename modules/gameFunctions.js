@@ -1,3 +1,4 @@
+let map = require('./variables').map
 function update(player, map, g){
         //movement og collision
         if(player.moving){
@@ -82,4 +83,49 @@ function keysU(keyCode, player, controller){
     }
 }
 
-module.exports = {update, keysD, keysU}
+function click(keyCode, px, py, PX, PY, player){
+    //høyreklikk, sjekker om man kan sette ut blokk
+    if(keyCode==2){
+        if(map[py][px]==9){
+            if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
+                if(map[py+1][px]!=9 || map[py-1][px]!=9 || map[py][px+1]!=9 || map[py][px-1]!=9){
+                    if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
+                        if(sight([player.x+0.5, player.y+1], [PX, PY])){
+                            map[py][px] = 0
+                        }
+                    }
+                }
+            }
+        }           
+    }
+    if(keyCode==0){
+        if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
+            if(sight([player.x+0.5, player.y+1], [PX, PY])){
+                map[py][px] = 9
+            }
+        }
+    }
+}
+
+function sight(pPos, mPos){
+    var a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
+    for(x=pPos[0]; x<mPos[0]; x+=0.01){
+        if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
+            return true
+        }
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=9){
+            return false
+        }
+    }
+    for(x=pPos[0]; x>mPos[0]; x-=0.01){
+        if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
+            return true
+        }
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=9){
+            return false
+        }
+    }
+    return true
+}
+
+module.exports = {update, keysD, keysU, click, sight}

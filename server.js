@@ -16,7 +16,7 @@ server.listen(PORT)
 
 // ----variables
 let users = {}
-const map = require('./modules/variables')
+let map = require('./modules/variables').map
 const g = 0.00004
 const db = require('./modules/db')
 
@@ -28,6 +28,7 @@ const dbFunctions = require('./modules/dbFunctions')
 const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
+const click = gameFunctions.click
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const getPlayerInfo = dbFunctions.getPlayerInfo
@@ -98,6 +99,14 @@ io.on('connection', socket => {
   socket.on('keysU', keyCode => {
     if(!userExists(users, socket.id)) return
     keysU(keyCode, users[socket.id].player, users[socket.id].controller)
+  })
+
+  socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+    px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
+    py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
+    PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
+    PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
+    click(button, px, py, PX, PY, users[socket.id].player)
   })
 
   socket.on('disconnect', () => {
