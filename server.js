@@ -16,7 +16,7 @@ server.listen(PORT)
 
 // ----variables
 let users = {}
-const map = require('./modules/variables')
+let map = require('./modules/variables').map
 const g = 0.00004
 const db = require('./modules/db')
 
@@ -99,7 +99,11 @@ io.on('connection', socket => {
     keysU(keyCode, users[socket.id].player, users[socket.id].controller)
   })
 
-  socket.on('click', (button, px, py, PX, PY) => {
+  socket.on('click', (button, clientX, clientY, canvas) => {
+    px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvas.width/2)/32)
+    py = Math.round(users[socket.id].player.y + (clientY - canvas.height/2)/32)
+    PX = users[socket.id].player.x + (clientX - canvas.width/2)/32
+    PY = users[socket.id].player.y + (clientY - canvas.height/2)/32
     console.log(1)
     click(button, px, py, PX, PY, users[socket.id].player)
   })

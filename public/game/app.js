@@ -25,15 +25,13 @@ form.onsubmit = (e) => {
         })
 
         window.addEventListener("mousemove", e => {
-            px = Math.round(users[playerID].player.x - 7/32 + (e.clientX - canvas.width/2)/32)
-            py = Math.round(users[playerID].player.y + (e.clientY - canvas.height/2)/32)
-            PX = users[playerID].player.x + (e.clientX - canvas.width/2)/32
-            PY = users[playerID].player.y + (e.clientY - canvas.height/2)/32
+            clientX = e.clientX
+            clientY = e.clientY
         })
 
         window.addEventListener("mousedown", e => {
             if(e.button == 0 || e.button == 2){
-                socket.emit('click', e.button, px, py, PX, PY)
+                socket.emit('click', e.button, clientX, clientY, canvas)
                 console.log(1)
             } 
         })

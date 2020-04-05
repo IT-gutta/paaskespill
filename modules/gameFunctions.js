@@ -1,3 +1,4 @@
+let map = require('variables').map
 function update(player, map, g){
         //movement og collision
         if(player.moving){
