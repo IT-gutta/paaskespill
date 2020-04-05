@@ -40,7 +40,7 @@ sky.src="assets/sky.png"
 
 const imgs = [stone, log, leaves, coal_ore, grass, iron_ore, dirt]
 
-canvas.width = 1280
-canvas.height = 640
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
 const w = window.innerWidth
 const h = window.innerHeight
