@@ -2,7 +2,8 @@ const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
 const form = document.querySelector('form')
 const textField = document.getElementById('textField')
-const socket = (window.location.href == "localhost:3000") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
+const socket = (window.location.href == "http://localhost:3000/game/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
+let playerID
 
 const player_left = new Image()
 player_left.src="assets/girl_left.png"
@@ -39,7 +40,7 @@ sky.src="assets/sky.png"
 
 const imgs = [stone, log, leaves, coal_ore, grass, iron_ore, dirt]
 
-canvas.width = 1280
-canvas.height = 640
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
 const w = window.innerWidth
 const h = window.innerHeight
