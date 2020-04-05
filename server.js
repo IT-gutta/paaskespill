@@ -14,7 +14,6 @@ server.listen(PORT)
 // ----variables
 let users = {}
 const map = require('./modules/variables')
-const collisionPrec = 10
 const g = 0.00004
 
 // functions
@@ -23,6 +22,7 @@ const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
 const objectIsEmpty = require('./modules/usefulFunctions').objectIsEmpty
+const userExists = require('./modules/usefulFunctions').userExists
 
 class Player {
   constructor(username) {
@@ -48,10 +48,10 @@ function heartbeat(){
   if(!objectIsEmpty(users)) {
     for (let [id, user] of Object.entries(users)) {
       for (let i = 0; i < 10; i++) {
-        update(user.player, map)      
+        update(user.player, map, g)      
       }
     }
-      io.emit('heartbeat', map, users, g)
+      io.emit('heartbeat', map, users)
   }
 }
 
@@ -63,13 +63,22 @@ io.on('connection', socket => {
   
   socket.on('new-user', (username) => {
     users[socket.id] = {player: new Player(username), controller: new Controller()}
+    console.log('new user: ' + username)
+    console.log('all users: ' + JSON.stringify(users))
   })
 
   socket.on('keysD', keyCode => {
+    if(!userExists(users, socket.id)) return
     keysD(keyCode, users[socket.id].player, users[socket.id].controller)
   })
 
   socket.on('keysU', keyCode => {
+    if(!userExists(users, socket.id)) return
     keysU(keyCode, users[socket.id].player, users[socket.id].controller)
+  })
+
+  socket.on('disconnect', () => {
+    delete users[socket.id]
+    console.log(socket.id + " disconnected.")
   })
 })

@@ -18,4 +18,9 @@ function random(min, max) {
     return true;
 }
 
-module.exports = {random, timer, objectIsEmpty}
+function userExists(object, id) {
+  if(object.hasOwnProperty(id)) return true
+  return false
+}
+
+module.exports = {random, timer, objectIsEmpty, userExists}

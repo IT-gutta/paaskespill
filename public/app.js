@@ -6,9 +6,8 @@ form.onsubmit = e => {
         for (let [id, user] of Object.entries(users)) {
             if(user.player.direction == "right") user.player.img = player_right
             else user.player.img = player_left
-            console.log(user.player)
-            draw(map, user.player)
         }
+        draw(map, users)
     })
 
     window.addEventListener("keydown", e => {
@@ -20,7 +19,7 @@ form.onsubmit = e => {
     })
 }
 
-function draw(map, player){
+function draw(map, users){
   c.clearRect(0,0,w,h)
   c.drawImage(sky, 0, 0)
   for(i=0; i<map.length; i++){
@@ -30,5 +29,7 @@ function draw(map, player){
           }
       }
   }
-  c.drawImage(player.img, player.x*32, player.y*32, 32, 64)
+  for (let [id, user] of Object.entries(users)) {
+    c.drawImage(user.player.img, user.player.x*32, user.player.y*32, 32, 64)
+  }
 }

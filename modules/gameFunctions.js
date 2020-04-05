@@ -1,31 +1,50 @@
 function update(player, map, g){
-    if(player.moving){
-        if(player.direction=="left"){
-            player.vx = -0.005
+        //movement og collision
+        if(player.moving){
+            if(player.direction=="left"){
+                player.vx = -0.005
+            }
+            else{
+                player.vx = 0.005
+            }
         }
         else{
-            player.vx = 0.005
+            if(player.falling){
+                player.vx-=player.vx/200
+            }
+            else{
+                player.vx = 0
+            }
         }
-    }
-    else{
+        if(player.vx>0){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1.99)][Math.floor(player.x+1-9/32)]!=9){
+                player.vx = 0
+            }
+        }
+        if(player.vx<0){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+1.99)][Math.floor(player.x+9/32)]!=9){
+                player.vx = 0
+            }
+        }
+        if(player.vy<0){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=9){
+                player.vy = 0
+            }
+        }
+        player.x+=player.vx
+        if(map[Math.round(player.y+2)][Math.floor(player.x+9/32)]==9 && map[Math.round(player.y+2)][Math.floor(player.x+1-9/32)]==9){
+            player.falling = true
+        }
         if(player.falling){
-            player.vx-=player.vx/1000
+            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && player.vy>0){
+                player.falling = false
+                player.vy = 0
+            }
+            else{
+                player.y+=player.vy
+                player.vy+=g
+            }
         }
-        else{
-            player.vx = 0
-        }
-    }
-    player.x+=player.vx
-    if(player.falling){
-        if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && player.vy>0){
-            player.falling = false
-            player.vy = 0
-        }
-        else{
-            player.y+=player.vy
-            player.vy+=g
-        }
-    }
 }
 
 function keysD(keyCode, player, controller){
