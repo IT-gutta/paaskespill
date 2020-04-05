@@ -24,8 +24,6 @@ form.onsubmit = (e) => {
         window.addEventListener("keyup", e => {
             if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
         })
-
-        //heihei dette er en test
 }
 
 function draw(map, users){
