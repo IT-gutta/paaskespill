@@ -5,6 +5,7 @@ form.onsubmit = (e) => {
 
         socket.on("playerID", id => {
             playerID = id
+            console.log(playerID)
         })
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
@@ -50,7 +51,7 @@ function draw(map, users){
   
   for (let [id, user] of Object.entries(users)){
     if(id != playerID){
-        c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32), canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64), 32, 64)
+        c.drawImage(user.player.img, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32), canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64), 32, 64)
     }
   }
 }
