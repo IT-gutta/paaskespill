@@ -1,4 +1,5 @@
 form.onsubmit = (e) => {
+    // dette er henriks kommentar
     e.preventDefault()
         socket.emit('new-user', textField.value)
         form.style.display = "none"
