@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
 const form = document.querySelector('form')
 const textField = document.getElementById('textField')
-const socket = io.connect('localhost:3000');
+const socket = (window.location.href == "localhost:3000") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 
 const player_left = new Image()
 player_left.src="assets/player_left.png"
