@@ -78,12 +78,8 @@ io.on('connection', socket => {
     // } else {
     //   users[socket.id] = getPlayerInfo(username)
     // }
-<<<<<<< HEAD
     
-    users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-=======
     users[socket.id] = {username: username, player: new Player(username), controller: new Controller(), playerID: socket.id}
->>>>>>> 5b1518fb0634f7d0fe9045c823358073517daddc
     
     socket.emit("playerID", socket.id)
 
