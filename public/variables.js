@@ -5,10 +5,13 @@ const textField = document.getElementById('textField')
 const socket = (window.location.href == "localhost:3000") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 
 const player_left = new Image()
-player_left.src="assets/player_left.png"
+player_left.src="assets/girl_left.png"
 
 const player_right = new Image()
-player_right.src="assets/player_right.png"
+player_right.src="assets/girl_right.png"
+
+const player_front = new Image()
+player_front.src="assets/girl_front.png"
 
 const grass = new Image()
 grass.src="assets/grass.png"
