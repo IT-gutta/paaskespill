@@ -5,7 +5,10 @@ const io = require('socket.io')(server)
 
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
+app.set('json spaces', 2); // number of spaces for indentation
 
+const routes = require('./routes/routes')
+app.use('/', routes)
 
 const PORT = process.env.PORT || 3000
 
@@ -15,6 +18,7 @@ server.listen(PORT)
 let users = {}
 const map = require('./modules/variables')
 const g = 0.00004
+const db = require('./modules/db')
 
 // functions
 const gameFunctions = require('./modules/gameFunctions')
