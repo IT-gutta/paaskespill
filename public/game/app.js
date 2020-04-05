@@ -31,7 +31,7 @@ form.onsubmit = (e) => {
 
         window.addEventListener("mousedown", e => {
             if(e.button == 0 || e.button == 2){
-                socket.emit('click', e.button, clientX, clientY, canvas)
+                socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
                 console.log(1)
             } 
         })

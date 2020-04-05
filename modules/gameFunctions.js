@@ -1,4 +1,4 @@
-let map = require('variables').map
+let map = require('./variables').map
 function update(player, map, g){
         //movement og collision
         if(player.moving){
@@ -87,7 +87,7 @@ function click(keyCode, px, py, PX, PY, player){
     //høyreklikk, sjekker om man kan sette ut blokk
     if(keyCode==2){
         if(map[py][px]==9){
-            if(px!=player.x || (py!=player.y && py!=player.y+1)){
+            if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
                 if(map[py+1][px]!=9 || map[py-1][px]!=9 || map[py][px+1]!=9 || map[py][px-1]!=9){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY])){
@@ -99,7 +99,11 @@ function click(keyCode, px, py, PX, PY, player){
         }           
     }
     if(keyCode==0){
-        map[py][px] = 9
+        if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
+            if(sight([player.x+0.5, player.y+1], [PX, PY])){
+                map[py][px] = 9
+            }
+        }
     }
 }
 
