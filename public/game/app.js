@@ -1,23 +1,23 @@
-form.onsubmit = e => {
+form.onsubmit = (e) => {
     e.preventDefault()
-    socket.emit('new-user', textField.value)
-    form.style.display = "none;"
-    socket.on('heartbeat', (map, users) => {
-        for (let [id, user] of Object.entries(users)) {
-            if(user.player.direction == "right") user.player.img = player_right
-            else if(user.player.direction == "left") user.player.img = player_left
-            else user.player.img = player_front
-        }
-        draw(map, users)
-    })
-
-    window.addEventListener("keydown", e => {
-        if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32) socket.emit('keysD', e.keyCode)
-    })
-
-    window.addEventListener("keyup", e => {
-        if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
-    })
+        socket.emit('new-user', textField.value)
+        form.style.display = "none;"
+        socket.on('heartbeat', (map, users) => {
+            for (let [id, user] of Object.entries(users)) {
+                if(user.player.direction == "right") user.player.img = player_right
+                else if(user.player.direction == "left") user.player.img = player_left
+                else user.player.img = player_front
+            }
+            draw(map, users)
+        })
+    
+        window.addEventListener("keydown", e => {
+            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32) socket.emit('keysD', e.keyCode)
+        })
+    
+        window.addEventListener("keyup", e => {
+            if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
+        })
 }
 
 function draw(map, users){

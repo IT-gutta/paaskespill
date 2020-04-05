@@ -7,8 +7,8 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.set('json spaces', 2); // number of spaces for indentation
 
-const routes = require('./routes/routes')
-app.use('/', routes)
+// const routes = require('./routes/routes')
+// app.use('/', routes)
 
 const PORT = process.env.PORT || 3000
 
@@ -72,12 +72,13 @@ io.on('connection', socket => {
   console.log("connected: " + socket.id)
   
   socket.on('new-user', (username) => {
-    if(!getPlayerInfo(username)) {
-      users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-      updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
-    } else {
-      users[socket.id] = getPlayerInfo(username)
-    }
+    // if(!getPlayerInfo(username)) {
+    //   users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
+    //   updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
+    // } else {
+    //   users[socket.id] = getPlayerInfo(username)
+    // }
+    users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
     
     console.log('new user: ' + username)
     console.log('all users: ' + JSON.stringify(users))
@@ -94,7 +95,7 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    updatePlayerInfo(socket[id].username)
+    // updatePlayerInfo(socket[id].username)
     delete users[socket.id]
     console.log(socket.id + " disconnected.")
   })
