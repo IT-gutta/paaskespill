@@ -12,6 +12,7 @@
 
 5. commit endringer:
     git commit -m "melding"
+    git commit -am "melding" for å legge til og committe samtidig
 
 6. merge inn i master-branch:
     1. bytt til master branch med git checkout master
@@ -22,3 +23,9 @@
 
 8. slett branch:
     git branch -d branchName
+
+
+
+andre ting:
+se tidligere commits:
+    git log

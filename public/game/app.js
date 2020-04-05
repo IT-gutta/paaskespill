@@ -28,9 +28,6 @@ form.onsubmit = (e) => {
 }
 
 function draw(map, users){
-
-
-
     c.clearRect(0,0,w,h)
     c.drawImage(sky, 0, 0, w, h)
     for(i=Math.floor(users[playerID].player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(users[playerID].player.y - 32/64 + canvas.height/64)+1; i++){
