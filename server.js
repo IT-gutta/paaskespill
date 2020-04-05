@@ -87,6 +87,7 @@ io.on('connection', socket => {
     // console.log(socket.id)
     // console.log('new user: ' + username)
     // console.log('all users: ' + JSON.stringify(users))
+
   })
 
   socket.on('keysD', keyCode => {
