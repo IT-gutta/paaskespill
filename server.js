@@ -28,6 +28,7 @@ const dbFunctions = require('./modules/dbFunctions')
 const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
+const click = gameFunctions.click
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const getPlayerInfo = dbFunctions.getPlayerInfo
@@ -96,6 +97,11 @@ io.on('connection', socket => {
   socket.on('keysU', keyCode => {
     if(!userExists(users, socket.id)) return
     keysU(keyCode, users[socket.id].player, users[socket.id].controller)
+  })
+
+  socket.on('click', (button, px, py, PX, PY) => {
+    console.log(1)
+    click(button, px, py, PX, PY, users[socket.id].player)
   })
 
   socket.on('disconnect', () => {

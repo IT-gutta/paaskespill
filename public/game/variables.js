@@ -44,3 +44,5 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 const w = window.innerWidth
 const h = window.innerHeight
+var px, py, PX, PY
+var users = {}
