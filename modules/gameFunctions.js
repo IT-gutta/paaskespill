@@ -11,12 +11,20 @@ function update(player, map, g){
         }
         else{
             if(player.falling){
-                player.vx-=player.vx/200
+                player.vx *= 0.95
             }
             else{
-                player.vx = 0
+                player.vx *= 0.9
             }
         }
+
+        //klatring i stige
+        // if(map[Math.floor(player.y + 2)][Math.floor(player.x + 1)] == 11 || map[Math.floor(player.y + 1)][Math.floor(player.x + 1)] ==11 || map[Math.floor(player.y + 2)][Math.floor(player.x)] ==11 || map[Math.floor(player.y + 1)][Math.floor(player.x)] == 11){
+        //     if(player.controller.up){
+        //         player.vy = -0.005
+        //     }
+        // }
+
         if(player.vx>0){
             if(map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1.99)][Math.floor(player.x+1-9/32)]!=9){
                 player.vx = 0
@@ -37,7 +45,7 @@ function update(player, map, g){
             player.falling = true
         }
         if(player.falling){
-            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && player.vy>0){
+            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
                 player.falling = false
                 player.y = Math.round(player.y)
                 player.vy = 0
@@ -59,6 +67,10 @@ function keysD(keyCode, player, controller){
         player.direction = "right"
         player.moving = true
         controller.right = true
+    }
+    if(keyCode==66){
+        player.moving = true
+        controller.up = true
     }
     if(keyCode==32){
         if(!player.falling){
