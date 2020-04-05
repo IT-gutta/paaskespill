@@ -32,5 +32,6 @@ function draw(map, users){
   }
   for (let [id, user] of Object.entries(users)) {
     c.drawImage(user.player.img, user.player.x*32, user.player.y*32, 32, 64)
+    
   }
 }

@@ -20,6 +20,7 @@ const map = require('./modules/variables')
 const g = 0.00004
 const db = require('./modules/db')
 
+
 // functions
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
@@ -31,6 +32,7 @@ const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
+
 
 class Player {
   constructor(username) {
