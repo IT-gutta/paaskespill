@@ -76,6 +76,7 @@ io.on('connection', socket => {
     // } else {
     //   users[socket.id] = getPlayerInfo(username)
     // }
+    
     users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
     
     console.log('new user: ' + username)
