@@ -38,6 +38,7 @@ function update(player, map, g){
         if(player.falling){
             if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && player.vy>0){
                 player.falling = false
+                player.y = Math.round(player.y)
                 player.vy = 0
             }
             else{
