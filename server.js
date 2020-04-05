@@ -7,8 +7,8 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.set('json spaces', 2); // number of spaces for indentation
 
-const routes = require('./routes/routes')
-app.use('/', routes)
+// const routes = require('./routes/routes')
+// app.use('/', routes)
 
 const PORT = process.env.PORT || 3000
 

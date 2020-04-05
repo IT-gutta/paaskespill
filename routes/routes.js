@@ -26,10 +26,3 @@ routes.post('/signup', (req, res) => {
         }
     })
 })
-
-
-
-
-
-
-

@@ -1,8 +1,6 @@
-socket.emit('new-client')
-
-form.onsubmit = () => {
-    // ingen ting skjer før klienten har fått OK på login
-    socket.on('logged-in', ()=> {
+form.onsubmit = (e) => {
+    e.preventDefault()
+        socket.emit('new-user', textField.value)
         form.style.display = "none;"
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
@@ -20,7 +18,6 @@ form.onsubmit = () => {
         window.addEventListener("keyup", e => {
             if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
         })
-    })
 }
 
 function draw(map, users){
