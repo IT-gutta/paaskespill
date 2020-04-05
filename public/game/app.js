@@ -2,6 +2,11 @@ form.onsubmit = (e) => {
     e.preventDefault()
         socket.emit('new-user', textField.value)
         form.style.display = "none;"
+
+        socket.on("playerID", id => {
+            playerID = id
+        })
+
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
                 if(user.player.direction == "right") user.player.img = player_right
@@ -18,20 +23,35 @@ form.onsubmit = (e) => {
         window.addEventListener("keyup", e => {
             if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
         })
+
+        
 }
 
 function draw(map, users){
-  c.clearRect(0,0,w,h)
-  c.drawImage(sky, 0, 0)
-  for(i=0; i<map.length; i++){
-      for(j=0; j<map[0].length; j++){
-          if(map[i][j]!=9){
-              c.drawImage(imgs[map[i][j]], 32*j, 32*i, 32, 32)
-          }
-      }
-  }
-  for (let [id, user] of Object.entries(users)) {
-    c.drawImage(user.player.img, user.player.x*32, user.player.y*32, 32, 64)
-    
+
+
+
+    c.clearRect(0,0,w,h)
+    c.drawImage(sky, 0, 0, w, h)
+    for(i=Math.floor(users[playerID].player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(users[playerID].player.y - 32/64 + canvas.height/64)+1; i++){
+        if(i<0) continue
+        if(i>=map.length) break
+        for(j=Math.floor(users[playerID].player.x - 7/32 - canvas.width/64)-1; j<Math.ceil(users[playerID].player.x - 7/32 + canvas.width/64)+1; j++){
+            if(j<0) continue
+            if(j>=map[i].length) break
+            if(map[i][j]!=9){
+                c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-users[playerID].player.x-7/32), canvas.height/2 + 32*(i-users[playerID].player.y-32/64), 32, 32)
+            }
+        }
+    }
+
+    c.drawImage(users[playerID].player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
+
+
+  
+  for (let [id, user] of Object.entries(users)){
+    if(id != playerID){
+        c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32), canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64), 32, 64)
+    }
   }
 }

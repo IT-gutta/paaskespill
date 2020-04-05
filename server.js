@@ -80,8 +80,10 @@ io.on('connection', socket => {
     // }
     users[socket.id] = {username: username, player: new Player(username), controller: new Controller(), playerID: socket.id}
     
-    console.log('new user: ' + username)
-    console.log('all users: ' + JSON.stringify(users))
+    socket.emit("playerID", socket.id)
+    // console.log(socket.id)
+    // console.log('new user: ' + username)
+    // console.log('all users: ' + JSON.stringify(users))
   })
 
   socket.on('keysD', keyCode => {
