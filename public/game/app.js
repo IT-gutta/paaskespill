@@ -1,7 +1,7 @@
 form.onsubmit = (e) => {
     e.preventDefault()
         socket.emit('new-user', textField.value)
-        form.style.display = "none;"
+        form.style.display = "none"
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
                 if(user.player.direction == "right") user.player.img = player_right
