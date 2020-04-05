@@ -70,12 +70,13 @@ io.on('connection', socket => {
   console.log("connected: " + socket.id)
   
   socket.on('new-user', (username) => {
-    if(!getPlayerInfo(username)) {
-      users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-      updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
-    } else {
-      users[socket.id] = getPlayerInfo(username)
-    }
+    // if(!getPlayerInfo(username)) {
+    //   users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
+    //   updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
+    // } else {
+    //   users[socket.id] = getPlayerInfo(username)
+    // }
+    users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
     
     console.log('new user: ' + username)
     console.log('all users: ' + JSON.stringify(users))
@@ -92,7 +93,7 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    updatePlayerInfo(socket[id].username)
+    // updatePlayerInfo(socket[id].username)
     delete users[socket.id]
     console.log(socket.id + " disconnected.")
   })
