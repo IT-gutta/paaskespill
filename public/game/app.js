@@ -5,6 +5,7 @@ form.onsubmit = (e) => {
 
         socket.on("playerID", id => {
             playerID = id
+            console.log(playerID)
         })
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
