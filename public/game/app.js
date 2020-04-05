@@ -19,11 +19,11 @@ form.onsubmit = (e) => {
         })
     
         window.addEventListener("keydown", e => {
-            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32) socket.emit('keysD', e.keyCode)
+            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode)
         })
     
         window.addEventListener("keyup", e => {
-            if(e.keyCode == 65 || e.keyCode == 68) socket.emit('keysU', e.keyCode)
+            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 66) socket.emit('keysU', e.keyCode)
         })
 
         window.addEventListener("mousemove", e => {
