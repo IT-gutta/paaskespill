@@ -14,6 +14,9 @@ player_right.src="assets/girl_right.png"
 const player_front = new Image()
 player_front.src="assets/girl_front.png"
 
+const air = new Image()
+air.src="assets/air.png"
+
 const grass = new Image()
 grass.src="assets/grass.png"
 
@@ -41,7 +44,7 @@ sky.src="assets/sky.png"
 const inventory = new Image()
 inventory.src="assets/inventory.png"
 
-const imgs = [stone, log, leaves, coal_ore, grass, iron_ore, dirt]
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt]
 
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
