@@ -66,23 +66,23 @@ function update(player, map, g){
         }
 
 
-        if(map[Math.round(player.y+2)][Math.floor(player.x+9/32)]==0 && map[Math.round(player.y+2)][Math.floor(player.x+1-9/32)]==0){
+        if(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)]==0 && map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)]==0){
             player.falling = true
         }
 
 
         if(player.falling){
-            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=0 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
+            if((equalsSome(mapValue(player.pos.botLeft), solidBlocks) || equalsSome(mapValue(player.pos.botRight), solidBlocks)) && player.vy>0){
                 player.falling = false
                 player.y = Math.round(player.y)
                 player.vy = 0
             }
             else{
-                player.y+=player.vy
                 player.vy+=g
             }
         }
         player.x+=player.vx
+        player.y+=player.vy
 }
 
 
