@@ -26,26 +26,26 @@ function update(player, map, g){
         // }
 
         if(player.vx>0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+1-9/32)]!=9 || map[Math.floor(player.y+1.99)][Math.floor(player.x+1-9/32)]!=9){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=0 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+1-9/32)]!=0 || map[Math.floor(player.y+1.99)][Math.floor(player.x+1-9/32)]!=0){
                 player.vx = 0
             }
         }
         if(player.vx<0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+1.99)][Math.floor(player.x+9/32)]!=9){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+1.99)][Math.floor(player.x+9/32)]!=0){
                 player.vx = 0
             }
         }
         if(player.vy<0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=9 || map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=9){
+            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=0){
                 player.vy = 0
             }
         }
         player.x+=player.vx
-        if(map[Math.round(player.y+2)][Math.floor(player.x+9/32)]==9 && map[Math.round(player.y+2)][Math.floor(player.x+1-9/32)]==9){
+        if(map[Math.round(player.y+2)][Math.floor(player.x+9/32)]==0 && map[Math.round(player.y+2)][Math.floor(player.x+1-9/32)]==0){
             player.falling = true
         }
         if(player.falling){
-            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=9 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
+            if(map[Math.floor(player.y+2)][Math.round(player.x)]!=0 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
                 player.falling = false
                 player.y = Math.round(player.y)
                 player.vy = 0
@@ -98,12 +98,12 @@ function keysU(keyCode, player, controller){
 function click(keyCode, px, py, PX, PY, player){
     //høyreklikk, sjekker om man kan sette ut blokk
     if(keyCode==2){
-        if(map[py][px]==9){
+        if(map[py][px]==0){
             if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
-                if(map[py+1][px]!=9 || map[py-1][px]!=9 || map[py][px+1]!=9 || map[py][px-1]!=9){
+                if(map[py+1][px]!=0 || map[py-1][px]!=0 || map[py][px+1]!=0 || map[py][px-1]!=0){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY])){
-                            map[py][px] = 0
+                            map[py][px] = 1
                         }
                     }
                 }
@@ -113,7 +113,7 @@ function click(keyCode, px, py, PX, PY, player){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY])){
-                map[py][px] = 9
+                map[py][px] = 0
             }
         }
     }
@@ -125,7 +125,7 @@ function sight(pPos, mPos){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=9){
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
             return false
         }
     }
@@ -133,7 +133,7 @@ function sight(pPos, mPos){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=9){
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
             return false
         }
     }
