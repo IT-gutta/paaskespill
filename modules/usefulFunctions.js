@@ -1,3 +1,5 @@
+let map = require("./variables").map
+
 function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -43,5 +45,8 @@ function mapValue(pos){
   return map[Math.floor(pos.y)][Math.floor(pos.x)]
 }
 
+const f = num => Math.floor(num)
+const c = num => Math.ceil(num)
+const r = num => Math.r(num)
 
 module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue}

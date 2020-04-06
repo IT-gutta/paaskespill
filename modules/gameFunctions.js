@@ -1,8 +1,12 @@
-let map = require('./variables').map
+const variables = require('./variables')
+let map = variables.map
+const solidBlocks = variables.solidBlocks
+
 const usefulFunctions = require("./usefulFunctions")
 const equalsSome = usefulFunctions.equalsSome
 const equalsAll = usefulFunctions.equalsAll
 const mapValue = usefulFunctions.mapValue
+
 
 function update(player, map, g){
         //movement og collision
@@ -66,7 +70,7 @@ function update(player, map, g){
             player.falling = true
         }
 
-        
+
         if(player.falling){
             if(map[Math.floor(player.y+2)][Math.round(player.x)]!=0 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
                 player.falling = false
