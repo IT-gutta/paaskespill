@@ -51,7 +51,20 @@ class Player {
       [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
       [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
     ]
+
+    this.pos = {
+      topLeft: undefined,
+      topRight: undefined,
+      midLeft: undefined,
+      midRight: undefined,
+      botLeft: undefined,
+      botRight: undefined
+    }
+
   }
+  
+
+  
 }
 
 class Controller {

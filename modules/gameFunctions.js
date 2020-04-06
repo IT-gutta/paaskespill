@@ -1,4 +1,9 @@
 let map = require('./variables').map
+const usefulFunctions = require("./usefulFunctions")
+const equalsSome = usefulFunctions.equalsSome
+const equalsAll = usefulFunctions.equalsAll
+const mapValue = usefulFunctions.mapValue
+
 function update(player, map, g){
         //movement og collision
         if(player.moving){
@@ -25,25 +30,43 @@ function update(player, map, g){
         //     }
         // }
 
+
+        // viktige punkter på spilleren
+        player.pos.topRight = {x: player.x+1-9/32, y: player.y+20/64}
+        player.pos.midRight = {x: player.x+1-9/32, y: player.y+1+20/64}
+        player.pos.botRight = {x: player.x+1-9/32, y: player.y+1.99}
+        player.pos.topLeft = {x: player.x+9/32, y: player.y+20/64}
+        player.pos.midLeft = {x: player.x+9/32, y: player.y+1+20/64}
+        player.pos.botLeft = {x: player.x+9/32, y: player.y+1.99}
+
+
+        //kollisjon høyre side
         if(player.vx>0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=0 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+1-9/32)]!=0 || map[Math.floor(player.y+1.99)][Math.floor(player.x+1-9/32)]!=0){
+            if(equalsSome(mapValue(player.pos.topRight), solidBlocks) || equalsSome(mapValue(player.pos.midRight), solidBlocks) || equalsSome(mapValue(player.pos.botRight), solidBlocks)){
                 player.vx = 0
             }
         }
+
+        //kollissjon venstre side
         if(player.vx<0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+1+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+1.99)][Math.floor(player.x+9/32)]!=0){
+            if(equalsSome(mapValue(player.pos.topLeft), solidBlocks) || equalsSome(mapValue(player.pos.midLeft), solidBlocks) || equalsSome(mapValue(player.pos.botLeft), solidBlocks)){
                 player.vx = 0
             }
         }
+
+        //kollisjon når spilleren beveger seg oppover
         if(player.vy<0){
-            if(map[Math.floor(player.y+20/64)][Math.floor(player.x+9/32)]!=0 || map[Math.floor(player.y+20/64)][Math.floor(player.x+1-9/32)]!=0){
+            if(equalsSome(mapValue(player.pos.topLeft), solidBlocks) || equalsSome(mapValue(player.pos.topRight), solidBlocks)){
                 player.vy = 0
             }
         }
-        player.x+=player.vx
+
+
         if(map[Math.round(player.y+2)][Math.floor(player.x+9/32)]==0 && map[Math.round(player.y+2)][Math.floor(player.x+1-9/32)]==0){
             player.falling = true
         }
+
+        
         if(player.falling){
             if(map[Math.floor(player.y+2)][Math.round(player.x)]!=0 && /*map[Math.floor(player.y+2)][Math.round(player.x)]!=11 &&*/ player.vy>0){
                 player.falling = false
@@ -55,7 +78,10 @@ function update(player, map, g){
                 player.vy+=g
             }
         }
+        player.x+=player.vx
 }
+
+
 
 function keysD(keyCode, player, controller){
     if(keyCode==65){

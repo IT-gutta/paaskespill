@@ -24,17 +24,24 @@ function userExists(object, id) {
 }
 
 function equalsSome(val, arr){
+  let value = val
   for(let i = 0; i < arr.length; i++){
-    if(arr[i] == val) return true
+    if(arr[i] == value) return true
   }
   return false
 }
 
 function equalsAll(val, arr){
+  let value = val
   for(let i = 0; i < arr.length; i++){
-    if(arr[i] != val) return false
+    if(arr[i] != value) return false
   }
   return true
 }
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll}
+function mapValue(pos){
+  return map[Math.floor(pos.y)][Math.floor(pos.x)]
+}
+
+
+module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue}
