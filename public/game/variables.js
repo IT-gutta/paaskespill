@@ -38,6 +38,9 @@ iron_ore.src="assets/iron_ore.png"
 const sky = new Image()
 sky.src="assets/sky.png"
 
+const inventory = new Image()
+inventory.src="assets/inventory.png"
+
 const imgs = [stone, log, leaves, coal_ore, grass, iron_ore, dirt]
 
 canvas.width = window.innerWidth
