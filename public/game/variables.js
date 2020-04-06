@@ -38,13 +38,18 @@ coal_ore.src="assets/coal_ore.png"
 const iron_ore = new Image()
 iron_ore.src="assets/iron_ore.png"
 
+const safe = new Image()
+safe.src="assets/safe.png"
+
 const sky = new Image()
 sky.src="assets/sky.png"
 
 const inventory = new Image()
 inventory.src="assets/inventory.png"
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt]
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe]
+
+
 
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight

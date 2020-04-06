@@ -1,4 +1,6 @@
 let showInventory = false
+let selectedInventoryIndex = 0
+let inventorySwap = false
 form.onsubmit = (e) => {
     // dette er henriks kommentar
     //Jørgen er kul
@@ -39,8 +41,21 @@ form.onsubmit = (e) => {
                 console.log(1)
             } 
          }
+         else if(!inventorySwap){
+             var x = e.clientX
+             var y = e.clientY
+             if(users[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8][0]!=0){
+                 selectedInventoryIndex = Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8
+                 inventorySwap = true
+             }
+         }
          else{
-             
+             var x = e.clientX
+             var y = e.clientY
+             var a = users[playerID].player.inventory[selectedInventoryIndex]
+             var b = users[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8]
+             user[playerID].player.inventory[selectedInventoryIndex] = b
+             user[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8] = a
          }
         })
         
