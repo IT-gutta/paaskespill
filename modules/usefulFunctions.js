@@ -23,4 +23,18 @@ function userExists(object, id) {
   return false
 }
 
-module.exports = {random, timer, objectIsEmpty, userExists}
+function equalsSome(val, arr){
+  for(let i = 0; i < arr.length; i++){
+    if(arr[i] == val) return true
+  }
+  return false
+}
+
+function equalsAll(val, arr){
+  for(let i = 0; i < arr.length; i++){
+    if(arr[i] != val) return false
+  }
+  return true
+}
+
+module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll}
