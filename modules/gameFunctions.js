@@ -108,7 +108,7 @@ function click(keyCode, px, py, PX, PY, player){
                     }
                 }
             }
-        }           
+        }
     }
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
@@ -120,7 +120,7 @@ function click(keyCode, px, py, PX, PY, player){
 }
 
 function sight(pPos, mPos){
-    var a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
+    let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
     for(x=pPos[0]; x<mPos[0]; x+=0.01){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
