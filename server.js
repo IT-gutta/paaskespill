@@ -118,7 +118,6 @@ io.on('connection', socket => {
     PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
     PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
     if(button==2 && interact.indexOf(map[py][px])!=-1){
-      console.log(1)
       socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.currentSafe)
     }
     else{
@@ -127,6 +126,7 @@ io.on('connection', socket => {
   })
 
   socket.on('swap', (pos, inventory) => {
+    console.log(pos)
     let player = users[socket.id].player
     if(player.selectedSwap[0].index==-1){
       player.selectedSwap[0].type = inventory
@@ -142,11 +142,12 @@ io.on('connection', socket => {
         var a = player.currentSafe.inventory[player.selectedSwap[0].index]
       }
       if(player.selectedSwap[1].type=="player"){
-        var b = player.inventory[player.selectedSwap[0].index]
+        var b = player.inventory[player.selectedSwap[1].index]
       }
       else if(player.selectedSwap[1].type=="safe"){
-        var b = player.currentSafe.inventory[player.selectedSwap[0].index]
+        var b = player.currentSafe.inventory[player.selectedSwap[1].index]
       }
+      console.log(a, b)
       if(player.selectedSwap[0].type=="player"){
         player.inventory[player.selectedSwap[0].index] = b
       }
@@ -161,6 +162,7 @@ io.on('connection', socket => {
       }
       player.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
     }
+    // console.log(pos)
   })
 
   socket.on('disconnect', () => {

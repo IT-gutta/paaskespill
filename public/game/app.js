@@ -54,14 +54,17 @@ form.onsubmit = (e) => {
          else if(showSafe){
             var x = e.clientX
             var y = e.clientY
-            console.log(1)
             if(x>(canvas.width - 1300)/2+800){
                 var p = Math.floor((x-(canvas.width-1300)/2-800)/100) + Math.floor((y-(canvas.height-500)/2)/100)*5
-                socket.emit('swap', p, "safe")
+                if(p>=0 && p<=24){
+                    socket.emit('swap', p, "safe")
+                }
             }
             else{
                 var p = Math.floor((x-(canvas.width-1300)/2-80)/80) + Math.floor((y-(canvas.height-480)/2-80)/80)*8
-                socket.emit('swap', p, "player")
+                if(p>=0 && p<=31){
+                    socket.emit('swap', p, "player")
+                }
             }
          }
         })
@@ -108,10 +111,10 @@ function draw(map, users){
         }
     }
     c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
-    for(i=0; i<24; i+=1){
+    for(i=0; i<25; i+=1){
         if(users[playerID].player.currentSafe.inventory[i][1]!=0){
-            c.drawImage(imgs[users[playerID].player.currentSafe.inventory[i][0]], 30 + i%8*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/8)*100 + (canvas.height-500)/2, 40, 40)
-            c.fillText(users[playerID].player.currentSafe.inventory[i][1], 30 + (i%8)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/8)*100 + (canvas.height-500)/2)
+            c.drawImage(imgs[users[playerID].player.currentSafe.inventory[i][0]], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
+            c.fillText(users[playerID].player.currentSafe.inventory[i][1], 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
         }
     }
   }
