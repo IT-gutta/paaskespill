@@ -54,6 +54,7 @@ class Player {
       [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
     ]
     this.selectedSwap = -1
+    this.currentSafe = ""
   }
 }
 
@@ -117,7 +118,8 @@ io.on('connection', socket => {
     PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
     PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
     if(button==2 && interact.indexOf(map[py][px])!=-1){
-      socket.emit(interaction(px, py), px, py)
+      console.log(1)
+      socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.currentSafe)
     }
     else{
       click(button, px, py, PX, PY, users[socket.id].player)

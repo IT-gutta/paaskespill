@@ -13,13 +13,13 @@ form.onsubmit = (e) => {
             playerID = id
             console.log(playerID)
         })
-        socket.on('heartbeat', (map, users) => {
+        socket.on('heartbeat', (map, users, safe) => {
             for (let [id, user] of Object.entries(users)) {
                 if(user.player.direction == "right") user.player.img = player_right
                 else if(user.player.direction == "left") user.player.img = player_left
                 else user.player.img = player_front
             }
-            draw(map, users)
+            draw(map, users, safe)
         })
     
         window.addEventListener("keydown", e => {
@@ -56,7 +56,8 @@ form.onsubmit = (e) => {
         window.addEventListener("keydown", e => {
             if(e.keyCode == 69/*nice*/) showInventory = !showInventory
         })
-        socket.on("safeOpened",(px, py) => {
+        socket.on("safeOpened",(px, py, safe) => {
+            console.log(px, py, safe)
             showSafe = true
         })
         
@@ -90,7 +91,20 @@ function draw(map, users){
   }
   if(showSafe){
     c.drawImage(inventory, (canvas.width-1300)/2, (canvas.height-480)/2, 800, 480)
+    for(i=0; i<32; i+=1){
+        if(users[playerID].player.inventory[i][1]!=0){
+            c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+        }
+    }
+    console.log(users[playerID].player.currentSafe.inventory)
     c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
+    for(i=0; i<24; i+=1){
+        if(users[playerID].player.currentSafe.inventory[i][1]!=0){
+            c.drawImage(imgs[users[playerID].player.currentSafe.inventory[i][0]], 30 + i%8*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/8)*100 + (canvas.height-500)/2, 40, 40)
+            c.fillText(users[playerID].player.currentSafe.inventory[i][1], 30 + (i%8)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/8)*100 + (canvas.height-500)/2)
+        }
+    }
   }
   if(showInventory){
       c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)

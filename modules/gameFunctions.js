@@ -1,4 +1,5 @@
 let map = require('./variables').map
+let interactMap = require('./variables').interactMap
 function update(player, map, g){
         //movement og collision
         if(player.moving){
@@ -139,10 +140,12 @@ function sight(pPos, mPos){
     }
     return true
 }
-function interaction(px, py){
+function interaction(px, py, player){
     if(map[py][px]==8){
+        player.currentSafe = interactMap[py][px]
         return 'safeOpened'
     }
+    return ("", "")
 }
 
 module.exports = {update, keysD, keysU, click, sight, interaction}
