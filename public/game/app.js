@@ -25,21 +25,27 @@ form.onsubmit = (e) => {
             if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 66) socket.emit('keysU', e.keyCode)
         })
 
-        window.addEventListener("mousemove", e => {
-            clientX = e.clientX
-            clientY = e.clientY
-        })
+        function emitMouseMove(e){
+            socket.emit("mousemove", e.clientX, e.clientY, canvas.width, canvas.height)
+        }
 
         window.addEventListener("mousedown", e => {
          if(!showInventory){
             if(e.button == 0 || e.button == 2){
-                socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
-                console.log(1)
-            } 
+                window.addEventListener("mousemove", emitMouseMove)
+                socket.emit('mousedown', e.button, e.clientX, e.clientY, canvas.width, canvas.height)
+            }
          }
          else{
              
          }
+        })
+
+        window.addEventListener("mouseup", e => {
+            if(e.button == 0 || e.button == 2){
+                window.removeEventListener("mousemove", emitMouseMove)
+                socket.emit("mouseup", e.button)
+            }
         })
         
         window.addEventListener("keydown", e => {

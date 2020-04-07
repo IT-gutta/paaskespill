@@ -32,6 +32,7 @@ const keysU = gameFunctions.keysU
 const click = gameFunctions.click
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
+const updateMousePos = usefulFunctions.updateMousePos
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 
@@ -41,7 +42,7 @@ class Player {
     this.username = username
     this.x = 28,
     this.y = 8,
-    this.direction = "",
+    this.direction = "front",
     this.moving = false,
     this.falling = false,
     this.vx = 0,
@@ -66,6 +67,19 @@ class Player {
       playerSprite: "boy",
       delay: 100,
       counter: 0
+    }
+
+    this.mouse = {
+      counter: 0,
+      delay: 150,
+      keys: {
+        0: false,
+        2: false
+      },
+      px: undefined,
+      py: undefined,
+      PX: undefined,
+      PY: undefined
     }
 
   }
@@ -128,12 +142,18 @@ io.on('connection', socket => {
     keysU(keyCode, users[socket.id].player, users[socket.id].controller)
   })
 
-  socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
-    px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
-    py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
-    PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
-    PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
-    click(button, px, py, PX, PY, users[socket.id].player)
+  socket.on('mousedown', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
+    users[socket.id].player.mouse.keys[button] = true
+    click(button, users[socket.id].player)
+  })
+
+  socket.on("mousemove", (clientX, clientY, canvasWidth, canvasHeight) => {
+    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
+  })
+
+  socket.on("mouseup", button => {
+    users[socket.id].player.mouse.keys[button] = false
   })
 
   socket.on('disconnect', () => {

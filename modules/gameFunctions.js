@@ -37,6 +37,12 @@ function update(player, map, g){
         if(player.sprite.counter > player.sprite.delay) updateSprites(player)
         else player.sprite.counter ++
 
+        if(player.mouse.counter > player.mouse.delay){
+            if(player.mouse.keys[0]) click(0, player)
+            else if(player.mouse.keys[2]) click(2, player)
+        }
+        else player.mouse.counter ++
+
         //klatring i stige
         // if(map[Math.floor(player.y + 2)][Math.floor(player.x + 1)] == 11 || map[Math.floor(player.y + 1)][Math.floor(player.x + 1)] ==11 || map[Math.floor(player.y + 2)][Math.floor(player.x)] ==11 || map[Math.floor(player.y + 1)][Math.floor(player.x)] == 11){
         //     if(player.controller.up){
@@ -142,14 +148,16 @@ function keysU(keyCode, player, controller){
     }
 }
 
-function click(keyCode, px, py, PX, PY, player){
+function click(keyCode, player){
+    player.mouse.counter = 0
     //høyreklikk, sjekker om man kan sette ut blokk
+    const [py, px, PY, PX] = [player.mouse.py, player.mouse.px, player.mouse.PY, player.mouse.PX]
     if(keyCode==2){
         if(map[py][px]==0){
             if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
                 if(map[py+1][px]!=0 || map[py-1][px]!=0 || map[py][px+1]!=0 || map[py][px-1]!=0){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
-                        if(sight([player.x+0.5, player.y+1], [PX, PY])){
+                        if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
                             map[py][px] = 1
                         }
                     }
@@ -159,14 +167,14 @@ function click(keyCode, px, py, PX, PY, player){
     }
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
-            if(sight([player.x+0.5, player.y+1], [PX, PY])){
+            if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
                 map[py][px] = 0
             }
         }
     }
 }
 
-function sight(pPos, mPos){
+function sight(pPos, mPos, py, px){
     let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
     for(x=pPos[0]; x<mPos[0]; x+=0.01){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){

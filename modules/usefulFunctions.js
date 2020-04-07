@@ -45,8 +45,15 @@ function mapValue(pos){
   return map[Math.floor(pos.y)][Math.floor(pos.x)]
 }
 
+function updateMousePos(player, clientX, clientY, canvasWidth, canvasHeight){
+    player.mouse.px = Math.round(player.x - 7/32 + (clientX - canvasWidth/2)/32)
+    player.mouse.py = Math.round(player.y + (clientY - canvasHeight/2)/32)
+    player.mouse.PX = player.x + (clientX - canvasWidth/2)/32
+    player.mouse.PY = player.y + (clientY - canvasHeight/2)/32
+}
+
 const f = num => Math.floor(num)
 const c = num => Math.ceil(num)
 const r = num => Math.r(num)
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue}
+module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos}
