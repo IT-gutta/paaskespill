@@ -12,9 +12,7 @@ form.onsubmit = (e) => {
         })
         socket.on('heartbeat', (map, users) => {
             for (let [id, user] of Object.entries(users)) {
-                if(user.player.direction == "right") user.player.img = player_right
-                else if(user.player.direction == "left") user.player.img = player_left
-                else user.player.img = player_front
+                user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.sprite.index]
             }
             draw(map, users)
         })

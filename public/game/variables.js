@@ -5,14 +5,17 @@ const textField = document.getElementById('textField')
 const socket = (window.location.href == "http://localhost:3000/game/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 let playerID
 
-const player_left = new Image()
-player_left.src="assets/girl_left.png"
 
-const player_right = new Image()
-player_right.src="assets/girl_right.png"
+function newImg(src){
+    let img = new Image()
+    img.src = src
+    return img
+}
 
-const player_front = new Image()
-player_front.src="assets/girl_front.png"
+const playerSprites = {
+    "girl": [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
+    "boy": [newImg("assets/boy_leftW1.png"), newImg("assets/boy_left.png"), newImg("assets/boy_front.png"), newImg("assets/boy_right.png"), newImg("assets/boy_rightW1.png")]
+}
 
 const air = new Image()
 air.src="assets/air.png"
