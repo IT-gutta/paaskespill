@@ -71,7 +71,7 @@ class Player {
 
     this.mouse = {
       counter: 0,
-      delay: 150,
+      delay: 50,
       keys: {
         0: false,
         2: false
@@ -81,7 +81,6 @@ class Player {
       PX: undefined,
       PY: undefined
     }
-
   }
   
 
