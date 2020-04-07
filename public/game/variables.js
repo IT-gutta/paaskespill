@@ -56,3 +56,11 @@ const h = window.innerHeight
 var clientX = 0
 var clientY = 0
 var users = {}
+
+function equalsSome(val, arr){
+  let value = val
+  for(let i = 0; i < arr.length; i++){
+    if(arr[i] == value) return true
+  }
+  return false
+}

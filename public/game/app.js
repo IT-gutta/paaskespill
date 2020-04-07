@@ -1,6 +1,3 @@
-const usefulFunctions = require("./../../modules/usefulFunctions")
-const equalsSome = usefulFunctions.equalsSome
-
 let showInventory = false
 form.onsubmit = (e) => {
     // dette er henriks kommentar
