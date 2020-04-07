@@ -81,10 +81,7 @@ class Player {
       PX: undefined,
       PY: undefined
     }
-  }
-  
-
-  
+  }  
 }
 
 class Controller {
@@ -113,27 +110,19 @@ io.on('connection', socket => {
   console.log("connected: " + socket.id)
   
   socket.on('new-user', (username) => {
-    // if(!getPlayerInfo(username)) {
-    //   users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-    //   updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
-    // } else {
-    //   users[socket.id] = getPlayerInfo(username)
-    // }
     
     users[socket.id] = {username: username, player: new Player(username), controller: new Controller(), playerID: socket.id}
     
     socket.emit("playerID", socket.id)
 
     console.log(socket.id)
-    // console.log(socket.id)
-    // console.log('new user: ' + username)
-    // console.log('all users: ' + JSON.stringify(users))
 
   })
 
-  socket.on('keysD', keyCode => {
+  socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
     if(!userExists(users, socket.id)) return
     keysD(keyCode, users[socket.id].player, users[socket.id].controller)
+    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
   })
 
   socket.on('keysU', keyCode => {
