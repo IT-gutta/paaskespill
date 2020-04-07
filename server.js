@@ -79,11 +79,12 @@ io.on('connection', socket => {
 
   socket.on('new-login', async username => {
     const playerInfo = await getPlayerInfo(username)
-  
+    // not playerinfo -> spilleren er ny
     if(!playerInfo){
       console.log("new user started playing")
       users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
       updatePlayerInfo(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
+      // ellers bruker data fra databasen
     } else {
       console.log("user " + username + " logged in and started playing")
       users[socket.id] = playerInfo
