@@ -6,6 +6,10 @@ const io = require('socket.io')(server)
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.set('json spaces', 2); // number of spaces for indentation
+app.use(express.json());
+
+const router = require('./modules/api/routes/routes')
+app.use('/api', router)
 
 // const routes = require('./routes/routes')
 // app.use('/', routes)
@@ -18,13 +22,13 @@ server.listen(PORT)
 let users = {}
 let map = require('./modules/variables').map
 const g = 0.00004
-const db = require('./modules/db')
+const db = require('./modules/api/modules/db')
 
 
 // functions
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
-const dbFunctions = require('./modules/dbFunctions')
+const dbFunctions = require('./modules/api/modules/dbFunctions')
 const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
@@ -72,24 +76,22 @@ setInterval(heartbeat, 1000/60)
 
 io.on('connection', socket => {
   console.log("connected: " + socket.id)
+
+  socket.on('new-login', async username => {
+    const playerInfo = await getPlayerInfo(username)
   
-  socket.on('new-user', (username) => {
-    // if(!getPlayerInfo(username)) {
-    //   users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-    //   updatePlayerInfo(username, users[socket.id].player, users[socket.id].controller)
-    // } else {
-    //   users[socket.id] = getPlayerInfo(username)
-    // }
-    
-    users[socket.id] = {username: username, player: new Player(username), controller: new Controller(), playerID: socket.id}
-    
+    if(!playerInfo){
+      console.log("new user started playing")
+      users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
+      updatePlayerInfo(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
+    } else {
+      console.log("user " + username + " logged in and started playing")
+      users[socket.id] = playerInfo
+      users[socket.id].playerID = socket.id
+    }
     socket.emit("playerID", socket.id)
-
-    console.log(socket.id)
-    // console.log(socket.id)
-    // console.log('new user: ' + username)
-    // console.log('all users: ' + JSON.stringify(users))
-
+    console.log("test")
+    socket.emit("logged-in")
   })
 
   socket.on('keysD', keyCode => {
@@ -103,6 +105,7 @@ io.on('connection', socket => {
   })
 
   socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+    if(!userExists(users, socket.id)) return
     px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
     py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
     PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
@@ -111,8 +114,8 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    // updatePlayerInfo(socket[id].username)
-    delete users[socket.id]
-    console.log(socket.id + " disconnected.")
+      updatePlayerInfo(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
+      delete users[socket.id]
+      console.log(socket.id + " disconnected.")
   })
 })

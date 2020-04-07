@@ -1,6 +1,40 @@
 const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
-const form = document.querySelector('form')
+
+const loginContainer =document.getElementById('loginContainer')
+
+const signupForm =document.getElementById('signupForm')
+const signupUsernameInput =document.getElementById('signupUsernameInput')
+const signupPasswordInput =document.getElementById('signupPasswordInput')
+
+
+const loginForm =document.getElementById('loginForm')
+const loginUsernameInput =document.getElementById('loginUsernameInput')
+const loginPasswordInput =document.getElementById('loginPasswordInput')
+
+// Example POST method implementation:
+async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return await response.json(); // parses JSON response into native JavaScript objects
+  }
+  
+//   postData('https://example.com/answer', { answer: 42 })
+//     .then((data) => {
+//       console.log(data); // JSON data parsed by `response.json()` call
+//     });
+
+
+
+
+
+
 const textField = document.getElementById('textField')
 const socket = (window.location.href == "http://localhost:3000/game/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 let playerID

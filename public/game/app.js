@@ -1,45 +1,32 @@
-form.onsubmit = (e) => {
-    // dette er henriks kommentar
-    //Jørgen er kul
+signupForm.onsubmit = async (e) => {
     e.preventDefault()
-        socket.emit('new-user', textField.value)
-        form.style.display = "none"
-
-        socket.on("playerID", id => {
-            playerID = id
-            console.log(playerID)
-        })
-        socket.on('heartbeat', (map, users) => {
-            for (let [id, user] of Object.entries(users)) {
-                if(user.player.direction == "right") user.player.img = player_right
-                else if(user.player.direction == "left") user.player.img = player_left
-                else user.player.img = player_front
-            }
-            draw(map, users)
-        })
-    
-        window.addEventListener("keydown", e => {
-            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode)
-        })
-    
-        window.addEventListener("keyup", e => {
-            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 66) socket.emit('keysU', e.keyCode)
-        })
-
-        window.addEventListener("mousemove", e => {
-            clientX = e.clientX
-            clientY = e.clientY
-        })
-
-        window.addEventListener("mousedown", e => {
-            if(e.button == 0 || e.button == 2){
-                socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
-                console.log(1)
-            } 
-        })
-
-        
+    const body = {username: signupUsernameInput.value, password: signupPasswordInput.value}
+    const data = await postData('http://localhost:3000/api/signup', body)
+    if(data.ok) {
+        signupForm.style = "display: none;"
+    } else {
+        console.log(data.msg)
+    }
 }
+
+
+loginForm.onsubmit = async (e) => {
+    e.preventDefault()
+    const body = {username: loginUsernameInput.value, password: loginPasswordInput.value}
+    const data = await postData('http://localhost:3000/api/login', body)
+    if(data.ok) {
+        loginContainer.style = "display: none;"
+        socket.emit('new-login', body.username)
+    } else {
+        console.log(data.msg)
+    }
+}
+
+socket.on('logged-in', () => {
+    console.log("logged in")
+    runGame()
+})
+
 
 function draw(map, users){
     c.clearRect(0,0,w,h)
@@ -69,4 +56,40 @@ function draw(map, users){
         c.fillText(user.username, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64) - 16)
     }
   }
+}
+
+socket.on("playerID", id => {
+    playerID = id
+    console.log(playerID)
+})
+
+function runGame() {
+    console.log("player-id: " + playerID)
+    socket.on('heartbeat', (map, users) => {
+        for (let [id, user] of Object.entries(users)) {
+            if(user.player.direction == "right") user.player.img = player_right
+            else if(user.player.direction == "left") user.player.img = player_left
+            else user.player.img = player_front
+        }
+        draw(map, users)
+    })
+
+    window.addEventListener("keydown", e => {
+        if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode)
+    })
+
+    window.addEventListener("keyup", e => {
+        if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 66) socket.emit('keysU', e.keyCode)
+    })
+
+    window.addEventListener("mousemove", e => {
+        clientX = e.clientX
+        clientY = e.clientY
+    })
+
+    window.addEventListener("mousedown", e => {
+        if(e.button == 0 || e.button == 2){
+            socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
+        } 
+    })
 }

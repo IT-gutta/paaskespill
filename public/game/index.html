@@ -10,10 +10,20 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body oncontextmenu="return false;">
-    <form>
-        <input type="text" name="username" id="textField">
-        <input type="submit" value="Spill">
-    </form>
+
+    <div id="loginContainer">
+        <form id="loginForm">
+            <input type="text" name="username" id="loginUsernameInput" required>
+            <input type="text" name="password" id="loginPasswordInput" required>
+            <input type="submit" value="Log in">
+        </form>
+
+        <form id="signupForm">
+            <input type="text" name="username" id="signupUsernameInput" required>
+            <input type="text" name="password" id="signupPasswordInput" required>
+            <input type="submit" value="Sign up">
+        </form>
+    </div>
     <canvas></canvas>
 </body>
 </html>
