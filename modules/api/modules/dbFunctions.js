@@ -1,22 +1,19 @@
-function getPlayerInfo(username) {
+function getPlayerData(username) {
     const db = require('./db.js')
     return new Promise((resolve, reject) => {
         db.find({username: username}).toArray((err, result) => {
-            console.log("inne i toArray-funksjonen")
-            if(result[0].player != undefined){
-                console.log("returner true!")
-                resolve ({username: username, player: result[0].player, controller: result[0].controller})
+            if(result[0].gameData){
+                resolve (result[0].gameData)
             } else {
-                console.log(result[0].player)
                 resolve (false)
             } 
         })
     })
 }
 
-function updatePlayerInfo(username, player, controller) {
+function updatePlayerData(username, data) {
     const db = require('./db.js')
-    db.update({username: username}, {$set: {player: player, controller: controller}})
+    db.update({username: username}, {$set: {gameData: data}})
 }
 
-module.exports = {getPlayerInfo, updatePlayerInfo}
+module.exports = {getPlayerData, updatePlayerData}

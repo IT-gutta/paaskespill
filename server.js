@@ -35,8 +35,8 @@ const keysU = gameFunctions.keysU
 const click = gameFunctions.click
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
-const getPlayerInfo = dbFunctions.getPlayerInfo
-const updatePlayerInfo = dbFunctions.updatePlayerInfo
+const getPlayerData = dbFunctions.getPlayerData
+const updatePlayerData = dbFunctions.updatePlayerData
 
 
 class Player {
@@ -78,20 +78,21 @@ io.on('connection', socket => {
   console.log("connected: " + socket.id)
 
   socket.on('new-login', async username => {
-    const playerInfo = await getPlayerInfo(username)
-    // not playerinfo -> spilleren er ny
-    if(!playerInfo){
-      console.log("new user started playing")
+    const playerData = await getPlayerData(username)
+    if(!playerData){
+      // not playerData -> spilleren er ny
       users[socket.id] = {username: username, player: new Player(username), controller: new Controller()}
-      updatePlayerInfo(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
-      // ellers bruker data fra databasen
+
+      let updatedData = {player: users[socket.id].player, controller: users[socket.id].controller}
+
+      updatePlayerData(username, updatedData)
     } else {
-      console.log("user " + username + " logged in and started playing")
-      users[socket.id] = playerInfo
+      // ellers bruker data fra databasen
+      let temp = {username: username, player: playerData.player, controller: playerData.controller}
+      users[socket.id] = temp
       users[socket.id].playerID = socket.id
     }
     socket.emit("playerID", socket.id)
-    console.log("test")
     socket.emit("logged-in")
   })
 
@@ -115,7 +116,8 @@ io.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-      updatePlayerInfo(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
+    if(!userExists(users, socket.id)) return
+      updatePlayerData(users[socket.id].username, users[socket.id].player, users[socket.id].controller)
       delete users[socket.id]
       console.log(socket.id + " disconnected.")
   })
