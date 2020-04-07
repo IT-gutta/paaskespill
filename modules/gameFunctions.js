@@ -159,7 +159,11 @@ function click(keyCode, player){
                 if(map[py+1][px]!=0 || map[py-1][px]!=0 || map[py][px+1]!=0 || map[py][px-1]!=0){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
-                            map[py][px] = 1
+                            //sjekker om spiller holder en blokk i hånden
+                            if(player.hand.type == "block" && player.hand.number != 0){
+                                map[py][px] = player.hand.value
+                                player.hand.number -= 1
+                            }
                         }
                     }
                 }

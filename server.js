@@ -38,6 +38,13 @@ const updateMousePos = usefulFunctions.updateMousePos
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 
+class Item{
+  constructor(type, value, number){
+    this.type = type
+    this.value = value
+    this.number = number
+  }
+}
 
 class Player {
   constructor(username) {
@@ -50,11 +57,15 @@ class Player {
     this.vx = 0,
     this.vy = 0
     this.inventory = [
-      [1,5],[4,4],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      [1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
+      // [1,5],[4,4],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
+      // [1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
+      // [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
+      // [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
     ]
+
+    for(let i = 0; i < 32; i++){
+      this.inventory.push(new Item("block", Math.floor(Math.random()*7), Math.floor(Math.random()*64)))
+    }
 
     this.pos = {
       topLeft: undefined,
@@ -83,10 +94,13 @@ class Player {
       PX: undefined,
       PY: undefined
     }
+    this.hotBarSpot = 1
+    this.hand = new Item("block", 3, 10)
+    
+
     this.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
     this.currentSafe = ""
-  }  
-
+  }
 }
 
 class Controller {
@@ -122,6 +136,12 @@ io.on('connection', socket => {
 
     console.log(socket.id)
 
+  })
+
+  //change hotBarItem og hover, key er 1, 2, 3, 4 etc...
+  socket.on("changeItem", key => {
+    users[socket.id].player.hotBarSpot = key
+    users[socket.id].player.hand = users[socket.id].player.inventory[23+key]
   })
 
   socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
@@ -169,7 +189,7 @@ io.on('connection', socket => {
   
   //mutering av inventory og safer
   socket.on('swap', (pos, inventory) => {
-    console.log(pos)
+    // console.log(pos)
     let player = users[socket.id].player
     if(player.selectedSwap[0].index==-1){
       player.selectedSwap[0].type = inventory

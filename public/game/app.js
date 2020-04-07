@@ -27,6 +27,11 @@ form.onsubmit = (e) => {
                 showSafe = false
                 showInventory = false
             }
+
+            //hotbar-opplegg
+            if(Number(e.key)){
+                socket.emit("changeItem", Number(e.key))
+            }
         })
     
         window.addEventListener("keyup", e => {
@@ -139,5 +144,18 @@ function draw(map, users){
             c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
         }
     }
-  }   
+  }
+  //kun tegne inn hotbaren
+  else{
+    for(let i=24; i<32; i++){
+        if(users[playerID].player.inventory[i][1]!=0){
+            c.drawImage(imgs[users[playerID].player.inventory[i].value], 100 + i%8*80 + (canvas.width - 800)/2, canvas.height-100, 40, 40)
+            c.fillText(users[playerID].player.inventory[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, canvas.height-100)
+        }
+    }
+    //tenger rektangel rundt den valgte
+    c.strokeStyle = "white"
+    c.lineWidth = 5
+    c.strokeRect(100 + (users[playerID].player.hotBarSpot + 23)%8*80 + (canvas.width - 800)/2-5, canvas.height-105, 50, 50)
+  }
 }
