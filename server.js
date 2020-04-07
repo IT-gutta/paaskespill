@@ -138,7 +138,14 @@ io.on('connection', socket => {
   socket.on('mousedown', (button, clientX, clientY, canvasWidth, canvasHeight) => {
     updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
     users[socket.id].player.mouse.keys[button] = true
-    click(button, users[socket.id].player)
+    var player = users[socket.id].player
+    //interaksjon
+    if(button==2 && interact.indexOf(map[player.mouse.py][player.mouse.px])!=-1){
+      socket.emit(interaction(player.mouse.px, player.mouse.py, users[socket.id].player), player.mouse.px, player.mouse.py, users[socket.id].player.currentSafe)
+    }
+    else{
+      click(button, users[socket.id].player)
+    }
   })
 
   socket.on("mousemove", (clientX, clientY, canvasWidth, canvasHeight) => {
@@ -147,6 +154,7 @@ io.on('connection', socket => {
 
   socket.on("mouseup", button => {
     users[socket.id].player.mouse.keys[button] = false
+  })
   // socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
   //   px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
   //   py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
@@ -158,8 +166,8 @@ io.on('connection', socket => {
   //   else{
   //     click(button, px, py, PX, PY, users[socket.id].player)
   //   }
-  })
-
+  
+  //mutering av inventory og safer
   socket.on('swap', (pos, inventory) => {
     console.log(pos)
     let player = users[socket.id].player
@@ -197,7 +205,6 @@ io.on('connection', socket => {
       }
       player.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
     }
-    // console.log(pos)
   })
 
   socket.on('disconnect', () => {

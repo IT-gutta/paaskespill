@@ -174,7 +174,7 @@ function click(keyCode, player){
         }
     }
 }
-
+//Sjekker om det er blokker mellom spilleren og musa
 function sight(pPos, mPos, py, px){
     let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
     for(x=pPos[0]; x<mPos[0]; x+=0.01){
@@ -195,6 +195,7 @@ function sight(pPos, mPos, py, px){
     }
     return true
 }
+//Sjekker om spilleren har trykket på en block man kan interagere med
 function interaction(px, py, player){
     if(map[py][px]==8){
         player.currentSafe = interactMap[py][px]
