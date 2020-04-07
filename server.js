@@ -26,6 +26,7 @@ const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
 const update = gameFunctions.update
+const updateSprites = gameFunctions.updateSprites
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
 const click = gameFunctions.click
@@ -59,6 +60,12 @@ class Player {
       midRight: undefined,
       botLeft: undefined,
       botRight: undefined
+    }
+    this.sprite = {
+      index: 2,
+      playerSprite: "boy",
+      delay: 100,
+      counter: 0
     }
 
   }

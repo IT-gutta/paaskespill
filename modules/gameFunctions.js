@@ -7,6 +7,13 @@ const equalsSome = usefulFunctions.equalsSome
 const equalsAll = usefulFunctions.equalsAll
 const mapValue = usefulFunctions.mapValue
 
+function updateSprites(player){
+    if(player.direction == "left") player.sprite.index = player.sprite.index == 1 ? 0 : 1
+    else if(player.direction == "right") player.sprite.index = player.sprite.index == 3 ? 4 : 3
+    else player.sprite.index = 2
+    player.sprite.counter = 0
+}
+
 
 function update(player, map, g){
         //movement og collision
@@ -26,6 +33,9 @@ function update(player, map, g){
                 player.vx *= 0.9
             }
         }
+
+        if(player.sprite.counter > player.sprite.delay) updateSprites(player)
+        else player.sprite.counter ++
 
         //klatring i stige
         // if(map[Math.floor(player.y + 2)][Math.floor(player.x + 1)] == 11 || map[Math.floor(player.y + 1)][Math.floor(player.x + 1)] ==11 || map[Math.floor(player.y + 2)][Math.floor(player.x)] ==11 || map[Math.floor(player.y + 1)][Math.floor(player.x)] == 11){
@@ -89,11 +99,13 @@ function update(player, map, g){
 
 function keysD(keyCode, player, controller){
     if(keyCode==65){
+        if(equalsSome(player.direction, ["right", "front"])) player.sprite.index = 0
         player.direction = "left"
         player.moving = true
         controller.left = true
     }
     if(keyCode==68){
+        if(equalsSome(player.direction, ["left", "front"])) player.sprite.index = 4
         player.direction = "right"
         player.moving = true
         controller.right = true
@@ -114,12 +126,17 @@ function keysU(keyCode, player, controller){
     if(keyCode==65){
         if(!controller.right){
             player.moving = false
+            player.direction = "front"
+            player.sprite.index = 2
         }
         controller.left = false
     }
     if(keyCode==68){
         if(!controller.left){
+            player.direction = "front"
             player.moving = false
+            player.sprite.index = 2
+            
         }
         controller.right = false
     }
@@ -170,4 +187,4 @@ function sight(pPos, mPos){
     return true
 }
 
-module.exports = {update, keysD, keysU, click, sight}
+module.exports = {update, keysD, keysU, click, sight, updateSprites}
