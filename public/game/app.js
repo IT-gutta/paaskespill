@@ -1,3 +1,6 @@
+const usefulFunctions = require("./../../modules/usefulFunctions")
+const equalsSome = usefulFunctions.equalsSome
+
 let showInventory = false
 form.onsubmit = (e) => {
     // dette er henriks kommentar
@@ -18,11 +21,11 @@ form.onsubmit = (e) => {
         })
     
         window.addEventListener("keydown", e => {
-            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
+            if(equalsSome(e.keyCode, [65, 68, 32, 66])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
         })
     
         window.addEventListener("keyup", e => {
-            if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 66) socket.emit('keysU', e.keyCode)
+            if(equalsSome(e.keyCode, [65, 68, 66])) socket.emit('keysU', e.keyCode)
         })
 
         window.addEventListener("mousemove", e => {
