@@ -17,41 +17,29 @@ const playerSprites = {
     "boy": [newImg("assets/boy_leftW1.png"), newImg("assets/boy_left.png"), newImg("assets/boy_front.png"), newImg("assets/boy_right.png"), newImg("assets/boy_rightW1.png")]
 }
 
-const air = new Image()
-air.src="assets/air.png"
+const air = newImg("assets/air.png")
 
-const grass = new Image()
-grass.src="assets/grass.png"
+const grass = newImg("assets/grass.png")
 
-const dirt = new Image()
-dirt.src="assets/dirt.png"
+const dirt = newImg("assets/dirt.png")
 
-const log = new Image()
-log.src="assets/log.png"
+const log = newImg("assets/log.png")
 
-const leaves = new Image()
-leaves.src="assets/leaves.png"
+const leaves = newImg("assets/leaves.png")
 
-const stone = new Image()
-stone.src="assets/stone.png"
+const stone = newImg("assets/stone.png")
 
-const coal_ore = new Image()
-coal_ore.src="assets/coal_ore.png"
+const coal_ore = newImg("assets/coal_ore.png")
 
-const iron_ore = new Image()
-iron_ore.src="assets/iron_ore.png"
+const iron_ore = newImg("assets/iron_ore.png")
 
-const safe = new Image()
-safe.src="assets/safe.png"
+const safe = newImg("assets/safe.png")
 
-const sky = new Image()
-sky.src="assets/sky.png"
+const sky = newImg("assets/sky.png")
 
-const inventory = new Image()
-inventory.src="assets/inventory.png"
+const inventory = newImg("assets/inventory.png")
 
-const safe_inside = new Image()
-safe_inside.src="assets/safe_inside.png"
+const safe_inside = newImg("assets/safe_inside.png")
 
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe]
 
