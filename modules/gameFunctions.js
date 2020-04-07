@@ -1,5 +1,6 @@
 const variables = require('./variables')
 let map = variables.map
+let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
 
 const usefulFunctions = require("./usefulFunctions")
@@ -194,5 +195,12 @@ function sight(pPos, mPos, py, px){
     }
     return true
 }
+function interaction(px, py, player){
+    if(map[py][px]==8){
+        player.currentSafe = interactMap[py][px]
+        return 'safeOpened'
+    }
+    return ("", "")
+}
 
-module.exports = {update, keysD, keysU, click, sight, updateSprites}
+module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction}

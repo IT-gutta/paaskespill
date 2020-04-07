@@ -1,4 +1,7 @@
 let showInventory = false
+let showSafe = false
+let selectedInventoryIndex = 0
+let inventorySwap = false
 form.onsubmit = (e) => {
     // dette er henriks kommentar
     //Jørgen er kul
@@ -10,15 +13,20 @@ form.onsubmit = (e) => {
             playerID = id
             console.log(playerID)
         })
-        socket.on('heartbeat', (map, users) => {
+        socket.on('heartbeat', (map, users, safe) => {
             for (let [id, user] of Object.entries(users)) {
                 user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.sprite.index]
             }
-            draw(map, users)
+            draw(map, users, safe)
         })
     
         window.addEventListener("keydown", e => {
             if(equalsSome(e.keyCode, [65, 68, 32, 66])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
+            if(e.keyCode == 69/*nice*/ && !showSafe) showInventory = !showInventory
+            if(e.keyCode == 27/*nice*/){
+                showSafe = false
+                showInventory = false
+            }
         })
     
         window.addEventListener("keyup", e => {
@@ -35,14 +43,35 @@ form.onsubmit = (e) => {
         }
 
         window.addEventListener("mousedown", e => {
-         if(!showInventory){
+         if(!showInventory && !showSafe){
             if(e.button == 0 || e.button == 2){
                 window.addEventListener("mousemove", emitMouseMove)
                 socket.emit('mousedown', e.button, e.clientX, e.clientY, canvas.width, canvas.height)
             }
          }
-         else{
-             
+         else if(showInventory){
+            var x = e.clientX
+            var y = e.clientY
+            var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
+            if(p>=0 && p<=31){
+                socket.emit('swap', p, "player")
+            }
+         }
+         else if(showSafe){
+            var x = e.clientX
+            var y = e.clientY
+            if(x>(canvas.width - 1300)/2+800){
+                var p = Math.floor((x-(canvas.width-1300)/2-800)/100) + Math.floor((y-(canvas.height-500)/2)/100)*5
+                if(p>=0 && p<=24){
+                    socket.emit('swap', p, "safe")
+                }
+            }
+            else{
+                var p = Math.floor((x-(canvas.width-1300)/2-80)/80) + Math.floor((y-(canvas.height-480)/2-80)/80)*8
+                if(p>=0 && p<=31){
+                    socket.emit('swap', p, "player")
+                }
+            }
          }
         })
 
@@ -53,8 +82,9 @@ form.onsubmit = (e) => {
             }
         })
         
-        window.addEventListener("keydown", e => {
-            if(e.keyCode == 69/*nice*/) showInventory = !showInventory
+
+        socket.on("safeOpened",(px, py, safe) => {
+            showSafe = true
         })
         
 }
@@ -85,11 +115,26 @@ function draw(map, users){
         c.fillText(user.username, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64) - 16)
     }
   }
-
+  if(showSafe){
+    c.drawImage(inventory, (canvas.width-1300)/2, (canvas.height-480)/2, 800, 480)
+    for(i=0; i<32; i+=1){
+        if(users[playerID].player.inventory[i][1]!=0){
+            c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+        }
+    }
+    c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
+    for(i=0; i<25; i+=1){
+        if(users[playerID].player.currentSafe.inventory[i][1]!=0){
+            c.drawImage(imgs[users[playerID].player.currentSafe.inventory[i][0]], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
+            c.fillText(users[playerID].player.currentSafe.inventory[i][1], 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
+        }
+    }
+  }
   if(showInventory){
       c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(imgs[users[playerID].player.inventory[i][1]]!=0){
+        if(users[playerID].player.inventory[i][1]!=0){
             c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
             c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
         }

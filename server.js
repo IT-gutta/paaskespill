@@ -17,6 +17,7 @@ server.listen(PORT)
 // ----variables
 let users = {}
 let map = require('./modules/variables').map
+let interact = require('./modules/variables').interact
 const g = 0.00004
 const db = require('./modules/db')
 
@@ -30,6 +31,7 @@ const updateSprites = gameFunctions.updateSprites
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
 const click = gameFunctions.click
+const interaction = gameFunctions.interaction
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const updateMousePos = usefulFunctions.updateMousePos
@@ -81,7 +83,10 @@ class Player {
       PX: undefined,
       PY: undefined
     }
+    this.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
+    this.currentSafe = ""
   }  
+
 }
 
 class Controller {
@@ -142,6 +147,57 @@ io.on('connection', socket => {
 
   socket.on("mouseup", button => {
     users[socket.id].player.mouse.keys[button] = false
+  // socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+  //   px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
+  //   py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
+  //   PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
+  //   PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
+  //   if(button==2 && interact.indexOf(map[py][px])!=-1){
+  //     socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.currentSafe)
+  //   }
+  //   else{
+  //     click(button, px, py, PX, PY, users[socket.id].player)
+  //   }
+  })
+
+  socket.on('swap', (pos, inventory) => {
+    console.log(pos)
+    let player = users[socket.id].player
+    if(player.selectedSwap[0].index==-1){
+      player.selectedSwap[0].type = inventory
+      player.selectedSwap[0].index = pos
+    }
+    else{
+      player.selectedSwap[1].index = pos
+      player.selectedSwap[1].type = inventory
+      if(player.selectedSwap[0].type=="player"){
+        var a = player.inventory[player.selectedSwap[0].index]
+      }
+      else if(player.selectedSwap[0].type=="safe"){
+        var a = player.currentSafe.inventory[player.selectedSwap[0].index]
+      }
+      if(player.selectedSwap[1].type=="player"){
+        var b = player.inventory[player.selectedSwap[1].index]
+      }
+      else if(player.selectedSwap[1].type=="safe"){
+        var b = player.currentSafe.inventory[player.selectedSwap[1].index]
+      }
+      console.log(a, b)
+      if(player.selectedSwap[0].type=="player"){
+        player.inventory[player.selectedSwap[0].index] = b
+      }
+      else if(player.selectedSwap[0].type=="safe"){
+        player.currentSafe.inventory[player.selectedSwap[0].index] = b
+      }
+      if(player.selectedSwap[1].type=="player"){
+        player.inventory[player.selectedSwap[1].index] = a
+      }
+      else if(player.selectedSwap[1].type=="safe"){
+        player.currentSafe.inventory[player.selectedSwap[1].index] = a
+      }
+      player.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
+    }
+    // console.log(pos)
   })
 
   socket.on('disconnect', () => {
