@@ -139,5 +139,10 @@ function sight(pPos, mPos){
     }
     return true
 }
+function interaction(px, py){
+    if(map[py][px]==8){
+        return 'safeOpened'
+    }
+}
 
-module.exports = {update, keysD, keysU, click, sight}
+module.exports = {update, keysD, keysU, click, sight, interaction}

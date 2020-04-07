@@ -17,6 +17,7 @@ server.listen(PORT)
 // ----variables
 let users = {}
 let map = require('./modules/variables').map
+let interact = require('./modules/variables').interact
 const g = 0.00004
 const db = require('./modules/db')
 
@@ -29,6 +30,7 @@ const update = gameFunctions.update
 const keysD = gameFunctions.keysD
 const keysU = gameFunctions.keysU
 const click = gameFunctions.click
+const interaction = gameFunctions.interaction
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const getPlayerInfo = dbFunctions.getPlayerInfo
@@ -51,6 +53,7 @@ class Player {
       [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
       [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
     ]
+    this.selectedSwap = -1
   }
 }
 
@@ -113,7 +116,25 @@ io.on('connection', socket => {
     py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
     PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
     PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
-    click(button, px, py, PX, PY, users[socket.id].player)
+    if(button==2 && interact.indexOf(map[py][px])!=-1){
+      socket.emit(interaction(px, py), px, py)
+    }
+    else{
+      click(button, px, py, PX, PY, users[socket.id].player)
+    }
+  })
+
+  socket.on('swap', pos => {
+    if(users[socket.id].player.selectedSwap==-1){
+      users[socket.id].player.selectedSwap = pos
+    }
+    else{
+        let a = users[socket.id].player.inventory[users[socket.id].player.selectedSwap]
+        let b = users[socket.id].player.inventory[pos]
+        users[socket.id].player.inventory[users[socket.id].player.selectedSwap] = b
+        users[socket.id].player.inventory[pos] = a
+        users[socket.id].player.selectedSwap = -1
+    }
   })
 
   socket.on('disconnect', () => {

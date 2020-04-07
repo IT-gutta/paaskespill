@@ -1,4 +1,5 @@
 let showInventory = false
+let showSafe = false
 let selectedInventoryIndex = 0
 let inventorySwap = false
 form.onsubmit = (e) => {
@@ -41,26 +42,22 @@ form.onsubmit = (e) => {
                 console.log(1)
             } 
          }
-         else if(!inventorySwap){
-             var x = e.clientX
-             var y = e.clientY
-             if(users[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8][0]!=0){
-                 selectedInventoryIndex = Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8
-                 inventorySwap = true
-             }
-         }
          else{
              var x = e.clientX
              var y = e.clientY
-             var a = users[playerID].player.inventory[selectedInventoryIndex]
-             var b = users[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8]
-             user[playerID].player.inventory[selectedInventoryIndex] = b
-             user[playerID].player.inventory[Math-floor((x-(canvas.width-800)/2)/80) + Math-floor((y-(canvas.height-480)/2)/80)*8] = a
+             var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
+             console.log(p)
+             if(p>=0 && p<=31){
+                 socket.emit('swap', p)
+             }
          }
         })
         
         window.addEventListener("keydown", e => {
             if(e.keyCode == 69/*nice*/) showInventory = !showInventory
+        })
+        socket.on("safeOpened",(px, py) => {
+            showSafe = true
         })
         
 }
@@ -91,7 +88,10 @@ function draw(map, users){
         c.fillText(user.username, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64) - 16)
     }
   }
-
+  if(showSafe){
+    c.drawImage(inventory, (canvas.width-1300)/2, (canvas.height-480)/2, 800, 480)
+    c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
+  }
   if(showInventory){
       c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){

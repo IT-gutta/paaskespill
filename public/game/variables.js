@@ -47,6 +47,9 @@ sky.src="assets/sky.png"
 const inventory = new Image()
 inventory.src="assets/inventory.png"
 
+const safe_inside = new Image()
+safe_inside.src="assets/safe_inside.png"
+
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe]
 
 
