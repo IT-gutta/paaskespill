@@ -24,8 +24,11 @@ form.onsubmit = (e) => {
     
         window.addEventListener("keydown", e => {
             if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode)
-            if(e.keyCode == 69/*nice*/) showInventory = !showInventory
-            if(e.keyCode == 27/*nice*/) showSafe = !showSafe
+            if(e.keyCode == 69/*nice*/ && !showSafe) showInventory = !showInventory
+            if(e.keyCode == 27/*nice*/){
+                showSafe = false
+                showInventory = false
+            }
         })
     
         window.addEventListener("keyup", e => {
@@ -121,7 +124,7 @@ function draw(map, users){
   if(showInventory){
       c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(imgs[users[playerID].player.inventory[i][1]]!=0){
+        if(users[playerID].player.inventory[i][1]!=0){
             c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
             c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
         }
