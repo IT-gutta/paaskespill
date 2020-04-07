@@ -53,7 +53,7 @@ class Player {
       [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
       [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
     ]
-    this.selectedSwap = -1
+    this.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
     this.currentSafe = ""
   }
 }
@@ -126,16 +126,40 @@ io.on('connection', socket => {
     }
   })
 
-  socket.on('swap', pos => {
-    if(users[socket.id].player.selectedSwap==-1){
-      users[socket.id].player.selectedSwap = pos
+  socket.on('swap', (pos, inventory) => {
+    let player = users[socket.id].player
+    if(player.selectedSwap[0].index==-1){
+      player.selectedSwap[0].type = inventory
+      player.selectedSwap[0].index = pos
     }
     else{
-        let a = users[socket.id].player.inventory[users[socket.id].player.selectedSwap]
-        let b = users[socket.id].player.inventory[pos]
-        users[socket.id].player.inventory[users[socket.id].player.selectedSwap] = b
-        users[socket.id].player.inventory[pos] = a
-        users[socket.id].player.selectedSwap = -1
+      player.selectedSwap[1].index = pos
+      player.selectedSwap[1].type = inventory
+      if(player.selectedSwap[0].type=="player"){
+        var a = player.inventory[player.selectedSwap[0].index]
+      }
+      else if(player.selectedSwap[0].type=="safe"){
+        var a = player.currentSafe.inventory[player.selectedSwap[0].index]
+      }
+      if(player.selectedSwap[1].type=="player"){
+        var b = player.inventory[player.selectedSwap[0].index]
+      }
+      else if(player.selectedSwap[1].type=="safe"){
+        var b = player.currentSafe.inventory[player.selectedSwap[0].index]
+      }
+      if(player.selectedSwap[0].type=="player"){
+        player.inventory[player.selectedSwap[0].index] = b
+      }
+      else if(player.selectedSwap[0].type=="safe"){
+        player.currentSafe.inventory[player.selectedSwap[0].index] = b
+      }
+      if(player.selectedSwap[1].type=="player"){
+        player.inventory[player.selectedSwap[1].index] = a
+      }
+      else if(player.selectedSwap[1].type=="safe"){
+        player.currentSafe.inventory[player.selectedSwap[1].index] = a
+      }
+      player.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
     }
   })
 

@@ -24,6 +24,8 @@ form.onsubmit = (e) => {
     
         window.addEventListener("keydown", e => {
             if(e.keyCode == 65 || e.keyCode == 68 || e.keyCode == 32 || e.keyCode == 66) socket.emit('keysD', e.keyCode)
+            if(e.keyCode == 69/*nice*/) showInventory = !showInventory
+            if(e.keyCode == 27/*nice*/) showSafe = !showSafe
         })
     
         window.addEventListener("keyup", e => {
@@ -36,28 +38,36 @@ form.onsubmit = (e) => {
         })
 
         window.addEventListener("mousedown", e => {
-         if(!showInventory){
+         if(!showInventory && !showSafe){
             if(e.button == 0 || e.button == 2){
                 socket.emit('click', e.button, clientX, clientY, canvas.width, canvas.height)
-                console.log(1)
             } 
          }
-         else{
-             var x = e.clientX
-             var y = e.clientY
-             var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
-             console.log(p)
-             if(p>=0 && p<=31){
-                 socket.emit('swap', p)
-             }
+         else if(showInventory){
+            var x = e.clientX
+            var y = e.clientY
+            var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
+            if(p>=0 && p<=31){
+                socket.emit('swap', p, "player")
+            }
+         }
+         else if(showSafe){
+            var x = e.clientX
+            var y = e.clientY
+            console.log(1)
+            if(x>(canvas.width - 1300)/2+800){
+                var p = Math.floor((x-(canvas.width-1300)/2-800)/100) + Math.floor((y-(canvas.height-500)/2)/100)*5
+                socket.emit('swap', p, "safe")
+            }
+            else{
+                var p = Math.floor((x-(canvas.width-1300)/2-80)/80) + Math.floor((y-(canvas.height-480)/2-80)/80)*8
+                socket.emit('swap', p, "player")
+            }
          }
         })
         
-        window.addEventListener("keydown", e => {
-            if(e.keyCode == 69/*nice*/) showInventory = !showInventory
-        })
+
         socket.on("safeOpened",(px, py, safe) => {
-            console.log(px, py, safe)
             showSafe = true
         })
         
@@ -97,7 +107,6 @@ function draw(map, users){
             c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
         }
     }
-    console.log(users[playerID].player.currentSafe.inventory)
     c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
     for(i=0; i<24; i+=1){
         if(users[playerID].player.currentSafe.inventory[i][1]!=0){
