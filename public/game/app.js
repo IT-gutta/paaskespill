@@ -125,10 +125,13 @@ function draw(map, users){
         c.fillRect(canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
     }
     
+
+    const px = Math.round(player.x - 7/32 + (clientX - canvas.width/2)/32)
+    const py = Math.round(player.y + (clientY - canvas.height/2)/32)
     //tegne inn den blokken man titter på med hvit rundt
-    if(map[player.mouse.r.y][player.mouse.r.x]){
+    if((map[py] && map[py][px]) || (map[py] && map[py][px+1]) || (map[py] && map[py][px-1]) || (map[py+1] && map[py+1][px]) || (map[py-1] && map[py-1][px])/*sjekker om det går an å sette ut blokk på stedet*/ ){
         c.strokeStyle = "white"
-        c.strokeRect(canvas.width/2 + 32*(player.mouse.r.x-player.x-7/32), canvas.height/2 + 32*(player.mouse.r.y-player.y-32/64), 32, 32)
+        c.strokeRect(canvas.width/2 + 32*(px-player.x-7/32), canvas.height/2 + 32*(py-player.y-32/64), 32, 32)
     }
 
     c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
