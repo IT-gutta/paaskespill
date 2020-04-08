@@ -22,10 +22,14 @@ form.onsubmit = (e) => {
     
         window.addEventListener("keydown", e => {
             if(equalsSome(e.keyCode, [65, 68, 32, 66])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
-            if(e.keyCode == 69/*nice*/ && !showSafe) showInventory = !showInventory
+            if(e.keyCode == 69/*nice*/ && !showSafe) {
+                showInventory = !showInventory
+                if(!showInventory) socket.emit("closeInventory")
+            }
             if(e.keyCode == 27/*nice*/){
                 showSafe = false
                 showInventory = false
+                socket.emit("closeInventory")
             }
 
             //hotbar-opplegg
@@ -96,8 +100,11 @@ form.onsubmit = (e) => {
 
 function draw(map, users){
 
-    let player = users[playerID].player
-    let inv = player.inventory.arr
+    c.textAlign = "center"
+    
+    const player = users[playerID].player
+    const inv = player.inventory.arr
+   
     c.clearRect(0,0,w,h)
     c.drawImage(sky, 0, 0, w, h)
     for(i=Math.floor(player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
@@ -111,8 +118,8 @@ function draw(map, users){
     }
 
     c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
-    c.font = "14px Monospace"
-    c.textAlign = "center"
+    c.fillStyle = "black"
+    c.font = "20px Arial bold"
     c.fillText(users[playerID].username, (canvas.width-16)/2 + 16, (canvas.height-32)/2 - 16)
 
 
@@ -124,68 +131,83 @@ function draw(map, users){
     }
   }
 
-
+  //font for inventory og hotbar
+  c.font = "20px Arial bold"
+  c.fillStyle = "black"
 
   if(showSafe){
-
+    
     //tegner inventory i tillegg til safe
     c.drawImage(inventory, (canvas.width-1300)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(inv[i]){
+        if(inv[i].type != "empty"){
             c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
 
             //hvis boksen skal highlightes
             if(inv[i].highlighted){
                 c.strokeStyle = "white"
-                c.lineWidth = 5
+                c.lineWidth = 4
                 c.strokeRect(100 + i%8*80 + (canvas.width - 1300)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
             }
+
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
         }
     }
     c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
-    for(i=0; i<25; i+=1){
-        if(player.safe.arr[i]){
-            c.drawImage(imgs[player.safe.arr[i].value], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
-            c.fillText(player.safe.arr[i].number, 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
 
+    c.fillStyle = "white"
+    for(i=0; i<25; i+=1){
+        if(player.safe.arr[i].type != "empty"){
+            c.drawImage(imgs[player.safe.arr[i].value], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
+            
             //hvis boksen skal highlightes
             if(player.safe.arr[i].highlighted){
                 c.strokeStyle = "white"
-                c.lineWidth = 5
+                c.lineWidth = 4
                 c.strokeRect(30 + i%5*100 + (canvas.width - 1300)/2+800 - 5, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2 - 5, 50, 50)
             }
+
+
+            
+            c.fillText(player.safe.arr[i].number, 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
         }
     }
   }
   if(showInventory){
+    c.fillStyle = "black"
       //tegner kun inventory
-      c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
+    c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(inv[i]){
-            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
-            
+        if(inv[i].type != "empty"){
             //hvis boksen skal highlightes
             if(inv[i].highlighted){
                 c.strokeStyle = "white"
-                c.lineWidth = 5
+                c.lineWidth = 4
                 c.strokeRect(100 + i%8*80 + (canvas.width - 800)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
             }
+
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+            
+            
         }
     }
   }
   //kun tegne inn hotbaren
   else{
+
+    //tenger rektangel rundt den valgte
+    c.strokeStyle = "white"
+    c.lineWidth = 4
+    c.strokeRect(100 + (player.hotBarSpot + 23)%8*80 + (canvas.width - 800)/2-5, canvas.height-105, 50, 50)
+
     for(let i=24; i<32; i++){
-        if(inv[i]){
+        if(inv[i].type != "empty"){
             c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, canvas.height-100, 40, 40)
             c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, canvas.height-100)
         }
+        c.fillStyle = "black"
+        c.fillText(i-23, 95 + (i%8)*80 + (canvas.width - 800)/2 + 52, canvas.height-100 + 52)
     }
-    //tenger rektangel rundt den valgte
-    c.strokeStyle = "white"
-    c.lineWidth = 5
-    c.strokeRect(100 + (player.hotBarSpot + 23)%8*80 + (canvas.width - 800)/2-5, canvas.height-105, 50, 50)
   }
 }

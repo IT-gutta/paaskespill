@@ -41,6 +41,7 @@ const updateMousePos = usefulFunctions.updateMousePos
 const mapValue = usefulFunctions.mapValue
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
+const copy = usefulFunctions.copy
 
 
 
@@ -57,10 +58,10 @@ class Player {
     this.inventory = {
       arr: []
     }
-    // this.holdsItem = false
 
     for(let i = 0; i < 32; i++){
-      this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7), Math.floor(Math.random()*64), i, "inventory"))
+      if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory"))
+      else this.inventory.arr.push(new Item("empty", null, null, i, "inventory"))
     }
 
     this.pos = {
@@ -136,9 +137,13 @@ io.on('connection', socket => {
 
   })
 
-  //change hotBarItem og hover, key er 1, 2, 3, 4 etc...
+  // change hotBarItem og hover, key er 1, 2, 3, 4 etc...
   socket.on("changeItem", key => {
     users[socket.id].player.hotBarSpot = key
+
+    // begge disse er pekere som peker til et sted i minnet, siden de peker til sammme sted når man setter den ene lik den andre,
+    // vil en endring av den ene resultere i en endring av den andre også, ingen av de har liksom sin egen verdi, programmet henter fram en verdi
+    // fra denne minneplassen når man spør om det, og det er verdien som befinner seg i minnet som blir endret dersom man endrer objektet
     users[socket.id].player.hand = users[socket.id].player.inventory.arr[23+key]
   })
 
@@ -157,7 +162,7 @@ io.on('connection', socket => {
     if(!userExists(users, socket.id)) return
     updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
     users[socket.id].player.mouse.keys[button] = true
-    var player = users[socket.id].player
+    const player = users[socket.id].player
 
 
     //interaksjon
@@ -193,36 +198,50 @@ io.on('connection', socket => {
   //   }
   
   //mutering av inventory og safer
+
+
+  socket.on("closeInventory", () =>{
+    const player = users[socket.id].player
+    //fjerner highlight
+    if(player.selectedSwap) player[player.selectedSwap.container].arr[player.selectedSwap.index].highlighted = false
+
+    player.selectedSwap = null
+    player.safe = null
+
+    //sørger for at player.hand er oppdatert
+    player.hand = player.inventory.arr[23+player.hotBarSpot]
+  })
+
+
   socket.on('swap', (index, type) => {
     if(!userExists(users, socket.id)) return
-    console.log(index, type)
+    // console.log(index, type)
 
-    let player = users[socket.id].player
-    let swap = player.selectedSwap
-    if(swap){
-      //tuple switch for å bytte index
-      let temp1 = player[swap.container].arr[swap.index].index
-      player[swap.container].arr[swap.index].index = player[type].arr[index].index
-      player[type].arr[index].index = temp1
-      
-      //tuple switch for å bytte container(hvis like endres ikke noe)
-      let temp2 = player[swap.container].arr[swap.index].container
-      player[swap.container].arr[swap.index].container = player[type].arr[index].container
-      player[type].arr[index].container = temp2
-      
-      //tuple switch for å bytte posisjon i arraysa
-      let temp3 = player[swap.container].arr[swap.index]
-      player[swap.container].arr[swap.index] = player[type].arr[index]
-      player[type].arr[index] = temp3
+    const player = users[socket.id].player
+    if(player.selectedSwap){
 
-      player[type].arr[index].highlighted = false
+      //tidligere valgte Item (allerede highlighted)
+      const swap = player.selectedSwap
 
-      player.selectedSwap = null
+      //senest valgte Item
+      const cItem = player[type].arr[index]
+
+      //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
+      delete player[swap.container].arr[swap.index]
+      player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, false)
+      delete player[type].arr[index]
+      player[type].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, false)
+
+      delete cItem
+      delete swap
+      delete player.selectedSwap
     }
-    else{
-      // console.log(player.selectedSwap)
+
+    //hvis det eksisterer ikke er et tomt item der du trykker
+    else if(player[type].arr[index].type != "empty"){
       player[type].arr[index].highlighted = true
-      player.selectedSwap = player[type].arr[index]
+      const cItem = player[type].arr[index]
+      player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, true)
     }
   })
 

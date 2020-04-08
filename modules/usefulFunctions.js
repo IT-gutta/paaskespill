@@ -52,8 +52,13 @@ function updateMousePos(player, clientX, clientY, canvasWidth, canvasHeight){
     player.mouse.y = player.y + (clientY - canvasHeight/2)/32
 }
 
+
+function copy(ob){
+  return JSON.parse(JSON.stringify(ob))
+}
+
 const f = num => Math.floor(num)
 const c = num => Math.ceil(num)
 const r = num => Math.r(num)
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos}
+module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos, copy}

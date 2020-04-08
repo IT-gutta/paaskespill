@@ -2,6 +2,7 @@ const variables = require('./variables')
 let map = variables.map
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
+const Item = variables.Item
 
 const usefulFunctions = require("./usefulFunctions")
 const equalsSome = usefulFunctions.equalsSome
@@ -160,12 +161,14 @@ function click(keyCode, player){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
                             //sjekker om spiller holder en blokk i hånden
-                            if(player.hand.type == "block" && player.hand.number != 0){
+                            if(player.hand && player.hand.type == "block" && player.hand.number != 0){
                                 map[py][px] = player.hand.value
                                 player.hand.number -= 1
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
-                                    player.inventory.arr[player.hand.index] = 0
+                                    delete player.inventory.arr[player.hand.index]
+                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, false)
+                                    delete player.hand
                                 }
                             }
                         }

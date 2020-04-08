@@ -24,13 +24,13 @@ const solidBlocks = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
 class Item{
-    constructor(type, value, number, index, container){
+    constructor(type, value, number, index, container, highlight){
       this.type = type
       this.value = value
       this.number = number
       this.index = index
       this.container = container
-      this.highlight = false
+      this.highlight = highlight
     }
   }
 
@@ -39,7 +39,7 @@ class Safe{
     constructor(x, y){
         this.arr = []
         for(let i = 0; i < 25; i++){
-            this.arr.push(new Item("block", Math.floor(Math.random()*7), Math.floor(Math.random()*64), i, "safe"))
+            this.arr.push(new Item("block", Math.floor(Math.random()*7 +1), Math.floor(Math.random()*64 +1), i, "safe", false))
           }
         this.x = x
         this.y = y
