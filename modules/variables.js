@@ -47,7 +47,7 @@ class Player {
       }
     }
     this.hotBarSpot = 1
-    this.hand = new Item("block", 3, 10)
+    this.hand = null
     
 
     this.selectedSwap = 0
