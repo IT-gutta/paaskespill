@@ -152,7 +152,7 @@ function keysU(keyCode, player, controller){
 function click(keyCode, player){
     player.mouse.counter = 0
     //høyreklikk, sjekker om man kan sette ut blokk
-    const [py, px, PY, PX] = [player.mouse.py, player.mouse.px, player.mouse.PY, player.mouse.PX]
+    const [py, px, PY, PX] = [player.mouse.r.y, player.mouse.r.x, player.mouse.y, player.mouse.x]
     if(keyCode==2){
         if(map[py][px]==0){
             if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
@@ -163,6 +163,10 @@ function click(keyCode, player){
                             if(player.hand.type == "block" && player.hand.number != 0){
                                 map[py][px] = player.hand.value
                                 player.hand.number -= 1
+                                //hvis spiller har brukt opp den siste av en blokk skal den fjernes
+                                if(player.hand.number <= 0){
+                                    player.inventory.arr[player.hand.index] = 0
+                                }
                             }
                         }
                     }
@@ -200,9 +204,9 @@ function sight(pPos, mPos, py, px){
     return true
 }
 //Sjekker om spilleren har trykket på en block man kan interagere med
-function interaction(px, py, player){
-    if(map[py][px]==8){
-        player.currentSafe = interactMap[py][px]
+function interaction(player){
+    if(map[player.mouse.r.y][player.mouse.r.x]==8){
+        player.safe = interactMap[player.mouse.r.y][player.mouse.r.x]
         return 'safeOpened'
     }
     return ("", "")

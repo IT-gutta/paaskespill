@@ -59,7 +59,7 @@ form.onsubmit = (e) => {
             var y = e.clientY
             var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
             if(p>=0 && p<=31){
-                socket.emit('swap', p, "player")
+                socket.emit('swap', p, "inventory")
             }
          }
          else if(showSafe){
@@ -67,14 +67,14 @@ form.onsubmit = (e) => {
             var y = e.clientY
             if(x>(canvas.width - 1300)/2+800){
                 var p = Math.floor((x-(canvas.width-1300)/2-800)/100) + Math.floor((y-(canvas.height-500)/2)/100)*5
-                if(p>=0 && p<=24){
+                if(p>=0 && p<25){
                     socket.emit('swap', p, "safe")
                 }
             }
             else{
                 var p = Math.floor((x-(canvas.width-1300)/2-80)/80) + Math.floor((y-(canvas.height-480)/2-80)/80)*8
-                if(p>=0 && p<=31){
-                    socket.emit('swap', p, "player")
+                if(p>=0 && p<32){
+                    socket.emit('swap', p, "inventory")
                 }
             }
          }
@@ -95,19 +95,22 @@ form.onsubmit = (e) => {
 }
 
 function draw(map, users){
+
+    let player = users[playerID].player
+    let inv = player.inventory.arr
     c.clearRect(0,0,w,h)
     c.drawImage(sky, 0, 0, w, h)
-    for(i=Math.floor(users[playerID].player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(users[playerID].player.y - 32/64 + canvas.height/64)+1; i++){
+    for(i=Math.floor(player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
         if(i<0) continue
         if(i>=map.length) break
-        for(j=Math.floor(users[playerID].player.x - 7/32 - canvas.width/64)-1; j<Math.ceil(users[playerID].player.x - 7/32 + canvas.width/64)+1; j++){
+        for(j=Math.floor(player.x - 7/32 - canvas.width/64)-1; j<Math.ceil(player.x - 7/32 + canvas.width/64)+1; j++){
             if(j<0) continue
             if(j>=map[i].length) break
-            c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-users[playerID].player.x-7/32), canvas.height/2 + 32*(i-users[playerID].player.y-32/64), 32, 32)
+            c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
         }
     }
 
-    c.drawImage(users[playerID].player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
+    c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
     c.font = "14px Monospace"
     c.textAlign = "center"
     c.fillText(users[playerID].username, (canvas.width-16)/2 + 16, (canvas.height-32)/2 - 16)
@@ -116,46 +119,73 @@ function draw(map, users){
   
   for (let [id, user] of Object.entries(users)){
     if(id != playerID){
-        c.drawImage(user.player.img, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32), canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64), 32, 64)
-        c.fillText(user.username, canvas.width/2 + 32*(user.player.x-users[playerID].player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-users[playerID].player.y-32/64) - 16)
+        c.drawImage(user.player.img, canvas.width/2 + 32*(user.player.x-player.x-7/32), canvas.height/2 + 32*(user.player.y-player.y-32/64), 32, 64)
+        c.fillText(user.username, canvas.width/2 + 32*(user.player.x-player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-player.y-32/64) - 16)
     }
   }
+
+
+
   if(showSafe){
+
+    //tegner inventory i tillegg til safe
     c.drawImage(inventory, (canvas.width-1300)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(users[playerID].player.inventory[i][1]!=0){
-            c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+        if(inv[i]){
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+
+            //hvis boksen skal highlightes
+            if(inv[i].highlighted){
+                c.strokeStyle = "white"
+                c.lineWidth = 5
+                c.strokeRect(100 + i%8*80 + (canvas.width - 1300)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
+            }
         }
     }
     c.drawImage(safe_inside, (canvas.width-1300)/2+800, (canvas.height-500)/2, 500, 500)
     for(i=0; i<25; i+=1){
-        if(users[playerID].player.currentSafe.inventory[i][1]!=0){
-            c.drawImage(imgs[users[playerID].player.currentSafe.inventory[i][0]], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
-            c.fillText(users[playerID].player.currentSafe.inventory[i][1], 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
+        if(player.safe.arr[i]){
+            c.drawImage(imgs[player.safe.arr[i].value], 30 + i%5*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2, 40, 40)
+            c.fillText(player.safe.arr[i].number, 30 + (i%5)*100 + (canvas.width - 1300)/2+800, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2)
+
+            //hvis boksen skal highlightes
+            if(player.safe.arr[i].highlighted){
+                c.strokeStyle = "white"
+                c.lineWidth = 5
+                c.strokeRect(30 + i%5*100 + (canvas.width - 1300)/2+800 - 5, 30 + Math.floor(i/5)*100 + (canvas.height-500)/2 - 5, 50, 50)
+            }
         }
     }
   }
   if(showInventory){
+      //tegner kun inventory
       c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
     for(i=0; i<32; i+=1){
-        if(users[playerID].player.inventory[i][1]!=0){
-            c.drawImage(imgs[users[playerID].player.inventory[i][0]], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(users[playerID].player.inventory[i][1], 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+        if(inv[i]){
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+            
+            //hvis boksen skal highlightes
+            if(inv[i].highlighted){
+                c.strokeStyle = "white"
+                c.lineWidth = 5
+                c.strokeRect(100 + i%8*80 + (canvas.width - 800)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
+            }
         }
     }
   }
   //kun tegne inn hotbaren
   else{
     for(let i=24; i<32; i++){
-        if(users[playerID].player.inventory[i][1]!=0){
-            c.drawImage(imgs[users[playerID].player.inventory[i].value], 100 + i%8*80 + (canvas.width - 800)/2, canvas.height-100, 40, 40)
-            c.fillText(users[playerID].player.inventory[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, canvas.height-100)
+        if(inv[i]){
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, canvas.height-100, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, canvas.height-100)
         }
     }
     //tenger rektangel rundt den valgte
     c.strokeStyle = "white"
     c.lineWidth = 5
-    c.strokeRect(100 + (users[playerID].player.hotBarSpot + 23)%8*80 + (canvas.width - 800)/2-5, canvas.height-105, 50, 50)
+    c.strokeRect(100 + (player.hotBarSpot + 23)%8*80 + (canvas.width - 800)/2-5, canvas.height-105, 50, 50)
   }
 }

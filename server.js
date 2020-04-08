@@ -16,13 +16,16 @@ server.listen(PORT)
 
 // ----variables
 let users = {}
-let map = require('./modules/variables').map
-let interact = require('./modules/variables').interact
+let variables = require('./modules/variables')
+let map = variables.map
+let interactables = variables.interactables
 const g = 0.00004
 const db = require('./modules/db')
 
 
 // functions
+const Item = variables.Item
+const Safe = variables.Safe
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
@@ -35,16 +38,11 @@ const interaction = gameFunctions.interaction
 const objectIsEmpty = usefulFunctions.objectIsEmpty
 const userExists = usefulFunctions.userExists
 const updateMousePos = usefulFunctions.updateMousePos
+const mapValue = usefulFunctions.mapValue
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 
-class Item{
-  constructor(type, value, number){
-    this.type = type
-    this.value = value
-    this.number = number
-  }
-}
+
 
 class Player {
   constructor(username) {
@@ -56,15 +54,13 @@ class Player {
     this.falling = false,
     this.vx = 0,
     this.vy = 0
-    this.inventory = [
-      // [1,5],[4,4],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      // [1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      // [1,5],[5,60],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-      // [3,1],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],[1,5],
-    ]
+    this.inventory = {
+      arr: []
+    }
+    // this.holdsItem = false
 
     for(let i = 0; i < 32; i++){
-      this.inventory.push(new Item("block", Math.floor(Math.random()*7), Math.floor(Math.random()*64)))
+      this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7), Math.floor(Math.random()*64), i, "inventory"))
     }
 
     this.pos = {
@@ -83,23 +79,25 @@ class Player {
     }
 
     this.mouse = {
+      x: undefined,
+      y: undefined,
       counter: 0,
       delay: 50,
       keys: {
         0: false,
         2: false
       },
-      px: undefined,
-      py: undefined,
-      PX: undefined,
-      PY: undefined
+      r:{
+        x: undefined,
+        y: undefined
+      }
     }
     this.hotBarSpot = 1
     this.hand = new Item("block", 3, 10)
     
 
-    this.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
-    this.currentSafe = ""
+    this.selectedSwap = 0
+    this.safe = ""
   }
 }
 
@@ -141,7 +139,7 @@ io.on('connection', socket => {
   //change hotBarItem og hover, key er 1, 2, 3, 4 etc...
   socket.on("changeItem", key => {
     users[socket.id].player.hotBarSpot = key
-    users[socket.id].player.hand = users[socket.id].player.inventory[23+key]
+    users[socket.id].player.hand = users[socket.id].player.inventory.arr[23+key]
   })
 
   socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
@@ -156,23 +154,30 @@ io.on('connection', socket => {
   })
 
   socket.on('mousedown', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+    if(!userExists(users, socket.id)) return
     updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
     users[socket.id].player.mouse.keys[button] = true
     var player = users[socket.id].player
+
+
     //interaksjon
-    if(button==2 && interact.indexOf(map[player.mouse.py][player.mouse.px])!=-1){
-      socket.emit(interaction(player.mouse.px, player.mouse.py, users[socket.id].player), player.mouse.px, player.mouse.py, users[socket.id].player.currentSafe)
+    if(button==2 && interactables.indexOf(mapValue(player.mouse))){
+      socket.emit(interaction(users[socket.id].player), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
     }
+
+    
     else{
       click(button, users[socket.id].player)
     }
   })
 
   socket.on("mousemove", (clientX, clientY, canvasWidth, canvasHeight) => {
+    if(!userExists(users, socket.id)) return
     updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
   })
 
   socket.on("mouseup", button => {
+    if(!userExists(users, socket.id)) return
     users[socket.id].player.mouse.keys[button] = false
   })
   // socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
@@ -181,53 +186,48 @@ io.on('connection', socket => {
   //   PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
   //   PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
   //   if(button==2 && interact.indexOf(map[py][px])!=-1){
-  //     socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.currentSafe)
+  //     socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.safe)
   //   }
   //   else{
   //     click(button, px, py, PX, PY, users[socket.id].player)
   //   }
   
   //mutering av inventory og safer
-  socket.on('swap', (pos, inventory) => {
-    // console.log(pos)
+  socket.on('swap', (index, type) => {
+    if(!userExists(users, socket.id)) return
+    console.log(index, type)
+
     let player = users[socket.id].player
-    if(player.selectedSwap[0].index==-1){
-      player.selectedSwap[0].type = inventory
-      player.selectedSwap[0].index = pos
+    let swap = player.selectedSwap
+    if(swap){
+      //tuple switch for å bytte index
+      let temp1 = player[swap.container].arr[swap.index].index
+      player[swap.container].arr[swap.index].index = player[type].arr[index].index
+      player[type].arr[index].index = temp1
+      
+      //tuple switch for å bytte container(hvis like endres ikke noe)
+      let temp2 = player[swap.container].arr[swap.index].container
+      player[swap.container].arr[swap.index].container = player[type].arr[index].container
+      player[type].arr[index].container = temp2
+      
+      //tuple switch for å bytte posisjon i arraysa
+      let temp3 = player[swap.container].arr[swap.index]
+      player[swap.container].arr[swap.index] = player[type].arr[index]
+      player[type].arr[index] = temp3
+
+      player[type].arr[index].highlighted = false
+
+      player.selectedSwap = null
     }
     else{
-      player.selectedSwap[1].index = pos
-      player.selectedSwap[1].type = inventory
-      if(player.selectedSwap[0].type=="player"){
-        var a = player.inventory[player.selectedSwap[0].index]
-      }
-      else if(player.selectedSwap[0].type=="safe"){
-        var a = player.currentSafe.inventory[player.selectedSwap[0].index]
-      }
-      if(player.selectedSwap[1].type=="player"){
-        var b = player.inventory[player.selectedSwap[1].index]
-      }
-      else if(player.selectedSwap[1].type=="safe"){
-        var b = player.currentSafe.inventory[player.selectedSwap[1].index]
-      }
-      console.log(a, b)
-      if(player.selectedSwap[0].type=="player"){
-        player.inventory[player.selectedSwap[0].index] = b
-      }
-      else if(player.selectedSwap[0].type=="safe"){
-        player.currentSafe.inventory[player.selectedSwap[0].index] = b
-      }
-      if(player.selectedSwap[1].type=="player"){
-        player.inventory[player.selectedSwap[1].index] = a
-      }
-      else if(player.selectedSwap[1].type=="safe"){
-        player.currentSafe.inventory[player.selectedSwap[1].index] = a
-      }
-      player.selectedSwap = [{type:"", index:-1},{type:"", index:-1}]
+      // console.log(player.selectedSwap)
+      player[type].arr[index].highlighted = true
+      player.selectedSwap = player[type].arr[index]
     }
   })
 
   socket.on('disconnect', () => {
+    if(!userExists(users, socket.id)) return
     // updatePlayerInfo(socket[id].username)
     delete users[socket.id]
     console.log(socket.id + " disconnected.")

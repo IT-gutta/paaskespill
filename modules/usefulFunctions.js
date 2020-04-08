@@ -46,10 +46,10 @@ function mapValue(pos){
 }
 
 function updateMousePos(player, clientX, clientY, canvasWidth, canvasHeight){
-    player.mouse.px = Math.round(player.x - 7/32 + (clientX - canvasWidth/2)/32)
-    player.mouse.py = Math.round(player.y + (clientY - canvasHeight/2)/32)
-    player.mouse.PX = player.x + (clientX - canvasWidth/2)/32
-    player.mouse.PY = player.y + (clientY - canvasHeight/2)/32
+    player.mouse.r.x = Math.round(player.x - 7/32 + (clientX - canvasWidth/2)/32)
+    player.mouse.r.y = Math.round(player.y + (clientY - canvasHeight/2)/32)
+    player.mouse.x = player.x + (clientX - canvasWidth/2)/32
+    player.mouse.y = player.y + (clientY - canvasHeight/2)/32
 }
 
 const f = num => Math.floor(num)
