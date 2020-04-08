@@ -1,5 +1,5 @@
 function getPlayerInfo(username) {
-    const db = require('./db.js').collection('users')
+    const db = require('./db.js')
     db.find({username: username}).toArray((err, result) => {
         if(result.player && result.controller) return {username: username, player: result.player, controller: result.controller}
         else return false
@@ -7,7 +7,7 @@ function getPlayerInfo(username) {
 }
 
 function updatePlayerInfo(username, player, controller) {
-    const db = require('./db.js').collection("users")
+    const db = require('./db.js')
     db.update({username: username}, {$set: {player: player, controller: controller}})
 }
 
@@ -20,7 +20,6 @@ function insertIntoCollection(collection, object) {
     // } catch(e) {
     //     console.log(e)
     // }
-    console.log(db.collection('test'))
     db.collection(collection).insertOne(object)
 }
 
