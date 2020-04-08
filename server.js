@@ -26,6 +26,8 @@ const db = require('./modules/db')
 // functions
 const Item = variables.Item
 const Safe = variables.Safe
+const Player = variables.Player
+const Controller = variables.Controller
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
@@ -42,73 +44,6 @@ const mapValue = usefulFunctions.mapValue
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 const copy = usefulFunctions.copy
-
-
-
-class Player {
-  constructor(username) {
-    this.username = username
-    this.x = 28,
-    this.y = 8,
-    this.direction = "front",
-    this.moving = false,
-    this.falling = false,
-    this.vx = 0,
-    this.vy = 0
-    this.inventory = {
-      arr: []
-    }
-
-    for(let i = 0; i < 32; i++){
-      if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory"))
-      else this.inventory.arr.push(new Item("empty", null, null, i, "inventory"))
-    }
-
-    this.pos = {
-      topLeft: undefined,
-      topRight: undefined,
-      midLeft: undefined,
-      midRight: undefined,
-      botLeft: undefined,
-      botRight: undefined
-    }
-    this.sprite = {
-      index: 2,
-      playerSprite: "boy",
-      delay: 100,
-      counter: 0
-    }
-
-    this.mouse = {
-      x: undefined,
-      y: undefined,
-      counter: 0,
-      delay: 50,
-      keys: {
-        0: false,
-        2: false
-      },
-      r:{
-        x: undefined,
-        y: undefined
-      }
-    }
-    this.hotBarSpot = 1
-    this.hand = new Item("block", 3, 10)
-    
-
-    this.selectedSwap = 0
-    this.safe = ""
-  }
-}
-
-class Controller {
-  constructor() {
-    this.left = false,
-    this.right = false,
-    this.up = false
-  }
-}
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
