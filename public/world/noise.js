@@ -1,3 +1,8 @@
+const socket = (window.location.href == "http://localhost:3000/world/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
+const button = document.querySelector('button')
+
+
+
 class NoiseMap{
     constructor(width, height, scale){
         this.width = width
@@ -50,7 +55,7 @@ function createFromNoiseMap(noiseArr, width, height, scale){
 }
 
 let img = new Image()
-img.src = "../public/game/assets/dirt.png"
+img.src = "../game/assets/dirt.png"
 
 function setup(){
     createCanvas(window.innerWidth, window.innerHeight)
@@ -63,5 +68,9 @@ function setup(){
         }
     }
     // noiseMap.draw()
+
+    button.addEventListener('click', () => {
+        socket.emit('new-insert', "gameObjects", {map: map})
+    })
 }
 

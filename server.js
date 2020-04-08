@@ -37,6 +37,7 @@ const userExists = usefulFunctions.userExists
 const updateMousePos = usefulFunctions.updateMousePos
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
+const insertIntoCollection = dbFunctions.insertIntoCollection
 
 
 class Player {
@@ -107,6 +108,7 @@ function heartbeat(){
       io.emit('heartbeat', map, users)
   }
 }
+
 
 
 setInterval(heartbeat, 1000/60)
@@ -212,4 +214,11 @@ io.on('connection', socket => {
     delete users[socket.id]
     console.log(socket.id + " disconnected.")
   })
+
+
+  socket.on('new-insert', (collection, data) => {
+    console.log("new insert!!", collection)
+    insertIntoCollection(collection, data)
+  })
+
 })
