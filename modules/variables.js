@@ -13,8 +13,8 @@ class Player {
     }
 
     for(let i = 0; i < 32; i++){
-      if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory"))
-      else this.inventory.arr.push(new Item("empty", null, null, i, "inventory"))
+      if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory", 1, false))
+      else this.inventory.arr.push(new Item("empty", null, null, i, "inventory", 1, false))
     }
 
     this.pos = {
@@ -49,9 +49,16 @@ class Player {
     this.hotBarSpot = 1
     this.hand = null
     
-
     this.selectedSwap = 0
     this.safe = ""
+
+    //mining
+    this.mining = {
+      active: false,
+      current: undefined,
+      stage: 0,
+      difficulty: 1
+    }
   }
 }
 
@@ -91,12 +98,13 @@ const solidBlocks = [1, 2, 3, 4, 5, 6, 7, 8]
 
 
 class Item{
-    constructor(type, value, number, index, container, highlight){
+    constructor(type, value, number, index, container, mineSpeed, highlight){
       this.type = type
       this.value = value
       this.number = number
       this.index = index
       this.container = container
+      this.mineSpeed = mineSpeed
       this.highlight = highlight
     }
   }
@@ -106,7 +114,7 @@ class Safe{
     constructor(x, y){
         this.arr = []
         for(let i = 0; i < 25; i++){
-            this.arr.push(new Item("block", Math.floor(Math.random()*7 +1), Math.floor(Math.random()*64 +1), i, "safe", false))
+            this.arr.push(new Item("block", Math.floor(Math.random()*7 +1), Math.floor(Math.random()*64 +1), i, "safe", 1, false))
           }
         this.x = x
         this.y = y

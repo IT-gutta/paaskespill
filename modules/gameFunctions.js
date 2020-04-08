@@ -150,6 +150,9 @@ function keysU(keyCode, player, controller){
     }
 }
 
+function updatePlayerHand(player){
+    player.hand = player.inventory.arr[23+player.hotBarSpot]
+}
 function click(keyCode, player){
     player.mouse.counter = 0
     //høyreklikk, sjekker om man kan sette ut blokk
@@ -169,6 +172,7 @@ function click(keyCode, player){
                                     delete player.inventory.arr[player.hand.index]
                                     player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, false)
                                     delete player.hand
+                                    updatePlayerHand(player)
                                 }
                             }
                         }
@@ -180,18 +184,44 @@ function click(keyCode, player){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
-                // if(player.hand.type && player.hand.type == "pickaxe"){
-                //     mine(player)
-                // }
-                map[py][px] = 0
+                if(mapValue(player.mouse.r) != 0)mine(player)
             }
         }
     }
 }
 
 function mine(player){
-    if(player.mining){
-
+    if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
+        player.mining.stage += player.hand.mineSpeed/player.mining.difficulty
+        if(player.mining.stage > 5){
+            //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
+            for(let i = 0; i < player.inventory.arr.length; i++){
+                //hvis det finnes en stack med itemet fra før der det er plass
+                if(player.inventory.arr[i].value == mapValue(player.mining.current) && player.inventory.arr[i].number < 64){
+                    player.inventory.arr[i].number += 1
+                    map[player.mining.current.y][player.mining.current.x] = 0
+                    player.mining.active = false
+                    return
+                }
+            }
+            //hvis det ikke finnes prøver den å fylle en tom plass
+            for(let i = 0; i < player.inventory.arr.length; i++){
+                //hvis det finnes en stack med itemet fra før der det er plass
+                if(player.inventory.arr[i].type == "empty"){
+                    delete player.inventory.arr[i]
+                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current), 1, i, "inventory", 1, false)
+                    map[player.mining.current.y][player.mining.current.x] = 0
+                    player.mining.active = false
+                    return
+                }
+            }
+        }
+    }
+    else{
+        player.mining.active = true
+        player.mining.current = {x: player.mouse.r.x, y: player.mouse.r.y}
+        player.mining.stage = 0
+        player.mining.difficulty = 1
     }
 }
 //Sjekker om det er blokker mellom spilleren og musa
@@ -224,4 +254,4 @@ function interaction(player){
     return ("", "")
 }
 
-module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction}
+module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand}

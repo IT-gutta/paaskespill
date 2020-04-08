@@ -107,6 +107,7 @@ function draw(map, users){
    
     c.clearRect(0,0,w,h)
     c.drawImage(sky, 0, 0, w, h)
+    //draws tilemap
     for(i=Math.floor(player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
         if(i<0) continue
         if(i>=map.length) break
@@ -115,6 +116,13 @@ function draw(map, users){
             if(j>=map[i].length) break
             c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
         }
+    }
+
+    //draw miningprogression
+    if(player.mining.active){// && Math.floor(player.mining.stage) < miningImgs.length){
+        //c.drawImage(miningImgs[Math.floor(player.mining.stage)], canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
+        c.fillStyle = `rgba(255, 0, 0, ${player.mining.stage/5})`
+        c.fillRect(canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
     }
 
     c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)

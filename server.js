@@ -45,6 +45,7 @@ const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 const copy = usefulFunctions.copy
 const insertIntoCollection = dbFunctions.insertIntoCollection
+const updatePlayerHand = gameFunctions.updatePlayerHand
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
@@ -81,7 +82,7 @@ io.on('connection', socket => {
     // begge disse er pekere som peker til et sted i minnet, siden de peker til sammme sted når man setter den ene lik den andre,
     // vil en endring av den ene resultere i en endring av den andre også, ingen av de har liksom sin egen verdi, programmet henter fram en verdi
     // fra denne minneplassen når man spør om det, og det er verdien som befinner seg i minnet som blir endret dersom man endrer objektet
-    users[socket.id].player.hand = users[socket.id].player.inventory.arr[23+key]
+    updatePlayerHand(users[socket.id].player)
   })
 
   socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
@@ -121,6 +122,7 @@ io.on('connection', socket => {
   socket.on("mouseup", button => {
     if(!userExists(users, socket.id)) return
     users[socket.id].player.mouse.keys[button] = false
+    users[socket.id].player.mining.active = false
   })
   // socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
   //   px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
@@ -146,7 +148,7 @@ io.on('connection', socket => {
     player.safe = null
 
     //sørger for at player.hand er oppdatert
-    player.hand = player.inventory.arr[23+player.hotBarSpot]
+    updatePlayerHand(player)
   })
 
 
@@ -165,9 +167,9 @@ io.on('connection', socket => {
 
       //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
       delete player[swap.container].arr[swap.index]
-      player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, false)
+      player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
       delete player[type].arr[index]
-      player[type].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, false)
+      player[type].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
 
       delete cItem
       delete swap
@@ -178,7 +180,7 @@ io.on('connection', socket => {
     else if(player[type].arr[index].type != "empty"){
       player[type].arr[index].highlighted = true
       const cItem = player[type].arr[index]
-      player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, true)
+      player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
     }
   })
 
