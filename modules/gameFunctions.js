@@ -180,9 +180,18 @@ function click(keyCode, player){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
+                // if(player.hand.type && player.hand.type == "pickaxe"){
+                //     mine(player)
+                // }
                 map[py][px] = 0
             }
         }
+    }
+}
+
+function mine(player){
+    if(player.mining){
+
     }
 }
 //Sjekker om det er blokker mellom spilleren og musa
