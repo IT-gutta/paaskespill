@@ -5,7 +5,7 @@ let db
 
 
 client.connect(err => {
-    db = client.db("paaskespilldb").collection('users');
+    db = client.db("paaskespilldb");
     module.exports = db
   });
 
