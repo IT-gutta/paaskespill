@@ -47,7 +47,7 @@ class Player {
       }
     }
     this.hotBarSpot = 1
-    this.hand = null
+    this.hand = this.inventory.arr[24]
     
     this.selectedSwap = 0
     this.safe = ""

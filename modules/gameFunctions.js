@@ -170,9 +170,10 @@ function click(keyCode, player){
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
                                     delete player.inventory.arr[player.hand.index]
-                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, false)
+                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, 1, false)
                                     delete player.hand
                                     updatePlayerHand(player)
+                                    
                                 }
                             }
                         }
@@ -184,7 +185,7 @@ function click(keyCode, player){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
-                if(mapValue(player.mouse.r) != 0)mine(player)
+                if(mapValue(player.mouse.r) != 0) mine(player)
             }
         }
     }
