@@ -124,6 +124,12 @@ function draw(map, users){
         c.fillStyle = `rgba(255, 0, 0, ${player.mining.stage/5})`
         c.fillRect(canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
     }
+    
+    //tegne inn den blokken man titter på med hvit rundt
+    if(map[player.mouse.r.y][player.mouse.r.x]){
+        c.strokeStyle = "white"
+        c.strokeRect(canvas.width/2 + 32*(player.mouse.r.x-player.x-7/32), canvas.height/2 + 32*(player.mouse.r.y-player.y-32/64), 32, 32)
+    }
 
     c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
     c.fillStyle = "black"
