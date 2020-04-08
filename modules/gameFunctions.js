@@ -196,7 +196,7 @@ function mine(player){
         player.mining.stage += player.hand.mineSpeed/player.mining.difficulty
         if(player.mining.stage > 5){
             //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
-            for(let i = 0; i < player.inventory.arr.length; i++){
+            for(let i = player.inventory.arr.length-1; i >= 0; i--){
                 //hvis det finnes en stack med itemet fra før der det er plass
                 if(player.inventory.arr[i].value == mapValue(player.mining.current) && player.inventory.arr[i].number < 64){
                     player.inventory.arr[i].number += 1
@@ -206,7 +206,7 @@ function mine(player){
                 }
             }
             //hvis det ikke finnes prøver den å fylle en tom plass
-            for(let i = 0; i < player.inventory.arr.length; i++){
+            for(let i = player.inventory.arr.length-1; i >= 0; i--){
                 //hvis det finnes en stack med itemet fra før der det er plass
                 if(player.inventory.arr[i].type == "empty"){
                     delete player.inventory.arr[i]
