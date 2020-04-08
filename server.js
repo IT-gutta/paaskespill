@@ -44,6 +44,7 @@ const mapValue = usefulFunctions.mapValue
 const getPlayerInfo = dbFunctions.getPlayerInfo
 const updatePlayerInfo = dbFunctions.updatePlayerInfo
 const copy = usefulFunctions.copy
+const insertIntoCollection = dbFunctions.insertIntoCollection
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
