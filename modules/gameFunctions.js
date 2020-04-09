@@ -263,6 +263,7 @@ function interaction(player){
 function swap(player, index, container){
     if(player.selectedSwap){
 
+
         //tidligere valgte Item (allerede highlighted)
         const swap = player.selectedSwap
   
