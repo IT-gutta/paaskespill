@@ -15,7 +15,7 @@ function addRecipe(recipes, grid, type, value, quantity){
     current.type = type
 }
 addRecipe(recipes, [1,1,1,1,1,1,1,1,1], "block", 6, 7)
-addRecipe(recipes, [2,2,2,2,2,2,2,2,2], "pickaxe", 12, 1)
+addRecipe(recipes, [1,1,1,0,9,0,0,9,0], "pickaxe", 12, 1)
 
 // let b = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 

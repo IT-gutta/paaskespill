@@ -184,7 +184,7 @@ function click(keyCode, player){
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
                                     delete player.inventory.arr[player.hand.index]
-                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, false)
+                                    player.inventory.arr[player.hand.index] = new Item("empty", 0, null, player.hand.index, player.hand.container, false)
                                     delete player.hand
                                     updatePlayerHand(player)
                                     
@@ -221,7 +221,7 @@ function craftingMinus(player){
             player.crafting.arr[i].number --
             if(player.crafting.arr[i].number <= 0){
                 delete player.crafting.arr[i]
-                player.crafting.arr[i] = new Item("empty", null, null, i, "crafting", false)
+                player.crafting.arr[i] = new Item("empty", 0, null, i, "crafting", false)
             }
         }
     }
@@ -335,7 +335,6 @@ function swap(player, index, container, button){
             return
         }
         if(button == 2){
-            
             if(equalsSome(swap.type, ["block", "material"]) && equalsSome(cItem.type, ["empty", "block", "material"])){
                 if(cItem.type == "empty"){
                     delete player[container].arr[index]
@@ -354,7 +353,7 @@ function swap(player, index, container, button){
                 //hvis itemet du holder går tomt skal det bli borte
                 if(player[swap.container].arr[swap.index].number <= 0){
                     delete player[swap.container].arr[swap.index]
-                    player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
+                    player[swap.container].arr[swap.index] = new Item("empty", 0, null, swap.index, swap.container, false)
                     delete player.selectedSwap
                 }
             }
@@ -362,7 +361,7 @@ function swap(player, index, container, button){
         else{
 
             //sjekker først om det er items av samme type, slik at vi kan legge de sammen
-            if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block" && swap.number != 64 && cItem.number != 64){
+            if(cItem.value == swap.value && equalsSome(cItem.type, ["material", "block"]) && equalsSome(swap.type, ["material", "block"]) && swap.number != 64 && cItem.number != 64){
                 //kan endre på cItem istedenfor å endre på player[container].arr[index] fordi de henger sammen (begge er pekere på det samme stedet i minne)
                 //men kan ikke endre på swap for å endre på den forrige man trykket på, fordi den kun er linket til player.selectedSwap, og player.selectedSwap
                 //er ikke linket til denne plassen, den er bare en "kopi", dermed er cItem og bare en kopi
@@ -375,7 +374,7 @@ function swap(player, index, container, button){
                 }
                 else{
                     delete player[swap.container].arr[swap.index]
-                    player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
+                    player[swap.container].arr[swap.index] = new Item("empty", 0, null, swap.index, swap.container, false)
                 }
             }
             else{

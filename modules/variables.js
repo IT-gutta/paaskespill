@@ -18,12 +18,13 @@ class Player {
     }
 
     for(let i = 0; i < 32; i++){
-      if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory", false))
-      else this.inventory.arr.push(new Item("empty", null, null, i, "inventory", false))
+      if(i == 24) this.inventory.arr.push(new Item("pickaxe", 12, null, 24, "inventory", false))
+      else if(i == 25) this.inventory.arr.push(new Item("material", 9, 20, 25, "inventory", false))
+      else if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory", false))
+      else this.inventory.arr.push(new Item("empty", 0, null, i, "inventory", false))
     }
-    //bare legge inn en pickaxe
-    delete this.inventory.arr[24]
-    this.inventory.arr[24] = new Item("pickaxe", 12, null, 24, "inventory", false)
+    
+    
 
     this.pos = {
       topLeft: undefined,
@@ -73,7 +74,7 @@ class Player {
       arr: []
     }
     for(let i = 0; i < 9; i++){
-      this.crafting.arr.push(new Item("empty", null, null, i, "crafting", false))
+      this.crafting.arr.push(new Item("empty", 0, null, i, "crafting", false))
     }
   }
 }
@@ -118,7 +119,7 @@ class Item{
     constructor(type, value, number, index, container, highlight){
       this.type = type
       this.value = value
-      if(this.type == "block") this.number = number
+      if(this.type == "block" || this.type == "material") this.number = number
       this.index = index
       this.container = container
       this.highlight = highlight
