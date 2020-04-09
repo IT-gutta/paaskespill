@@ -181,7 +181,7 @@ function click(keyCode, player){
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
                                     delete player.inventory.arr[player.hand.index]
-                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, 1, false)
+                                    player.inventory.arr[player.hand.index] = new Item("empty", null, null, player.hand.index, player.hand.container, false)
                                     delete player.hand
                                     updatePlayerHand(player)
                                     
@@ -204,7 +204,7 @@ function click(keyCode, player){
 
 function mine(player){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
-        player.mining.stage += player.hand.mineSpeed/player.mining.difficulty
+        player.mining.stage += stageIncrement(player.hand, player.mining.current)
         if(player.mining.stage > 5){
             //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
             for(let i = player.inventory.arr.length-1; i >= 0; i--){
@@ -221,7 +221,7 @@ function mine(player){
                 //hvis det finnes en stack med itemet fra før der det er plass
                 if(player.inventory.arr[i].type == "empty"){
                     delete player.inventory.arr[i]
-                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current), 1, i, "inventory", 1, false)
+                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current), 1, i, "inventory", false)
                     map[player.mining.current.y][player.mining.current.x] = 0
                     player.mining.active = false
                     return
@@ -295,16 +295,16 @@ function swap(player, index, container){
             }
             else{
                 delete player[swap.container].arr[swap.index]
-                player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, 1, false)
+                player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
             }
         }
         else{
             //hvis de itemsa som skal byttes ikke er av samme type
             //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
             delete player[swap.container].arr[swap.index]
-            player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
+            player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, false)
             delete player[container].arr[index]
-            player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
+            player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, false)
         }
         //sletter sånn at ikke minnet blir fylt opp igjen og igjen hver gang man lager new Object()
         delete cItem
@@ -316,7 +316,7 @@ function swap(player, index, container){
     else if(player[container].arr[index].type != "empty"){
     player[container].arr[index].highlighted = true
     const cItem = player[container].arr[index]
-    player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
+    player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, true)
     delete cItem
     }
 }

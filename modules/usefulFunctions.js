@@ -56,6 +56,28 @@ function playerMovement(player, state){
   if(state=="running" && player.falling) return
   player.movement = state
 }
+//for å vite hvor fort man skal hakke ting i minefunksjonen
+function stageIncrement(tool, blockPos){
+  blockValue = mapValue(blockPos)
+  if(tool.type == "pickaxe" && equalsSome(blockValue, tool.efficientOn)){
+    return tool.level/getMiningDifficulty(blockValue)
+  }
+  else{
+    //tool er hånd eller en blokk
+    return 1/getMiningDifficulty(blockValue)
+  }
+}
+
+function getLevel(val){
+  //bare en start for å definere at stonepickaxe er level 2
+  if(val == 12){
+    return 2
+  }
+}
+function getMiningDifficulty(val){
+  // for øyeblikket bare returnere 1 uansett hva slags blokk det er kanskje?
+  return 1
+}
 
 function copy(ob){
   return JSON.parse(JSON.stringify(ob))
@@ -65,4 +87,17 @@ const f = num => Math.floor(num)
 const c = num => Math.ceil(num)
 const r = num => Math.r(num)
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos, playerMovement}
+module.exports = {
+  random, 
+  timer, 
+  objectIsEmpty, 
+  userExists, 
+  equalsSome, 
+  equalsAll, 
+  mapValue, 
+  updateMousePos, 
+  playerMovement, 
+  stageIncrement, 
+  getLevel, 
+  getMiningDifficulty
+}
