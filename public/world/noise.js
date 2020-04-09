@@ -55,7 +55,7 @@ function createFromNoiseMap(noiseArr, width, height, scale){
 }
 
 let img = new Image()
-img.src = "../game/assets/dirt.png"
+img.src = "../game/assets/blocks/general/dirt.png"
 
 function setup(){
     createCanvas(window.innerWidth, window.innerHeight)
