@@ -8,7 +8,7 @@ const usefulFunctions = require("./usefulFunctions")
 const equalsSome = usefulFunctions.equalsSome
 const equalsAll = usefulFunctions.equalsAll
 const mapValue = usefulFunctions.mapValue
-const toggleSprint = usefulFunctions.toggleSprint
+const playerMovement = usefulFunctions.playerMovement
 
 function updateSprites(player){
     if(player.direction == "front") player.sprite.index = 0
@@ -23,11 +23,11 @@ function update(player, map, g){
         //movement og collision
         if(player.moving){
             if(player.direction=="left"){
-                if(player.sprinting) player.vx = -0.01
+                if(player.movement == "sprinting") player.vx = -0.01
                 else player.vx = -0.005
             }
             else{
-                if(player.sprinting) player.vx = 0.01
+                if(player.movement == "sprinting") player.vx = 0.01
                 else player.vx = 0.005
             }
         }
@@ -134,7 +134,7 @@ function keysD(keyCode, player, controller){
     }
     //shift, aka sprint
     else if(keyCode == 16){
-        toggleSprint(player, true)
+        playerMovement(player, "sprinting")
     }
 }
 
@@ -149,15 +149,15 @@ function keysU(keyCode, player, controller){
     }
     if(keyCode==68){
         if(!controller.left){
-            player.direction = "front"
             player.moving = false
+            player.direction = "front"
             player.sprite.index = 0
         }
         controller.right = false
     }
     //shift, aka sprint
     else if(keyCode == 16){
-        toggleSprint(player, false)
+        playerMovement(player, "walking")
     }
 }
 
