@@ -13,8 +13,20 @@ function newImg(src){
 }
 
 const playerSprites = {
-    "girl": [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
-    "boy": [newImg("assets/boy_leftW1.png"), newImg("assets/boy_left.png"), newImg("assets/boy_front.png"), newImg("assets/boy_right.png"), newImg("assets/boy_rightW1.png")]
+    girl: [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
+    boy: {
+      left: [
+        newImg("assets/player/man/running_left_animation/1.png"), 
+        newImg("assets/player/man/running_left_animation/2.png"), 
+        newImg("assets/player/man/running_left_animation/3.png"), 
+        newImg("assets/player/man/running_left_animation/4.png")],
+      front: [newImg("assets/boy_front.png")],
+      right: [
+        newImg("assets/player/man/running_right_animation/1.png"), 
+        newImg("assets/player/man/running_right_animation/2.png"), 
+        newImg("assets/player/man/running_right_animation/3.png"), 
+        newImg("assets/player/man/running_right_animation/4.png")]
+    }
 }
 
 const air = newImg("assets/air.png")
