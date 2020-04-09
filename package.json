@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "count": "cloc . --exclude-dir=node_modules --exclude-ext=json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloc": "^2.5.1",
     "express": "^4.17.1",
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
