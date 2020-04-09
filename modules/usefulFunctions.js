@@ -1,5 +1,3 @@
-let map = require("./variables").map
-
 function random(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -41,7 +39,7 @@ function equalsAll(val, arr){
   return true
 }
 
-function mapValue(pos){
+function mapValue(pos, map){
   return map[Math.floor(pos.y)][Math.floor(pos.x)]
 }
 
@@ -57,8 +55,8 @@ function playerMovement(player, state){
   player.movement = state
 }
 //for å vite hvor fort man skal hakke ting i minefunksjonen
-function stageIncrement(tool, blockPos){
-  blockValue = mapValue(blockPos)
+function stageIncrement(tool, blockPos, map){
+  blockValue = mapValue(blockPos, map)
   if(tool.type == "pickaxe" && equalsSome(blockValue, tool.efficientOn)){
     return tool.level/getMiningDifficulty(blockValue)
   }
@@ -86,6 +84,9 @@ function copy(ob){
 const f = num => Math.floor(num)
 const c = num => Math.ceil(num)
 const r = num => Math.r(num)
+const s = num => Math.sqrt(num)
+const pow = (num, ex) => Math.pow(num, ex)
+const dist = (p1, p2) => s(pow(p2.x-p1.x, 2) + pow(p2.y-p1.y, 2))
 
 module.exports = {
   random, 

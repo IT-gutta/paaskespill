@@ -70,7 +70,9 @@ const inventory = newImg("assets/ui/inventory.png")
 
 const safe_inside = newImg("assets/ui/safe_inside.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, 0, 0, 0, 12]
+const iron_pick = newImg("assets/tools/iron_pick.png")
+
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, 0, 0, 0, iron_pick]
 
 
 
@@ -89,3 +91,10 @@ function equalsSome(val, arr){
   }
   return false
 }
+
+const fl = num => Math.floor(num)
+const ce = num => Math.ceil(num)
+const ro = num => Math.r(num)
+const sq = num => Math.sqrt(num)
+const pow = (num, ex) => Math.pow(num, ex)
+const dist = (p1, p2) => sq(pow(p2.x-p1.x, 2) + pow(p2.y-p1.y, 2))

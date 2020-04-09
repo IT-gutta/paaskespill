@@ -106,7 +106,7 @@ io.on('connection', socket => {
 
 
     //interaksjon
-    if(button==2 && interactables.indexOf(mapValue(player.mouse))){
+    if(button==2 && interactables.indexOf(mapValue(player.mouse, map))){
       socket.emit(interaction(users[socket.id].player), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
     }
 

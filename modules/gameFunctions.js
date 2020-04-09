@@ -9,6 +9,7 @@ const equalsSome = usefulFunctions.equalsSome
 const equalsAll = usefulFunctions.equalsAll
 const mapValue = usefulFunctions.mapValue
 const playerMovement = usefulFunctions.playerMovement
+const stageIncrement = usefulFunctions.stageIncrement
 
 function updateSprites(player){
     if(player.direction == "front") player.sprite.index = 0
@@ -68,21 +69,21 @@ function update(player, map, g){
 
         //kollisjon høyre side
         if(player.vx>0){
-            if(equalsSome(mapValue(player.pos.topRight), solidBlocks) || equalsSome(mapValue(player.pos.midRight), solidBlocks) || equalsSome(mapValue(player.pos.botRight), solidBlocks)){
+            if(equalsSome(mapValue(player.pos.topRight, map), solidBlocks) || equalsSome(mapValue(player.pos.midRight, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)){
                 player.vx = 0
             }
         }
 
         //kollissjon venstre side
         if(player.vx<0){
-            if(equalsSome(mapValue(player.pos.topLeft), solidBlocks) || equalsSome(mapValue(player.pos.midLeft), solidBlocks) || equalsSome(mapValue(player.pos.botLeft), solidBlocks)){
+            if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.midLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botLeft, map), solidBlocks)){
                 player.vx = 0
             }
         }
 
         //kollisjon når spilleren beveger seg oppover
         if(player.vy<0){
-            if(equalsSome(mapValue(player.pos.topLeft), solidBlocks) || equalsSome(mapValue(player.pos.topRight), solidBlocks)){
+            if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.topRight, map), solidBlocks)){
                 player.vy = 0
             }
         }
@@ -94,7 +95,7 @@ function update(player, map, g){
 
 
         if(player.falling){
-            if((equalsSome(mapValue(player.pos.botLeft), solidBlocks) || equalsSome(mapValue(player.pos.botRight), solidBlocks)) && player.vy>0){
+            if((equalsSome(mapValue(player.pos.botLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)) && player.vy>0){
                 player.falling = false
                 player.y = Math.round(player.y)
                 player.vy = 0
@@ -196,7 +197,7 @@ function click(keyCode, player){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
-                if(mapValue(player.mouse.r) != 0) mine(player)
+                if(mapValue(player.mouse.r, map) != 0) mine(player)
             }
         }
     }
@@ -204,12 +205,12 @@ function click(keyCode, player){
 
 function mine(player){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
-        player.mining.stage += stageIncrement(player.hand, player.mining.current)
+        player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
             for(let i = player.inventory.arr.length-1; i >= 0; i--){
                 //hvis det finnes en stack med itemet fra før der det er plass
-                if(player.inventory.arr[i].value == mapValue(player.mining.current) && player.inventory.arr[i].number < 64){
+                if(player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
                     player.inventory.arr[i].number += 1
                     map[player.mining.current.y][player.mining.current.x] = 0
                     player.mining.active = false
@@ -221,7 +222,7 @@ function mine(player){
                 //hvis det finnes en stack med itemet fra før der det er plass
                 if(player.inventory.arr[i].type == "empty"){
                     delete player.inventory.arr[i]
-                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current), 1, i, "inventory", false)
+                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current, map), 1, i, "inventory", false)
                     map[player.mining.current.y][player.mining.current.x] = 0
                     player.mining.active = false
                     return

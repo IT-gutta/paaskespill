@@ -1,11 +1,12 @@
 const usefulFuncions = require("./usefulFunctions")
 const getLevel = usefulFuncions.getLevel
-const getMiningDifficulty = usefulFuncions.getMiningDifficulty
+
 class Player {
   constructor(username) {
     this.username = username
     this.x = 28,
     this.y = 8,
+    this.sightPos = {x: this.x+16, y: this.y+16}
     this.direction = "front",
     this.moving = false,
     this.movement = "walking"
@@ -20,7 +21,9 @@ class Player {
       if(Math.random() > 0.5) this.inventory.arr.push(new Item("block", Math.floor(Math.random()*7)+1, Math.floor(Math.random()*64 +1), i, "inventory", false))
       else this.inventory.arr.push(new Item("empty", null, null, i, "inventory", false))
     }
-    this.inventory.arr.push(new Item("pickaxe", 12, null, 24, "inventory", false))
+    //bare legge inn en pickaxe
+    delete this.inventory.arr[24]
+    this.inventory.arr[24] = new Item("pickaxe", 12, null, 24, "inventory", false)
 
     this.pos = {
       topLeft: undefined,

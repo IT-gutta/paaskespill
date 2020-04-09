@@ -134,7 +134,7 @@ function draw(map, users){
         c.strokeRect(canvas.width/2 + 32*(px-player.x-7/32), canvas.height/2 + 32*(py-player.y-32/64), 32, 32)
     }
 
-    c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
+    if(player.img) c.drawImage(player.img, (canvas.width-16)/2, (canvas.height-32)/2, 32, 64)
     c.fillStyle = "black"
     c.font = "20px Arial bold"
     c.fillText(users[playerID].username, (canvas.width-16)/2 + 16, (canvas.height-32)/2 - 16)
@@ -227,4 +227,26 @@ function draw(map, users){
         c.fillText(i-23, 95 + (i%8)*80 + (canvas.width - 800)/2 + 52, canvas.height-100 + 52)
     }
   }
+}
+
+//Sjekker om det er blokker mellom spilleren og musa
+function sight(pPos, mPos, py, px, map){
+    let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
+    for(x=pPos[0]; x<mPos[0]; x+=0.01){
+        if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
+            return true
+        }
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+            return false
+        }
+    }
+    for(x=pPos[0]; x>mPos[0]; x-=0.01){
+        if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
+            return true
+        }
+        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+            return false
+        }
+    }
+    return true
 }
