@@ -203,31 +203,46 @@ function click(keyCode, player){
     }
 }
 
+function pickupItem(player, map, fromCrafting){
+    //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
+    for(let i = player.inventory.arr.length-1; i >= 0; i--){
+        //hvis det finnes en stack med itemet fra før der det er plass
+        if(fromCrafting && player.inventory.arr[i].number < 65-player.craftedItem.quantity && player.craftedItem.value == player.inventory.arr[i].value){
+            player.inventory.arr[i].number += player.craftedItem.quantity
+            delete player.craftedItem
+            return
+        }
+        else if(player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
+            player.inventory.arr[i].number += 1
+            map[player.mining.current.y][player.mining.current.x] = 0
+            player.mining.active = false
+            return
+        }
+    }
+    //hvis det ikke finnes prøver den å fylle en tom plass
+    for(let i = player.inventory.arr.length-1; i >= 0; i--){
+        //hvis det finnes en stack med itemet fra før der det er plass
+        if(player.inventory.arr[i].type == "empty"){
+            delete player.inventory.arr[i]
+            if(fromCrafting){
+                player.inventory.arr[i] = new Item("block", player.craftedItem.value, player.craftedItem.quantity, i, "inventory", false)
+                delete player.craftedItem
+                return
+            }
+            else{
+                player.inventory.arr[i] = new Item("block", mapValue(player.mining.current, map), 1, i, "inventory", false)
+                map[player.mining.current.y][player.mining.current.x] = 0
+                player.mining.active = false
+                return
+            }
+        }
+    }
+}
 function mine(player){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
-            //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
-            for(let i = player.inventory.arr.length-1; i >= 0; i--){
-                //hvis det finnes en stack med itemet fra før der det er plass
-                if(player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
-                    player.inventory.arr[i].number += 1
-                    map[player.mining.current.y][player.mining.current.x] = 0
-                    player.mining.active = false
-                    return
-                }
-            }
-            //hvis det ikke finnes prøver den å fylle en tom plass
-            for(let i = player.inventory.arr.length-1; i >= 0; i--){
-                //hvis det finnes en stack med itemet fra før der det er plass
-                if(player.inventory.arr[i].type == "empty"){
-                    delete player.inventory.arr[i]
-                    player.inventory.arr[i] = new Item("block", mapValue(player.mining.current, map), 1, i, "inventory", false)
-                    map[player.mining.current.y][player.mining.current.x] = 0
-                    player.mining.active = false
-                    return
-                }
-            }
+            pickupItem(player, map, false)
         }
     }
     else{
@@ -281,6 +296,10 @@ function swap(player, index, container, button){
         //senest valgte Item
         const cItem = player[container].arr[index]
 
+        //for crafting lenger nede
+        const container1 = swap.container
+        const container2 = cItem.container
+
 
         if(cItem.container == swap.container && cItem.index == swap.index){
             delete player.selectedSwap
@@ -312,7 +331,7 @@ function swap(player, index, container, button){
                 }
             }
         }
-        else if(button == 0){
+        else{
 
             //sjekker først om det er items av samme type, slik at vi kan legge de sammen
             if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block" && swap.number != 64 && cItem.number != 64){
@@ -344,7 +363,16 @@ function swap(player, index, container, button){
             delete swap
             delete player.selectedSwap
         }
-
+        if(container1 == "crafting" || container2 == "crafting"){
+            const craftedItem = checkRecipe(player.crafting.arr)
+            if(craftedItem){
+                player.craftedItem = craftedItem
+                delete craftedItem
+            }
+            else{
+                if(player.craftedItem) delete player.craftedItem
+            }
+        }
       }
   
     //hvis spilleren ikke har valgt et Item for bytte enda, og det ikke er et tomt item der du trykker

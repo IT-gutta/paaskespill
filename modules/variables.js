@@ -67,6 +67,8 @@ class Player {
       stage: 0,
       difficulty: 1
     }
+
+    this.craftedItem = undefined
   }
 }
 
