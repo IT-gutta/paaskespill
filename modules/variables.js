@@ -67,6 +67,14 @@ class Player {
       stage: 0,
       difficulty: 1
     }
+
+    this.craftedItem = undefined
+    this.crafting = {
+      arr: []
+    }
+    for(let i = 0; i < 9; i++){
+      this.crafting.arr.push(new Item("empty", null, null, i, "inventory", false))
+    }
   }
 }
 
