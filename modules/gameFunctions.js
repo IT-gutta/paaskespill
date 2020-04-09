@@ -11,9 +11,11 @@ const mapValue = usefulFunctions.mapValue
 const toggleSprint = usefulFunctions.toggleSprint
 
 function updateSprites(player){
-    if(player.direction == "left") player.sprite.index = player.sprite.index == 1 ? 0 : 1
-    else if(player.direction == "right") player.sprite.index = player.sprite.index == 3 ? 4 : 3
-    else player.sprite.index = 2
+    if(player.direction == "front") player.sprite.index = 0
+    else {
+        if(player.sprite.index == 3) player.sprite.index = 0
+        else player.sprite.index ++
+    }
     player.sprite.counter = 0
 }
 
@@ -116,7 +118,7 @@ function keysD(keyCode, player, controller){
         controller.left = true
     }
     else if(keyCode==68){
-        if(equalsSome(player.direction, ["left", "front"])) player.sprite.index = 4
+        if(equalsSome(player.direction, ["left", "front"])) player.sprite.index = 0
         player.direction = "right"
         player.moving = true
         controller.right = true
@@ -142,7 +144,7 @@ function keysU(keyCode, player, controller){
         if(!controller.right){
             player.moving = false
             player.direction = "front"
-            player.sprite.index = 2
+            player.sprite.index = 0
         }
         controller.left = false
     }
@@ -150,8 +152,7 @@ function keysU(keyCode, player, controller){
         if(!controller.left){
             player.direction = "front"
             player.moving = false
-            player.sprite.index = 2
-            
+            player.sprite.index = 0
         }
         controller.right = false
     }
