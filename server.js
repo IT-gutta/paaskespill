@@ -46,6 +46,7 @@ const updatePlayerInfo = dbFunctions.updatePlayerInfo
 const copy = usefulFunctions.copy
 const insertIntoCollection = dbFunctions.insertIntoCollection
 const updatePlayerHand = gameFunctions.updatePlayerHand
+const swap = gameFunctions.swap
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {

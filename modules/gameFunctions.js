@@ -267,7 +267,7 @@ function swap(player, index, container){
         const swap = player.selectedSwap
   
         //senest valgte Item
-        const cItem = player[type].arr[index]
+        const cItem = player[container].arr[index]
 
         //sjekker først om det er items av samme type, slik at vi kan legge de sammen
         if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block"){
@@ -285,8 +285,8 @@ function swap(player, index, container){
         //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
         delete player[swap.container].arr[swap.index]
         player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
-        delete player[type].arr[index]
-        player[type].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
+        delete player[container].arr[index]
+        player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
   
         delete cItem
         delete swap
@@ -294,11 +294,12 @@ function swap(player, index, container){
       }
   
       //hvis det eksisterer ikke er et tomt item der du trykker
-      else if(player[type].arr[index].type != "empty"){
-        player[type].arr[index].highlighted = true
-        const cItem = player[type].arr[index]
+      else if(player[container].arr[index].type != "empty"){
+        player[container].arr[index].highlighted = true
+        const cItem = player[container].arr[index]
         player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
+        delete cItem
       }
 }
 
-module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand}
+module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap}
