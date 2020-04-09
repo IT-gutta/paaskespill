@@ -282,6 +282,19 @@ function swap(player, index, container){
                 
             }
         }
+
+        //sjekker først om det er items av samme type, slik at vi kan legge de sammen
+        if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block"){
+            cItem.number += swap.number
+            if(cItem.number > 64){
+                swap.number = cItem.number - 64
+                cItem.number = 64
+                //legges bare tilbake igjen
+            }
+            else{
+                
+            }
+        }
   
         //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
         delete player[swap.container].arr[swap.index]
