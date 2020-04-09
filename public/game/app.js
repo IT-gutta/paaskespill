@@ -61,9 +61,23 @@ form.onsubmit = (e) => {
          else if(showInventory){
             var x = e.clientX
             var y = e.clientY
-            var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
-            if(p>=0 && p<=31){
-                socket.emit('swap', p, "inventory", e.button)
+            if(x<(w-800-660)/2+800){
+                var p = Math.floor((x-(canvas.width-800-660)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
+                if(p>=0 && p<=31){
+                    socket.emit('swap', p, "inventory", e.button)
+                }
+            }
+            else if(x<(w-800-660)/2+800+420){
+                var p = Math.floor((x-(canvas.width-800-660)/2-860)/120 + Math.floor((y-(canvas.height-480)/2-60)/120)*3)
+                if(p>=0 && p<=8){
+                    socket.emit('swap', p, "crafting", e.button)
+                }
+            }
+            else{
+                console.log(1)
+                if(y<(h-480)/2+300 && y>(h-480)/2+180 && x>(w-800-660)/2+800+480 && x<(w-800-660)/2+800+600){
+                    socket.emit('husker ikke hva du kalte det, jørgen :(')
+                }
             }
          }
          else if(showSafe){
@@ -193,18 +207,19 @@ function draw(map, users){
   if(showInventory){
     c.fillStyle = "black"
       //tegner kun inventory
-    c.drawImage(inventory, (canvas.width-800)/2, (canvas.height-480)/2, 800, 480)
+    c.drawImage(inventory, (canvas.width-800-660)/2, (canvas.height-480)/2, 800, 480)
+    c.drawImage(crafting, (canvas.width-800-660)/2 + 800, (canvas.height-480)/2, 660, 480)
     for(i=0; i<32; i+=1){
         if(inv[i].type != "empty"){
             //hvis boksen skal highlightes
             if(inv[i].highlighted){
                 c.strokeStyle = "white"
                 c.lineWidth = 4
-                c.strokeRect(100 + i%8*80 + (canvas.width - 800)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
+                c.strokeRect(100 + i%8*80 + (canvas.width - 800 - 660)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
             }
 
-            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800 - 660)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800 - 660)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
             
             
         }

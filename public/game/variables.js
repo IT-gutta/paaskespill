@@ -69,6 +69,8 @@ const inventory = newImg("assets/ui/inventory.png")
 
 const safe_inside = newImg("assets/ui/safe_inside.png")
 
+const crafting = newImg("assets/ui/crafting.png")
+
 const iron_pick = newImg("assets/tools/iron_pick.png")
 
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, 0, 0, 0, iron_pick]
