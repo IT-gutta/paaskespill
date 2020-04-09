@@ -226,6 +226,8 @@ function craftingMinus(player){
     updateCraftedItem(player)
 }
 function pickupItem(player, map, fromCrafting){
+    //hvis det ikke finnes noe i "ferdig-craft" ruten
+    if(fromCrafting && !player.craftedItem) return
     //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
     for(let i = player.inventory.arr.length-1; i >= 0; i--){
         //hvis det finnes en stack med itemet fra før der det er plass
