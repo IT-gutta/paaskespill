@@ -16,42 +16,42 @@ const playerSprites = {
     girl: [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
     boy: {
       left: [
-        newImg("assets/player/man/running_left_animation/1.png"), 
-        newImg("assets/player/man/running_left_animation/2.png"), 
-        newImg("assets/player/man/running_left_animation/3.png"), 
-        newImg("assets/player/man/running_left_animation/4.png")],
-      front: [newImg("assets/boy_front.png")],
+        newImg("assets/player/man/running_left/1.png"), 
+        newImg("assets/player/man/running_left/2.png"), 
+        newImg("assets/player/man/running_left/3.png"), 
+        newImg("assets/player/man/running_left/4.png")],
+      front: [newImg("assets/player/man/front/boy_front.png")],
       right: [
-        newImg("assets/player/man/running_right_animation/1.png"), 
-        newImg("assets/player/man/running_right_animation/2.png"), 
-        newImg("assets/player/man/running_right_animation/3.png"), 
-        newImg("assets/player/man/running_right_animation/4.png")]
+        newImg("assets/player/man/running_right/1.png"), 
+        newImg("assets/player/man/running_right/2.png"), 
+        newImg("assets/player/man/running_right/3.png"), 
+        newImg("assets/player/man/running_right/4.png")]
     }
 }
 
-const air = newImg("assets/air.png")
+const air = newImg("assets/blocks/general/air.png")
 
-const grass = newImg("assets/grass.png")
+const grass = newImg("assets/blocks/general/grass.png")
 
-const dirt = newImg("assets/dirt.png")
+const dirt = newImg("assets/blocks/general/dirt.png")
 
-const log = newImg("assets/log.png")
+const log = newImg("assets/blocks/general/log.png")
 
-const leaves = newImg("assets/leaves.png")
+const leaves = newImg("assets/blocks/general/leaves.png")
 
-const stone = newImg("assets/stone.png")
+const stone = newImg("assets/blocks/general/stone.png")
 
-const coal_ore = newImg("assets/coal_ore.png")
+const coal_ore = newImg("assets/blocks/ores/coal_ore.png")
 
-const iron_ore = newImg("assets/iron_ore.png")
+const iron_ore = newImg("assets/blocks/ores/iron_ore.png")
 
-const safe = newImg("assets/safe.png")
+const safe = newImg("assets/blocks/interactables/safe.png")
 
-const sky = newImg("assets/sky.png")
+const sky = newImg("assets/backgrounds/sky.png")
 
-const inventory = newImg("assets/inventory.png")
+const inventory = newImg("assets/ui/inventory.png")
 
-const safe_inside = newImg("assets/safe_inside.png")
+const safe_inside = newImg("assets/ui/safe_inside.png")
 
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe]
 
