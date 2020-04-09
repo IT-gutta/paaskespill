@@ -30,16 +30,16 @@ const playerSprites = {
       },
       walking: {
         left: [
-          newImg("assets/player/man/running_left/1.png"), 
-          newImg("assets/player/man/running_left/2.png"), 
-          newImg("assets/player/man/running_left/3.png"), 
-          newImg("assets/player/man/running_left/4.png")],
+          newImg("assets/player/man/walking_left/1.png"), 
+          newImg("assets/player/man/walking_left/mid.png"), 
+          newImg("assets/player/man/walking_left/2.png"), 
+          newImg("assets/player/man/walking_left/mid.png")],
         front: [newImg("assets/player/man/front/boy_front.png")],
         right: [
-          newImg("assets/player/man/running_right/1.png"), 
-          newImg("assets/player/man/running_right/2.png"), 
-          newImg("assets/player/man/running_right/3.png"), 
-          newImg("assets/player/man/running_right/4.png")]
+          newImg("assets/player/man/walking_right/1.png"), 
+          newImg("assets/player/man/walking_right/mid.png"), 
+          newImg("assets/player/man/walking_right/2.png"), 
+          newImg("assets/player/man/walking_right/mid.png")]
       },
       mining: ["assets/player/man/mining/1.png", "assets/player/man/mining/2.png", "assets/player/man/mining/3.png", "assets/player/man/mining/4.png"]
     }
