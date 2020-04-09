@@ -3,6 +3,8 @@ let map = variables.map
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
 const Item = variables.Item
+const recipes = require("./recipes")
+const checkRecipe = recipes.checkRecipe
 
 const usefulFunctions = require("./usefulFunctions")
 const equalsSome = usefulFunctions.equalsSome
@@ -237,7 +239,7 @@ function pickupItem(player, map, fromCrafting){
             craftingMinus(player)
             return
         }
-        else if(player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
+        else if(!fromCrafting && player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
             player.inventory.arr[i].number += 1
             map[player.mining.current.y][player.mining.current.x] = 0
             player.mining.active = false
@@ -250,12 +252,12 @@ function pickupItem(player, map, fromCrafting){
         if(player.inventory.arr[i].type == "empty"){
             delete player.inventory.arr[i]
             if(fromCrafting){
-                player.inventory.arr[i] = new Item("block", player.craftedItem.value, player.craftedItem.quantity, i, "inventory", false)
+                player.inventory.arr[i] = new Item(player.craftedItem.type, player.craftedItem.value, player.craftedItem.quantity, i, "inventory", false)
                 delete player.craftedItem
                 craftingMinus(player)
                 return
             }
-            else{
+            else if(!fromCrafting){
                 player.inventory.arr[i] = new Item("block", mapValue(player.mining.current, map), 1, i, "inventory", false)
                 map[player.mining.current.y][player.mining.current.x] = 0
                 player.mining.active = false
@@ -398,7 +400,7 @@ function swap(player, index, container, button){
     else if(player[container].arr[index].type != "empty" && button == 0){
     player[container].arr[index].highlighted = true
     const cItem = player[container].arr[index]
-    player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, true)
+    player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, index, container, true)
     delete cItem
     }
 }

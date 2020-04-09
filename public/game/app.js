@@ -59,24 +59,23 @@ form.onsubmit = (e) => {
             }
          }
          else if(showInventory){
-            var x = e.clientX
-            var y = e.clientY
+            const x = e.clientX
+            const y = e.clientY
             if(x<(w-800-660)/2+800){
-                var p = Math.floor((x-(canvas.width-800-660)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
+                const p = Math.floor((x-(canvas.width-800-660)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
                 if(p>=0 && p<=31){
                     socket.emit('swap', p, "inventory", e.button)
                 }
             }
             else if(x<(w-800-660)/2+800+420){
-                var p = Math.floor((x-(canvas.width-800-660)/2-860)/120 + Math.floor((y-(canvas.height-480)/2-60)/120)*3)
+                const p = Math.floor((x-(canvas.width-800-660)/2-860)/120 + Math.floor((y-(canvas.height-480)/2-60)/120)*3)
                 if(p>=0 && p<=8){
                     socket.emit('swap', p, "crafting", e.button)
                 }
             }
             else{
-                console.log(1)
                 if(y<(h-480)/2+300 && y>(h-480)/2+180 && x>(w-800-660)/2+800+480 && x<(w-800-660)/2+800+600){
-                    socket.emit('husker ikke hva du kalte det, jørgen :(')
+                    socket.emit('pickUpCraftedItem')
                 }
             }
          }
@@ -207,24 +206,51 @@ function draw(map, users){
   if(showInventory){
     c.fillStyle = "black"
       //tegner kun inventory
-    c.drawImage(inventory, (canvas.width-800-660)/2, (canvas.height-480)/2, 800, 480)
-    c.drawImage(crafting, (canvas.width-800-660)/2 + 800, (canvas.height-480)/2, 660, 480)
+    //definerer disse to slik at man evt kan flytte de litt, uten at alt det andre ødelegges også (fungerer kanskje da ikke for swap?)
+    const invPos = {x: (canvas.width-800-660)/2, y: (canvas.height-480)/2}
+    const craftPos = {x: invPos.x+800, y: invPos.y}
+    c.drawImage(inventory, invPos.x, invPos.y, 800, 480)
+    c.drawImage(crafting, craftPos.x, craftPos.y, 660, 480)
+
+    //tegne alt inne i inventory
     for(i=0; i<32; i+=1){
         if(inv[i].type != "empty"){
             //hvis boksen skal highlightes
             if(inv[i].highlighted){
                 c.strokeStyle = "white"
                 c.lineWidth = 4
-                c.strokeRect(100 + i%8*80 + (canvas.width - 800 - 660)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
+                c.strokeRect(100 + i%8*80 + invPos.x - 5, 100 + Math.floor(i/8)*80 + invPos.y - 5, 50, 50)
             }
 
-            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + (canvas.width - 800 - 660)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2, 40, 40)
-            c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 800 - 660)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
+            c.drawImage(imgs[inv[i].value], 100 + i%8*80 + invPos.x, 100 + Math.floor(i/8)*80 + invPos.y, 40, 40)
+            c.fillText(inv[i].number, 95 + (i%8)*80 + invPos.x, 100 + Math.floor(i/8)*80 + invPos.y)
             
             
         }
     }
+
+    //tegne alt inne i crafting
+    for(let i=0; i<9; i++){
+        if(player.crafting.arr[i].type != "empty"){
+            //hvis boksen skal highlightes
+            if(player.crafting.arr[i].highlighted){
+                c.strokeStyle = "white"
+                c.lineWidth = 4
+                c.strokeRect(95 + i%3*120 + craftPos.x -5, 95 + Math.floor(i/3)*120 + craftPos.y - 5, 60, 60)
+            }
+
+            c.drawImage(imgs[player.crafting.arr[i].value], 95 + i%3*120 + craftPos.x, 95 + Math.floor(i/3)*120 + craftPos.y, 50, 50)
+            c.fillText(player.crafting.arr[i].number, 90 + (i%3)*120 + craftPos.x, 95 + Math.floor(i/3)*120 + craftPos.y)
+        }
+    }
+    //tegne inn hvis spilleren har klart å lage et item som finnes i recipe
+    if(player.craftedItem){
+      c.drawImage(imgs[player.craftedItem.value], craftPos.x + 515, craftPos.y + 215, 50, 50)
+      c.fillText(player.craftedItem.quantity, craftPos.x + 510, craftPos.y + 215)
+    }
   }
+
+
   //kun tegne inn hotbaren
   else{
 

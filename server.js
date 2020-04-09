@@ -161,7 +161,7 @@ io.on('connection', socket => {
   })
 
   socket.on('pickUpCraftedItem', ()=>{
-    pickupItem(player, map, true)
+    pickupItem(users[socket.id].player, map, true)
   })
 
   socket.on('disconnect', () => {
