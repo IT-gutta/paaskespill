@@ -16,7 +16,7 @@ function addRecipe(recipes, grid, value, quantity){
 addRecipe(recipes, [1,1,1,1,1,1,1,1,1], 6, 7)
 addRecipe(recipes, [9,8,7,6,5,4,3,2,1], )
 addRecipe(recipes, [1,8,7,6,5,4,3,2,1])
-console.log(recipes)
+
 
 var a = [1,1,1,1,1,1,1,1,1]
 
@@ -32,4 +32,3 @@ function checkRecipe(recipes, currentRecipe){
         return false
     }
 }
-console.log(checkRecipe(recipes, a))

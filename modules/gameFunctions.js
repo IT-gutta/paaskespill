@@ -202,7 +202,29 @@ function click(keyCode, player){
         }
     }
 }
-
+//oppdaterer om recipien gir noen match
+function updateCraftedItem(player){
+    const craftedItem = checkRecipe(player.crafting.arr)
+    if(craftedItem){
+        player.craftedItem = craftedItem
+        delete craftedItem
+    }
+    else{
+        if(player.craftedItem) delete player.craftedItem
+    }
+}
+function craftingMinus(player){
+    for(let i = 0; i < player.crafting.arr.length; i++){
+        if(player.crafting.arr[i].type != "empty"){
+            player.crafting.arr[i].number --
+            if(player.crafting.arr[i].number <= 0){
+                delete player.crafting.arr[i]
+                player.crafting.arr[i] = new Item("empty", null, null, i, "crafting", false)
+            }
+        }
+    }
+    updateCraftedItem(player)
+}
 function pickupItem(player, map, fromCrafting){
     //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
     for(let i = player.inventory.arr.length-1; i >= 0; i--){
@@ -210,6 +232,7 @@ function pickupItem(player, map, fromCrafting){
         if(fromCrafting && player.inventory.arr[i].number < 65-player.craftedItem.quantity && player.craftedItem.value == player.inventory.arr[i].value){
             player.inventory.arr[i].number += player.craftedItem.quantity
             delete player.craftedItem
+            craftingMinus(player)
             return
         }
         else if(player.inventory.arr[i].value == mapValue(player.mining.current, map) && player.inventory.arr[i].number < 64){
@@ -227,6 +250,7 @@ function pickupItem(player, map, fromCrafting){
             if(fromCrafting){
                 player.inventory.arr[i] = new Item("block", player.craftedItem.value, player.craftedItem.quantity, i, "inventory", false)
                 delete player.craftedItem
+                craftingMinus(player)
                 return
             }
             else{
@@ -364,14 +388,7 @@ function swap(player, index, container, button){
             delete player.selectedSwap
         }
         if(container1 == "crafting" || container2 == "crafting"){
-            const craftedItem = checkRecipe(player.crafting.arr)
-            if(craftedItem){
-                player.craftedItem = craftedItem
-                delete craftedItem
-            }
-            else{
-                if(player.craftedItem) delete player.craftedItem
-            }
+            updateCraftedItem(player)
         }
       }
   
@@ -386,4 +403,4 @@ function swap(player, index, container, button){
 
 
 
-module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap}
+module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap, pickupItem}

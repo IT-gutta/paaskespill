@@ -48,7 +48,7 @@ const copy = usefulFunctions.copy
 const insertIntoCollection = dbFunctions.insertIntoCollection
 const updatePlayerHand = gameFunctions.updatePlayerHand
 const swap = gameFunctions.swap
-const toggleSprint = usefulFunctions.toggleSprint
+const pickupItem = gameFunctions.pickupItem
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
@@ -158,6 +158,10 @@ io.on('connection', socket => {
   socket.on('swap', (index, container, button) => {
     if(!userExists(users, socket.id)) return
     swap(users[socket.id].player, index, container, button)
+  })
+
+  socket.on('pickUpCraftedItem', ()=>{
+    pickupItem(player, map, true)
   })
 
   socket.on('disconnect', () => {
