@@ -63,7 +63,7 @@ form.onsubmit = (e) => {
             var y = e.clientY
             var p = Math.floor((x-(canvas.width-800)/2)/80-1) + Math.floor((y-(canvas.height-480)/2)/80-1)*8
             if(p>=0 && p<=31){
-                socket.emit('swap', p, "inventory")
+                socket.emit('swap', p, "inventory", e.button)
             }
          }
          else if(showSafe){
@@ -72,13 +72,13 @@ form.onsubmit = (e) => {
             if(x>(canvas.width - 1300)/2+800){
                 var p = Math.floor((x-(canvas.width-1300)/2-800)/100) + Math.floor((y-(canvas.height-500)/2)/100)*5
                 if(p>=0 && p<25){
-                    socket.emit('swap', p, "safe")
+                    socket.emit('swap', p, "safe", e.button)
                 }
             }
             else{
                 var p = Math.floor((x-(canvas.width-1300)/2-80)/80) + Math.floor((y-(canvas.height-480)/2-80)/80)*8
                 if(p>=0 && p<32){
-                    socket.emit('swap', p, "inventory")
+                    socket.emit('swap', p, "inventory", e.button)
                 }
             }
          }

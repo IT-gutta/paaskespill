@@ -154,10 +154,9 @@ io.on('connection', socket => {
   })
 
 
-  socket.on('swap', (index, container) => {
+  socket.on('swap', (index, container, button) => {
     if(!userExists(users, socket.id)) return
-    swap(users[socket.id].player, index, container)
-
+    swap(users[socket.id].player, index, container, button)
   })
 
   socket.on('disconnect', () => {

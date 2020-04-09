@@ -272,9 +272,8 @@ function interaction(player){
 // parameterene index og container fortelleren hvor brukeren har trykket, og hvilken container den har trykket i
 // hvilken index i hvilken container
 // den åpnede safen og inventory er accesible gjennom player
-function swap(player, index, container){
+function swap(player, index, container, button){
     if(player.selectedSwap){
-
 
         //tidligere valgte Item (allerede highlighted)
         const swap = player.selectedSwap
@@ -282,39 +281,74 @@ function swap(player, index, container){
         //senest valgte Item
         const cItem = player[container].arr[index]
 
-        //sjekker først om det er items av samme type, slik at vi kan legge de sammen
-        if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block" && swap.number != 64 && cItem.number != 64){
-            //kan endre på cItem istedenfor å endre på player[container].arr[index] fordi de henger sammen (begge er pekere på det samme stedet i minne)
-            //men kan ikke endre på swap for å endre på den forrige man trykket på, fordi den kun er linket til player.selectedSwap, og player.selectedSwap
-            //er ikke linket til denne plassen, den er bare en "kopi", dermed er cItem og bare en kopi
-            cItem.number += swap.number
-            if(cItem.number > 64){
-                player[swap.container].arr[swap.index].number = cItem.number - 64
-                cItem.number = 64
-                player[swap.container].arr[swap.index].highlighted = false
-                //legges bare tilbake igjen
+
+        if(cItem.container == swap.container && cItem.index == swap.index){
+            delete player.selectedSwap
+            player[swap.container].arr[swap.index].highlighted = false
+            return
+        }
+        if(button == 2){
+            
+            if(equalsSome(swap.type, ["block", "material"]) && equalsSome(cItem.type, ["empty", "block", "material"])){
+                if(cItem.type == "empty"){
+                    delete player[container].arr[index]
+                    player[container].arr[index] = new Item(swap.type, swap.value, 1, cItem.index, cItem.container, false)
+                    player[swap.container].arr[swap.index].number --
+                    delete player.selectedSwap
+                    player.selectedSwap = player[swap.container].arr[swap.index]
+                }
+                else if(cItem.value == swap.value && cItem.number < 64){
+                    cItem.number ++
+                    player[swap.container].arr[swap.index].number --
+                    delete player.selectedSwap
+                    player.selectedSwap = player[swap.container].arr[swap.index]
+                }
+                
+                //hvis itemet du holder går tomt skal det bli borte
+                if(player[swap.container].arr[swap.index].number <= 0){
+                    delete player[swap.container].arr[swap.index]
+                    player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
+                    delete player.selectedSwap
+                }
+            }
+        }
+        else if(button == 0){
+
+            //sjekker først om det er items av samme type, slik at vi kan legge de sammen
+            if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block" && swap.number != 64 && cItem.number != 64){
+                //kan endre på cItem istedenfor å endre på player[container].arr[index] fordi de henger sammen (begge er pekere på det samme stedet i minne)
+                //men kan ikke endre på swap for å endre på den forrige man trykket på, fordi den kun er linket til player.selectedSwap, og player.selectedSwap
+                //er ikke linket til denne plassen, den er bare en "kopi", dermed er cItem og bare en kopi
+                cItem.number += swap.number
+                if(cItem.number > 64){
+                    player[swap.container].arr[swap.index].number = cItem.number - 64
+                    cItem.number = 64
+                    player[swap.container].arr[swap.index].highlighted = false
+                    //legges bare tilbake igjen
+                }
+                else{
+                    delete player[swap.container].arr[swap.index]
+                    player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
+                }
             }
             else{
+                //hvis de itemsa som skal byttes ikke er av samme type
+                //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
                 delete player[swap.container].arr[swap.index]
-                player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, false)
+                player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, false)
+                delete player[container].arr[index]
+                player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, false)
             }
+            //sletter sånn at ikke minnet blir fylt opp igjen og igjen hver gang man lager new Object()
+            delete cItem
+            delete swap
+            delete player.selectedSwap
         }
-        else{
-            //hvis de itemsa som skal byttes ikke er av samme type
-            //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
-            delete player[swap.container].arr[swap.index]
-            player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, false)
-            delete player[container].arr[index]
-            player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, false)
-        }
-        //sletter sånn at ikke minnet blir fylt opp igjen og igjen hver gang man lager new Object()
-        delete cItem
-        delete swap
-        delete player.selectedSwap
+
       }
   
     //hvis spilleren ikke har valgt et Item for bytte enda, og det ikke er et tomt item der du trykker
-    else if(player[container].arr[index].type != "empty"){
+    else if(player[container].arr[index].type != "empty" && button == 0){
     player[container].arr[index].highlighted = true
     const cItem = player[container].arr[index]
     player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, true)
