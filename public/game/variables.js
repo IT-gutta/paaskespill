@@ -40,9 +40,8 @@ const playerSprites = {
           newImg("assets/player/man/running_right/2.png"), 
           newImg("assets/player/man/running_right/3.png"), 
           newImg("assets/player/man/running_right/4.png")]
-      }
-
-      
+      },
+      mining: ["assets/player/man/mining/1.png", "assets/player/man/mining/2.png", "assets/player/man/mining/3.png", "assets/player/man/mining/4.png"]
     }
 }
 
