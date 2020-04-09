@@ -152,36 +152,10 @@ io.on('connection', socket => {
   })
 
 
-  socket.on('swap', (index, type) => {
+  socket.on('swap', (index, container) => {
     if(!userExists(users, socket.id)) return
-    // console.log(index, type)
+    swap(users[socket.id].player, index, container)
 
-    const player = users[socket.id].player
-    if(player.selectedSwap){
-
-      //tidligere valgte Item (allerede highlighted)
-      const swap = player.selectedSwap
-
-      //senest valgte Item
-      const cItem = player[type].arr[index]
-
-      //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
-      delete player[swap.container].arr[swap.index]
-      player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
-      delete player[type].arr[index]
-      player[type].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
-
-      delete cItem
-      delete swap
-      delete player.selectedSwap
-    }
-
-    //hvis det eksisterer ikke er et tomt item der du trykker
-    else if(player[type].arr[index].type != "empty"){
-      player[type].arr[index].highlighted = true
-      const cItem = player[type].arr[index]
-      player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
-    }
   })
 
   socket.on('disconnect', () => {
