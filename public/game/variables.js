@@ -70,7 +70,7 @@ const inventory = newImg("assets/ui/inventory.png")
 
 const safe_inside = newImg("assets/ui/safe_inside.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe]
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, 0, 0, 0, 12]
 
 
 
