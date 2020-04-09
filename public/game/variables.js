@@ -13,19 +13,36 @@ function newImg(src){
 }
 
 const playerSprites = {
-    girl: [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
+    // girl: [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
     boy: {
-      left: [
-        newImg("assets/player/man/running_left/1.png"), 
-        newImg("assets/player/man/running_left/2.png"), 
-        newImg("assets/player/man/running_left/3.png"), 
-        newImg("assets/player/man/running_left/4.png")],
-      front: [newImg("assets/player/man/front/boy_front.png")],
-      right: [
-        newImg("assets/player/man/running_right/1.png"), 
-        newImg("assets/player/man/running_right/2.png"), 
-        newImg("assets/player/man/running_right/3.png"), 
-        newImg("assets/player/man/running_right/4.png")]
+      running: {
+        left: [
+          newImg("assets/player/man/running_left/1.png"), 
+          newImg("assets/player/man/running_left/2.png"), 
+          newImg("assets/player/man/running_left/3.png"), 
+          newImg("assets/player/man/running_left/4.png")],
+        front: [newImg("assets/boy_front.png")],
+        right: [
+          newImg("assets/player/man/running_right/1.png"), 
+          newImg("assets/player/man/running_right/2.png"), 
+          newImg("assets/player/man/running_right/3.png"), 
+          newImg("assets/player/man/running_right/4.png")]
+      },
+      walking: {
+        left: [
+          newImg("assets/player/man/running_left/1.png"), 
+          newImg("assets/player/man/running_left/2.png"), 
+          newImg("assets/player/man/running_left/3.png"), 
+          newImg("assets/player/man/running_left/4.png")],
+        front: [newImg("assets/boy_front.png")],
+        right: [
+          newImg("assets/player/man/running_right/1.png"), 
+          newImg("assets/player/man/running_right/2.png"), 
+          newImg("assets/player/man/running_right/3.png"), 
+          newImg("assets/player/man/running_right/4.png")]
+      }
+
+      
     }
 }
 

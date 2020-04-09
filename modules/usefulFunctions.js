@@ -52,9 +52,9 @@ function updateMousePos(player, clientX, clientY, canvasWidth, canvasHeight){
     player.mouse.y = player.y + (clientY - canvasHeight/2)/32
 }
 
-function toggleSprint(player, bool){
-  if(bool && player.falling) return
-  player.sprinting = bool
+function playerMovement(player, state){
+  if(state=="running" && player.falling) return
+  player.movement = state
 }
 
 function copy(ob){
@@ -65,4 +65,4 @@ const f = num => Math.floor(num)
 const c = num => Math.ceil(num)
 const r = num => Math.r(num)
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos, toggleSprint}
+module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos, playerMovement}
