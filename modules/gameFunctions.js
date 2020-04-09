@@ -13,8 +13,7 @@ const toggleSprint = usefulFunctions.toggleSprint
 function updateSprites(player){
     if(player.direction == "front") player.sprite.index = 0
     else {
-        if(player.sprite.index == 3) player.sprite.index = 0
-        else player.sprite.index ++
+        player.sprite.index = player.sprite.index == 3 ? 0 : player.sprite.index + 1
     }
     player.sprite.counter = 0
 }
