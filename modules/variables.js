@@ -103,6 +103,7 @@ let map = [
     [7, 7, 7, 7, 7, 7, 7, 7, 7, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 3, 3, 3, 7, 7, 7, 7, 7, 7, 7, 7, 7]
 ]
 const solidBlocks = [1, 2, 3, 4, 5, 6, 7, 8]
+const val = {air:0, stone:1, log:2, leaves:3, coal_ore:4, grass:5, iron_ore:6, dirt:7, safe:8, grill:9, iron_pick:12}
 
 
 class Item{
@@ -156,5 +157,6 @@ let interactMap = [
     [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
 ]
 let interactables = [8]
+
 
 module.exports = {map, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller}

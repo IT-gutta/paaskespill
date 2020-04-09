@@ -31,6 +31,7 @@ const Controller = variables.Controller
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
+const recipes = require('./modules/recipes')
 const update = gameFunctions.update
 const updateSprites = gameFunctions.updateSprites
 const keysD = gameFunctions.keysD
