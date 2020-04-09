@@ -53,7 +53,7 @@ function updateMousePos(player, clientX, clientY, canvasWidth, canvasHeight){
 }
 
 function playerMovement(player, state){
-  if(state=="sprinting" && player.falling) return
+  if(state=="running" && player.falling) return
   player.movement = state
 }
 

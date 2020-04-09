@@ -15,7 +15,7 @@ function newImg(src){
 const playerSprites = {
     // girl: [newImg("assets/girl_left.png"), newImg("assets/girl_left.png"), newImg("assets/girl_front.png"), newImg("assets/girl_right.png"), newImg("assets/girl_right.png")],
     boy: {
-      sprinting: {
+      running: {
         left: [
           newImg("assets/player/man/running_left_animation/1.png"), 
           newImg("assets/player/man/running_left_animation/2.png"), 

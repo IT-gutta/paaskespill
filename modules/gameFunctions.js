@@ -23,11 +23,11 @@ function update(player, map, g){
         //movement og collision
         if(player.moving){
             if(player.direction=="left"){
-                if(player.movement == "sprinting") player.vx = -0.01
+                if(player.movement == "running") player.vx = -0.01
                 else player.vx = -0.005
             }
             else{
-                if(player.movement == "sprinting") player.vx = 0.01
+                if(player.movement == "running") player.vx = 0.01
                 else player.vx = 0.005
             }
         }
@@ -134,7 +134,7 @@ function keysD(keyCode, player, controller){
     }
     //shift, aka sprint
     else if(keyCode == 16){
-        playerMovement(player, "sprinting")
+        playerMovement(player, "running")
     }
 }
 
