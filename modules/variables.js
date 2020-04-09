@@ -5,6 +5,7 @@ class Player {
     this.y = 8,
     this.direction = "front",
     this.moving = false,
+    this.sprinting = false,
     this.falling = false,
     this.vx = 0,
     this.vy = 0

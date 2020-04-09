@@ -8,6 +8,7 @@ const usefulFunctions = require("./usefulFunctions")
 const equalsSome = usefulFunctions.equalsSome
 const equalsAll = usefulFunctions.equalsAll
 const mapValue = usefulFunctions.mapValue
+const toggleSprint = usefulFunctions.toggleSprint
 
 function updateSprites(player){
     if(player.direction == "left") player.sprite.index = player.sprite.index == 1 ? 0 : 1
@@ -21,10 +22,12 @@ function update(player, map, g){
         //movement og collision
         if(player.moving){
             if(player.direction=="left"){
-                player.vx = -0.005
+                if(player.sprinting) player.vx = -0.01
+                else player.vx = -0.005
             }
             else{
-                player.vx = 0.005
+                if(player.sprinting) player.vx = 0.01
+                else player.vx = 0.005
             }
         }
         else{
@@ -112,21 +115,25 @@ function keysD(keyCode, player, controller){
         player.moving = true
         controller.left = true
     }
-    if(keyCode==68){
+    else if(keyCode==68){
         if(equalsSome(player.direction, ["left", "front"])) player.sprite.index = 4
         player.direction = "right"
         player.moving = true
         controller.right = true
     }
-    if(keyCode==66){
+    else if(keyCode==66){
         player.moving = true
         controller.up = true
     }
-    if(keyCode==32){
+    else if(keyCode==32){
         if(!player.falling){
             player.falling = true
             player.vy = -0.01
         }
+    }
+    //shift, aka sprint
+    else if(keyCode == 16){
+        toggleSprint(player, true)
     }
 }
 
@@ -147,6 +154,10 @@ function keysU(keyCode, player, controller){
             
         }
         controller.right = false
+    }
+    //shift, aka sprint
+    else if(keyCode == 16){
+        toggleSprint(player, false)
     }
 }
 
@@ -271,49 +282,43 @@ function swap(player, index, container){
         const cItem = player[container].arr[index]
 
         //sjekker først om det er items av samme type, slik at vi kan legge de sammen
-        if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block"){
+        if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block" && swap.number != 64 && cItem.number != 64){
+            //kan endre på cItem istedenfor å endre på player[container].arr[index] fordi de henger sammen (begge er pekere på det samme stedet i minne)
+            //men kan ikke endre på swap for å endre på den forrige man trykket på, fordi den kun er linket til player.selectedSwap, og player.selectedSwap
+            //er ikke linket til denne plassen, den er bare en "kopi", dermed er cItem og bare en kopi
             cItem.number += swap.number
             if(cItem.number > 64){
-                swap.number = cItem.number - 64
+                player[swap.container].arr[swap.index].number = cItem.number - 64
                 cItem.number = 64
+                player[swap.container].arr[swap.index].highlighted = false
                 //legges bare tilbake igjen
             }
             else{
-                
+                delete player[swap.container].arr[swap.index]
+                player[swap.container].arr[swap.index] = new Item("empty", null, null, swap.index, swap.container, 1, false)
             }
         }
-
-        //sjekker først om det er items av samme type, slik at vi kan legge de sammen
-        if(cItem.value == swap.value && cItem.type == "block" && swap.type == "block"){
-            cItem.number += swap.number
-            if(cItem.number > 64){
-                swap.number = cItem.number - 64
-                cItem.number = 64
-                //legges bare tilbake igjen
-            }
-            else{
-                
-            }
+        else{
+            //hvis de itemsa som skal byttes ikke er av samme type
+            //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
+            delete player[swap.container].arr[swap.index]
+            player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
+            delete player[container].arr[index]
+            player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
         }
-  
-        //bruker delete for unngå at serveren kan krasje ved lange kjøretider pga fullt minne
-        delete player[swap.container].arr[swap.index]
-        player[swap.container].arr[swap.index] = new Item(cItem.type, cItem.value, cItem.number, swap.index, swap.container, cItem.mineSpeed, false)
-        delete player[container].arr[index]
-        player[container].arr[index] = new Item(swap.type, swap.value, swap.number, cItem.index, cItem.container, swap.mineSpeed, false)
-  
+        //sletter sånn at ikke minnet blir fylt opp igjen og igjen hver gang man lager new Object()
         delete cItem
         delete swap
         delete player.selectedSwap
       }
   
-      //hvis det eksisterer ikke er et tomt item der du trykker
-      else if(player[container].arr[index].type != "empty"){
-        player[container].arr[index].highlighted = true
-        const cItem = player[container].arr[index]
-        player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
-        delete cItem
-      }
+    //hvis spilleren ikke har valgt et Item for bytte enda, og det ikke er et tomt item der du trykker
+    else if(player[container].arr[index].type != "empty"){
+    player[container].arr[index].highlighted = true
+    const cItem = player[container].arr[index]
+    player.selectedSwap = new Item(cItem.type, cItem.value, cItem.number, cItem.index, cItem.container, cItem.mineSpeed, true)
+    delete cItem
+    }
 }
 
 module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap}

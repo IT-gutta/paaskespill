@@ -21,8 +21,8 @@ form.onsubmit = (e) => {
         })
     
         window.addEventListener("keydown", e => {
-            if(equalsSome(e.keyCode, [65, 68, 32, 66])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
-            if(e.keyCode == 69/*nice*/ && !showSafe) {
+            if(equalsSome(e.keyCode, [65, 68, 32, 66, 16])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
+            if(e.keyCode == 69/*nice*/ && !showSafe){
                 showInventory = !showInventory
                 if(!showInventory) socket.emit("closeInventory")
             }
@@ -39,7 +39,7 @@ form.onsubmit = (e) => {
         })
     
         window.addEventListener("keyup", e => {
-            if(equalsSome(e.keyCode, [65, 68, 66])) socket.emit('keysU', e.keyCode)
+            if(equalsSome(e.keyCode, [65, 68, 66, 16])) socket.emit('keysU', e.keyCode)
         })
 
         window.addEventListener("mousemove", e => {

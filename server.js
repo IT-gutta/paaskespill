@@ -47,6 +47,7 @@ const copy = usefulFunctions.copy
 const insertIntoCollection = dbFunctions.insertIntoCollection
 const updatePlayerHand = gameFunctions.updatePlayerHand
 const swap = gameFunctions.swap
+const toggleSprint = usefulFunctions.toggleSprint
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
