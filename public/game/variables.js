@@ -21,7 +21,7 @@ const playerSprites = {
           newImg("assets/player/man/running_left/2.png"), 
           newImg("assets/player/man/running_left/3.png"), 
           newImg("assets/player/man/running_left/4.png")],
-        front: [newImg("assets/boy_front.png")],
+        front: [newImg("assets/player/man/front/boy_front.png")],
         right: [
           newImg("assets/player/man/running_right/1.png"), 
           newImg("assets/player/man/running_right/2.png"), 
@@ -34,7 +34,7 @@ const playerSprites = {
           newImg("assets/player/man/running_left/2.png"), 
           newImg("assets/player/man/running_left/3.png"), 
           newImg("assets/player/man/running_left/4.png")],
-        front: [newImg("assets/boy_front.png")],
+        front: [newImg("assets/player/man/front/boy_front.png")],
         right: [
           newImg("assets/player/man/running_right/1.png"), 
           newImg("assets/player/man/running_right/2.png"), 
