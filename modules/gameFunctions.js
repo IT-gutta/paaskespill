@@ -12,11 +12,17 @@ const playerMovement = usefulFunctions.playerMovement
 const stageIncrement = usefulFunctions.stageIncrement
 
 function updateSprites(player){
-    if(player.direction == "front") player.sprite.index = 0
+    if(player.direction == "front") player.sprite.movement.index = 0
     else {
-        player.sprite.index = player.sprite.index == 3 ? 0 : player.sprite.index + 1
+        player.sprite.movement.index = player.sprite.movement.index == 3 ? 0 : player.sprite.movement.index + 1
     }
-    player.sprite.counter = 0
+    player.sprite.movement.counter = 0
+
+}
+
+function updateMiningSprites(player) {
+    player.sprite.mining.index = player.sprite.mining.index == 3 ? 0 : player.sprite.mining.index + 1
+    player.sprite.mining.counter = 0
 }
 
 
@@ -41,8 +47,11 @@ function update(player, map, g){
             }
         }
 
-        if(player.sprite.counter > player.sprite.delay) updateSprites(player)
-        else player.sprite.counter ++
+        if(player.sprite.movement.counter > player.sprite.movement.delay) updateSprites(player)
+        else player.sprite.movement.counter ++
+        
+        if(player.sprite.movement.counter > player.sprite.movement.delay) updateSprites(player)
+        else player.sprite.movement.counter ++
 
         if(player.mouse.counter > player.mouse.delay){
             if(player.mouse.keys[0]) click(0, player)
@@ -112,13 +121,13 @@ function update(player, map, g){
 
 function keysD(keyCode, player, controller){
     if(keyCode==65){
-        if(equalsSome(player.direction, ["right", "front"])) player.sprite.index = 0
+        if(equalsSome(player.direction, ["right", "front"])) player.sprite.movement.index = 0
         player.direction = "left"
         player.moving = true
         controller.left = true
     }
     else if(keyCode==68){
-        if(equalsSome(player.direction, ["left", "front"])) player.sprite.index = 0
+        if(equalsSome(player.direction, ["left", "front"])) player.sprite.movement.index = 0
         player.direction = "right"
         player.moving = true
         controller.right = true
@@ -144,7 +153,7 @@ function keysU(keyCode, player, controller){
         if(!controller.right){
             player.moving = false
             player.direction = "front"
-            player.sprite.index = 0
+            player.sprite.movement.index = 0
         }
         controller.left = false
     }
@@ -152,7 +161,7 @@ function keysU(keyCode, player, controller){
         if(!controller.left){
             player.moving = false
             player.direction = "front"
-            player.sprite.index = 0
+            player.sprite.movement.index = 0
         }
         controller.right = false
     }
@@ -231,6 +240,7 @@ function mine(player){
         }
     }
     else{
+        updateSprites(player)
         player.mining.active = true
         player.mining.current = {x: player.mouse.r.x, y: player.mouse.r.y}
         player.mining.stage = 0

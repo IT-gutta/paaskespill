@@ -33,11 +33,19 @@ class Player {
       botLeft: undefined,
       botRight: undefined
     }
+    
     this.sprite = {
-      index: 2,
       playerSprite: "boy",
-      delay: 100,
-      counter: 0
+      movement: {
+        index: 0,
+        delay: 100,
+        counter: 0
+      },
+      mining:  {
+        index: 0,
+        delay: 100,
+        counter: 0
+      }
     }
 
     this.mouse = {

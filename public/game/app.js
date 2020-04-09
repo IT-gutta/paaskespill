@@ -15,7 +15,7 @@ form.onsubmit = (e) => {
         })
         socket.on('heartbeat', (map, users, safe) => {
             for (let [id, user] of Object.entries(users)) {
-                user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.index]
+                user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.movement.index]
             }
             draw(map, users, safe)
         })
