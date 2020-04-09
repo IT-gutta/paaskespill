@@ -14,10 +14,7 @@ function addRecipe(recipes, grid, type, value, quantity){
     current.quantity = quantity
     current.type = type
 }
-addRecipe(recipes, [1,1,1,1,1,1,1,1,1], "block", 6, 7)
-addRecipe(recipes, [1,1,1,0,9,0,0,9,0], "pickaxe", 12, 1)
 
-// let b = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 function checkRecipe(currentRecipe){
     try{
@@ -32,6 +29,21 @@ function checkRecipe(currentRecipe){
     }
 }
 
-// console.log(checkRecipe(b))
+
+addRecipe(recipes, [1,1,1,1,1,1,1,1,1], "block", 6, 7)
+addRecipe(recipes, [1,1,1,0,9,0,0,9,0], "pickaxe", 12, 1)
+
+function addRecipeSingleItem(val, type, outComeValue, quantity){
+    for(let i = 0; i < 9; i++){
+        let arr = []
+        for(let j = 0; j < 9; j++){
+            if(i==j) arr[j] = val
+            else arr[j] = 0
+        }
+        addRecipe(recipes, arr, type, outComeValue, quantity)
+    }
+}
+
+
 
 module.exports = {checkRecipe}
