@@ -4,7 +4,7 @@ const socket = (window.location.href == "http://localhost:3000/world/") ? io.con
 
 
 class NoiseMap{
-    constructor(width, height, scale, octaves, lacunarity, persistance, blockSize){
+    constructor(width, height, scale, octaves, lacunarity, persistance, blockSize, canWidth, xPos){
         this.width = width
         this.height = height
         this.scale = scale
@@ -24,7 +24,7 @@ class NoiseMap{
             this.noiseHeight = 0
 
             for(let i = 0; i < this.octaves; i++){
-                const sampleX = x / this.scale * this.frequency
+                const sampleX = (x - (((canWidth/2))/blockSize)) / this.scale * this.frequency 
                 const perlinValue = noise(sampleX) * 2 - 1
 
                 this.noiseHeight += perlinValue * this.amplitude
@@ -89,7 +89,7 @@ let prevX, prevY, mouseIsPressed, slideSpeed
 function setup(){
     createCanvas(window.innerWidth-5, window.innerHeight-5)
     colorMode(HSB)
-    scale = createSlider(1, 1000, 50)
+    scale = createSlider(1, 1000, 500)
     octaves = createSlider(1, 10, 3)
     lacunarity = createSlider(100, 500, 200)
     persistance = createSlider(200, 1000, 500)
@@ -139,17 +139,13 @@ function setup(){
 function draw(){
     drawingContext.clearRect(0, 0, width, height)
     const sizeValue = blockSize.value()
-    const xVal = xPos.value()
-    const yVal = yPos.value()
+    const xVal = /*0*/ xPos.value()
+    const yVal = /*0*/ yPos.value()
 
-    let noiseMap = new NoiseMap(10000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, sizeValue)
+    let noiseMap = new NoiseMap(10000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, sizeValue, width, xVal)
     let map = noiseMap.create2DArr(noiseMap.map, 10000, 3000, sizeValue)
     
-    // beginShape()
-    // noiseMap.draw()
-    // endShape()
     
-
 
     beginShape()
     for(let y = Math.floor(yVal/sizeValue); y < Math.floor(yVal+height/sizeValue); y++){
@@ -157,6 +153,11 @@ function draw(){
             if(map[y] && map[y][x] == 1) drawingContext.drawImage(img, x*sizeValue - xVal, y*sizeValue - yVal, sizeValue, sizeValue)
         }
     }
+    // for(let y = 0; y < map.length; y++){
+    //         for(let x = 0; x < map[0].length; x++){
+    //             if(map[y][x] == 1) drawingContext.drawImage(img, x*sizeValue, y*sizeValue, sizeValue, sizeValue)
+    //         }
+    //     }
     endShape()
 
     text(`Scale: ${scale.value()}`, 10, 20)
