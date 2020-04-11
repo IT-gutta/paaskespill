@@ -40,6 +40,7 @@ function equalsAll(val, arr){
 }
 
 function mapValue(pos, map){
+  if(Math.floor(pos.y) < 0) return undefined
   return map[Math.floor(pos.y)][Math.floor(pos.x)]
 }
 
@@ -74,6 +75,7 @@ function getLevel(val){
 }
 function getMiningDifficulty(val){
   // for øyeblikket bare returnere 1 uansett hva slags blokk det er kanskje?
+  if(val == 10) return Infinity
   return 1
 }
 

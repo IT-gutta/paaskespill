@@ -91,7 +91,7 @@ function update(player, map, g){
         }
 
 
-        if(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)]==0 && map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)]==0){
+        if(mapValue({x:player.pos.botLeft.x, y: player.y+2}, map)==0 && mapValue({x:player.pos.botRight.x, y: player.y+2}, map)==0){
             player.falling = true
         }
 
@@ -171,6 +171,7 @@ function click(keyCode, player){
     player.mouse.counter = 0
     //høyreklikk, sjekker om man kan sette ut blokk
     const [py, px, PY, PX] = [player.mouse.r.y, player.mouse.r.x, player.mouse.y, player.mouse.x]
+    if(py < 1 || py > map.length-1 || px < 1 || px > map[0].length-1) return false
     if(keyCode==2){
         if(map[py][px]==0){
             if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
@@ -295,7 +296,7 @@ function sight(pPos, mPos, py, px){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+        if(!map[Math.floor(pPos[1]+(x-pPos[0])*a)] || map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
             return false
         }
     }
@@ -303,7 +304,7 @@ function sight(pPos, mPos, py, px){
 }
 //Sjekker om spilleren har trykket på en block man kan interagere med
 function interaction(player){
-    if(map[player.mouse.r.y][player.mouse.r.x]==8){
+    if(map[player.mouse.r.y] && map[player.mouse.r.y][player.mouse.r.x]==8){
         player.safe = interactMap[player.mouse.r.y][player.mouse.r.x]
         return 'safeOpened'
     }
