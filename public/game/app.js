@@ -13,11 +13,11 @@ form.onsubmit = (e) => {
             playerID = id
             console.log(playerID)
         })
-        socket.on('heartbeat', (map, users, safe) => {
+        socket.on('heartbeat', (map, users, world) => {
             for (let [id, user] of Object.entries(users)) {
                 user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.index]
             }
-            draw(map, users, safe)
+            draw(map, users, world)
         })
     
         window.addEventListener("keydown", e => {
@@ -111,7 +111,7 @@ form.onsubmit = (e) => {
         
 }
 
-function draw(map, users){
+function draw(map, users, world){
 
     c.textAlign = "center"
     
@@ -128,8 +128,13 @@ function draw(map, users){
             if(j<0) continue
             if(j>=map[i].length) break
             c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+            // c.fillText(world.lightLevels.map[i][j], canvas.width/2 + 32*(j-player.x-7/32)+16, canvas.height/2 + 32*(i-player.y-32/64)+16, 32, 32)
+            c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.map[i][j]+1)/10}`
+            // c.fillRect(canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32.1, 32.1)
         }
     }
+    
+
 
     //draw miningprogression
     if(player.mining.active){// && Math.floor(player.mining.stage) < miningImgs.length){
@@ -160,6 +165,10 @@ function draw(map, users){
         c.fillText(user.username, canvas.width/2 + 32*(user.player.x-player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-player.y-32/64) - 16)
     }
   }
+
+//   c.fillStyle = `rgba(0, 0, 0, ${0*Math.abs(Math.cos(2*Math.PI/60000*world.time))}`;
+//   c.fillRect(0, 0, w, h);
+  
 
   //font for inventory og hotbar
   c.font = "20px Arial bold"
