@@ -134,11 +134,11 @@ class NoiseMap{
         this.frequency = 1
 
         for(let x = 0; x < f(this.width/blockSize); x++){
-            if(x > f(this.width/(blockSize*2))){
-                if(this.scale > scale/4) this.scale-=5
-                if(this.persistance > 0.4) this.persistance-=0.01
-                this.octaves = 6
-            }
+            // if(x > f(this.width/(blockSize*2))){
+            //     if(this.scale > scale/4) this.scale-=5
+            //     if(this.persistance > 0.4) this.persistance-=0.01
+            //     this.octaves = 6
+            // }
             this.amplitude = 1
             this.frequency = 1
             this.noiseHeight = 0
@@ -160,13 +160,13 @@ class NoiseMap{
         }
 
         //normalize values
-        let max = 0.5
-        let min = 0.2
+        // let max = 0.5
+        // let min = 0.2
         for(let i = 0; i < this.noiseMap.length; i++){
-            if(i > this.noiseMap.length/2 && max < 1) max+=0.001
-            if(i > this.noiseMap.length/2 && min < 0.5) min+=0.001
+            // if(i > this.noiseMap.length/2 && max < 1) max+=0.001
+            // if(i > this.noiseMap.length/2 && min < 0.5) min+=0.001
 
-            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 1-max, 1-min)   
+            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 0.2/*1-max*/, 0.8/*1-min*/)   
         }
         // console.log(this.noiseMap)
     }
