@@ -100,8 +100,8 @@ const treeRate = 0.3
 //         bedrockLevel2[i] = random()<0.7 ? true : false
 //         treeBools[i] = random()<treeRate ? true : false
 //         oreBools[i] = []
-//         for(let x = 0; x < f(width/blockSize); x++){
-//             oreBools[i][x] = [random()<oreRate ? true : false, randInt(0, oreChunkTypes.length), randInt(0, ores.length)]
+//         for(let y = 0; y < f(height/blockSize); y++){
+//             oreBools[i][y] = [random()<oreRate ? true : false, randInt(0, oreChunkTypes.length), randInt(0, ores.length)]
 //         }
 //     }
 //     //bedrock level 3
@@ -133,7 +133,12 @@ class NoiseMap{
         this.amplitude = 1
         this.frequency = 1
 
-        for(let x = 0; x < Math.floor(this.width/blockSize); x++){
+        for(let x = 0; x < f(this.width/blockSize); x++){
+            if(x > f(this.width/(blockSize*2))){
+                if(this.scale > scale/4) this.scale-=5
+                if(this.persistance > 0.4) this.persistance-=0.01
+                this.octaves = 6
+            }
             this.amplitude = 1
             this.frequency = 1
             this.noiseHeight = 0
@@ -154,9 +159,14 @@ class NoiseMap{
             this.noiseMap.push(this.noiseHeight)
         }
 
-        //normalize values to between 0 and 1
+        //normalize values
+        let max = 0.5
+        let min = 0.2
         for(let i = 0; i < this.noiseMap.length; i++){
-            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 0, 1)
+            if(i > this.noiseMap.length/2 && max < 1) max+=0.001
+            if(i > this.noiseMap.length/2 && min < 0.5) min+=0.001
+
+            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 1-max, 1-min)   
         }
         // console.log(this.noiseMap)
     }
@@ -214,7 +224,8 @@ function getValue(map, x, y){
         depth++
         i--
     }
-    if(y < dirtThreshHold(map.length)){
+    let highestDirt = map.length * 0.35
+    if(y > highestDirt){
         //gress
         if(depth == 0) return 5
 
@@ -225,7 +236,7 @@ function getValue(map, x, y){
     //ellers bare returnere luft
     return 1
 }
-const dirtThreshHold = height => height-15
+
 
 function placeTree(map, x, y){
     //sjekker om det er plass
@@ -279,20 +290,20 @@ let prevX, prevY, mouseIsPressed, slideSpeed, seedInp, createRandomSeed, updateB
 function setup(){
     createCanvas(window.innerWidth-5, window.innerHeight-5)
     colorMode(HSB)
-    scale = createSlider(1, 1000, 500)
-    octaves = createSlider(1, 10, 3)
-    lacunarity = createSlider(100, 500, 200)
+    scale = createSlider(1, 2000, 500)
+    octaves = createSlider(1, 10, 5)
+    lacunarity = createSlider(100, 500, 220)
     persistance = createSlider(200, 1000, 500)
-    xPos = createSlider(0, 10000, 0)
-    yPos = createSlider(0, 10000, 0)
+    xPos = createSlider(0, 100000, 0)
+    yPos = createSlider(0, 100000, 0)
     blockSize = createSlider(4, 64, 32)
     slideSpeed = createSlider(1, 4, 1)
     seedInp = createInput("")
     createRandomSeed = createCheckbox("randomSeed", true)
-    cavesOn = createCheckbox("Draw caves", true)
+    cavesOn = createCheckbox("Draw caves", false)
     updateBtn = createButton("Update")
-    zoomSlider = createSlider(1, 1000, 100)
-    caveFillPercent = createSlider(400, 550, 450)
+    zoomSlider = createSlider(10, 10000, 1000)
+    caveFillPercent = createSlider(400, 550, 480)
 
     scale.position(10, 20)
     octaves.position(10, 70)
@@ -339,18 +350,17 @@ function setup(){
         prevX = e.clientX
         prevY = e.clientY
     })
-    canvas.addEventListener("mouseup", e =>{
+    window.addEventListener("mouseup", e =>{
         mouseIsPressed = false
     })
     canvas.addEventListener("wheel", e =>{
         if(e.deltaY < 0){
-            zoomSlider.value(zoomSlider.value() + 5)
+            zoomSlider.value(zoomSlider.value() + 20)
         }
         else{
-            zoomSlider.value(zoomSlider.value() - 5)
+            zoomSlider.value(zoomSlider.value() - 20)
         }
     })
-
     newMap()
 }
 
@@ -360,12 +370,12 @@ function newMap(){
     noiseSeed(seedInp.value())
     randomSeed(seedInp.value())
 
-    noiseMap = new NoiseMap(10000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
+    noiseMap = new NoiseMap(20000, 5000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
     map = noiseMap.create2DArr()
 
   
     if(cavesOn.checked()){
-        caveMap = createCaveMap(10000, 3000, blockSize.value(), caveFillPercent.value()/10)
+        caveMap = createCaveMap(20000, 5000, blockSize.value(), caveFillPercent.value()/10)
         adjustMap(caveMap, map)
     }
 }
@@ -376,7 +386,7 @@ function draw(){
     const sizeValue = blockSize.value()
     const xVal = xPos.value()
     const yVal = yPos.value()
-    const zoom = zoomSlider.value()/100
+    const zoom = zoomSlider.value()/1000
 
     
     if(map){
@@ -386,11 +396,6 @@ function draw(){
                 if(map[y] && map[y][x]) drawingContext.drawImage(imgs[map[y][x]], x*sizeValue*zoom - xVal, y*sizeValue*zoom - yVal, sizeValue*zoom, sizeValue*zoom)
             }
         }
-        // for(let y = 0; y < map.length; y++){
-        //         for(let x = 0; x < map[0].length; x++){
-        //             if(map[y][x] == 1) drawingContext.drawImage(img, x*sizeValue, y*sizeValue, sizeValue, sizeValue)
-        //         }
-        //     }
         endShape()
     }
 
