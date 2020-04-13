@@ -18,40 +18,41 @@ server.listen(PORT)
 let users = {}
 let variables = require('./modules/variables')
 let storage = variables.storage
-let map// = variables.map
+let map = variables.map
+let world = variables.world
 let mapInfo
-let world = {
-  lightLevels:{ 
-    map:[],
-    sun:0
-  },
-  time:0
-}
-storage.collection("map").get().then(snap =>{
-  mapInfo = snap.docs[snap.docs.length-1].data()
-  map = JSON.parse(snap.docs[2].data().stringifiedMap)
-  delete mapInfo.stringifiedMap
-  console.log(!map, mapInfo, snap.docs.length)
+// let world = {
+//   lightLevels:{ 
+//     map:[],
+//     sun:0
+//   },
+//   time:0
+// }
+// storage.collection("map").get().then(snap =>{
+//   mapInfo = snap.docs[snap.docs.length-1].data()
+//   map = JSON.parse(snap.docs[2].data().stringifiedMap)
+//   delete mapInfo.stringifiedMap
+//   console.log(!map, mapInfo, snap.docs.length)
   
   
-  //fylle opp world.lightLeves.map
-  for(let y = 0; y < map.length; y++){
-    world.lightLevels.map[y] = []
-    for(let x = 0; x < map[0].length; x++){
-      world.lightLevels.map[y][x] = 0
-    }
-  }
-}).then( ()=>{
-  //updater mappet til databasen hvert 15 sekund
-  setInterval(() => {
-    storage.collection("map").doc(mapInfo.index).set({
-      stringifiedMap: JSON.stringify(map),
-      height: map.length,
-      width: map[0].length,
-      index: mapInfo.index
-    })
-  }, 30000)
-})
+//   //fylle opp world.lightLeves.map
+//   for(let y = 0; y < map.length; y++){
+//     world.lightLevels.map[y] = []
+//     for(let x = 0; x < map[0].length; x++){
+//       world.lightLevels.map[y][x] = 0
+//     }
+//   }
+// }).then( ()=>{
+//   //updater mappet til databasen hvert 15 sekund
+//   setInterval(() => {
+//     storage.collection("map").doc(mapInfo.index).set({
+//       stringifiedMap: JSON.stringify(map),
+//       height: map.length,
+//       width: map[0].length,
+//       index: mapInfo.index
+//     })
+//   }, 30000)
+// })
 
 let interactables = variables.interactables
 const g = 0.00004
@@ -95,8 +96,8 @@ function heartbeat(){
         update(user.player, map, g, world, users)      
       }
     }
-    // updateTime(world)
-    // updateLightLevels(users, world.time, false, map, world)
+    updateTime(world)
+    updateLightLevels(users, world.time, false, map, world)
       io.emit('heartbeat', map, users, world)
   }
 }

@@ -195,7 +195,7 @@ function click(keyCode, player, map, world, users){
                                 map[py][px] = player.hand.value
                         
                                 player.hand.number -= 1
-                                // updateLightLevels(users, world.time, true, map, world)
+                                updateLightLevels(users, world.time, true, map, world, users)
 
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
@@ -214,7 +214,7 @@ function click(keyCode, player, map, world, users){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
-                if(mapValue(player.mouse.r, map) != 0) mine(player, map, world)
+                if(mapValue(player.mouse.r, map) != 0) mine(player, map, world, users)
             }
         }
     }
@@ -281,12 +281,12 @@ function pickupItem(player, map, fromCrafting){
         }
     }
 }
-function mine(player, map, world){
+function mine(player, map, world, users){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             pickupItem(player, map, false)
-            // updateLightLevels(users, world.time, true, map, world)
+            updateLightLevels(users, world.time, true, map, world)
         }
     }
     else{
@@ -434,7 +434,8 @@ function updateLightLevels(users, time, change, map, world){
     
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for (let [id, user] of Object.entries(users)) {
-          const indexes = user.player.indexes
+        const indexes = user.player.indexes
+        console.log(indexes.startX, indexes.endX, map[0].length)
         for(i= indexes.startX; i<indexes.endX; i++){
             let sunLight = world.lightLevels.sun
             for(j=indexes.startY; j<indexes.endY; j++){
@@ -444,7 +445,7 @@ function updateLightLevels(users, time, change, map, world){
                 }
                 if(lightEmittingBlocks.indexOf(map[j][i])!=-1){
                     world.lightLevels.map[j][i] = 10
-                } 
+                }
             }
         }
         for(i=indexes.startY; i<indexes.endY; i++){
