@@ -300,7 +300,7 @@ function mine(player, map, world){
 //Sjekker om det er blokker mellom spilleren og musa
 function sight(pPos, mPos, py, px, map){
     let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
-    for(x=pPos[0]; x<mPos[0]; x+=0.01){
+    for(x=pPos[0]; x<mPos[0]; x+=0.1){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
@@ -308,7 +308,7 @@ function sight(pPos, mPos, py, px, map){
             return false
         }
     }
-    for(x=pPos[0]; x>mPos[0]; x-=0.01){
+    for(x=pPos[0]; x>mPos[0]; x-=0.1){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
