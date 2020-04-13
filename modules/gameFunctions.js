@@ -93,7 +93,7 @@ function update(player, map, g){
         }
 
 
-        if(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)]==0 && map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)]==0){
+        if(solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)])==-1 && solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)])==-1){
             player.falling = true
         }
 
@@ -183,13 +183,14 @@ function click(keyCode, player){
                             if(player.hand && player.hand.type == "block" && player.hand.number != 0){
                                 map[py][px] = player.hand.value
                                 player.hand.number -= 1
+                                updateLightLevels(world.time, true)
+
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
                                     delete player.inventory.arr[player.hand.index]
                                     player.inventory.arr[player.hand.index] = new Item("empty", 0, null, player.hand.index, player.hand.container, false)
                                     delete player.hand
                                     updatePlayerHand(player)
-                                    updateLightLevels(world.time, true)
                                 }
                             }
                         }
@@ -291,7 +292,7 @@ function sight(pPos, mPos, py, px){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+        if(solidBlocks.indexOf(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)])!=-1){
             return false
         }
     }
@@ -299,7 +300,7 @@ function sight(pPos, mPos, py, px){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+        if(solidBlocks.indexOf(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)])!=-1){
             return false
         }
     }

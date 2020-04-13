@@ -67,6 +67,19 @@ const sky = newImg("assets/backgrounds/sky.png")
 
 const inventory = newImg("assets/ui/inventory.png")
 
+const shadow10 = newImg("assets/backgrounds/shadow10.png")
+const shadow20 = newImg("assets/backgrounds/shadow20.png")
+const shadow30 = newImg("assets/backgrounds/shadow30.png")
+const shadow40 = newImg("assets/backgrounds/shadow40.png")
+const shadow50 = newImg("assets/backgrounds/shadow50.png")
+const shadow60 = newImg("assets/backgrounds/shadow60.png")
+const shadow70 = newImg("assets/backgrounds/shadow70.png")
+const shadow80 = newImg("assets/backgrounds/shadow80.png")
+const shadow90 = newImg("assets/backgrounds/shadow90.png")
+const shadow100 = newImg("assets/backgrounds/shadow100.png")
+const shadows = [shadow10, shadow20, shadow30, shadow40, shadow50, shadow60, shadow70, shadow80, shadow90, shadow100]
+shadows.reverse()
+
 const safe_inside = newImg("assets/ui/safe_inside.png")
 
 const crafting = newImg("assets/ui/crafting.png")
