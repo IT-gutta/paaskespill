@@ -435,7 +435,7 @@ function updateLightLevels(users, time, change, map, world){
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for (let [id, user] of Object.entries(users)) {
         const indexes = user.player.indexes
-        console.log(indexes.startX, indexes.endX, map[0].length)
+        // console.log(indexes.startX, indexes.endX, map[0].length)
         for(i= indexes.startX; i<indexes.endX; i++){
             let sunLight = world.lightLevels.sun
             for(j=indexes.startY; j<indexes.endY; j++){
