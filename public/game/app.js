@@ -147,7 +147,7 @@ function draw(map, users, world){
                     
                     c.drawImage(shadows[world.lightLevels.map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
                 }
-            }   
+            }
         }
     }
     

@@ -91,14 +91,14 @@ const updateLightLevels = gameFunctions.updateLightLevels
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
-    for (let [id, user] of Object.entries(users)) {
+    for (let [id, user] of Object.entries(users)){
       for (let i = 0; i < 10; i++) {
         update(user.player, map, g, world, users)      
       }
     }
     updateTime(world)
     updateLightLevels(users, world.time, false, map, world)
-      io.emit('heartbeat', map, users, world)
+    io.emit('heartbeat', map, users, world)
   }
 }
 
