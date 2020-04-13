@@ -21,12 +21,21 @@ let storage = variables.storage
 let map
 let mapInfo
 storage.collection("map").get().then(snap =>{
-  map = JSON.parse(snap.docs[2].data().stringifiedMap)
   mapInfo = snap.docs[snap.docs.length-1].data()
+  map = JSON.parse(snap.docs[2].data().stringifiedMap)
+  delete mapInfo.stringifiedMap
+  console.log(!map, mapInfo, snap.docs.length)
+  
 }).then( ()=>{
   //updater mappet til databasen hvert 15 sekund
   setInterval(() => {
-    storage.collection("map").doc(mapInfo.index.toString()).set({stringifiedMap: JSON.stringify(map)})
+    console.log("hei")
+    storage.collection("map").doc(mapInfo.index).set({
+      stringifiedMap: JSON.stringify(map),
+      height: map.length,
+      width: map[0].length,
+      index: mapInfo.index
+    })
   }, 30000)
 })
 
