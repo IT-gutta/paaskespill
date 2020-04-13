@@ -18,7 +18,6 @@ server.listen(PORT)
 let users = {}
 let variables = require('./modules/variables')
 let storage = variables.storage
-let getMap = variables.getMap
 let map
 let mapInfo
 storage.collection("map").get().then(snap =>{
