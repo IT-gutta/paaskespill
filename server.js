@@ -17,7 +17,12 @@ server.listen(PORT)
 // ----variables
 let users = {}
 let variables = require('./modules/variables')
-let map = variables.map
+let storage = variables.storage
+let getMap = variables.getMap
+let map
+getMap(storage).then( dat=>{
+  map = dat
+})
 let interactables = variables.interactables
 const g = 0.00004
 const db = require('./modules/db')

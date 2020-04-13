@@ -1,5 +1,10 @@
 const variables = require('./variables')
-let map = variables.map
+let storage = variables.storage
+let getMap = variables.getMap
+let map
+getMap(storage).then( dat=>{
+  map = dat
+})
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
 const Item = variables.Item
