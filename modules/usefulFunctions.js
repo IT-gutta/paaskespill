@@ -40,7 +40,7 @@ function equalsAll(val, arr){
 }
 
 function mapValue(pos, map){
-  if(Math.floor(pos.y) < 0) return undefined
+  if(Math.floor(pos.y) < 0 || Math.floor(pos.y) > map.length-1) return undefined
   return map[Math.floor(pos.y)][Math.floor(pos.x)]
 }
 

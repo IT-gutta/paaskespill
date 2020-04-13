@@ -14,6 +14,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore()
 
+// db.collection("map").get().then(snap =>{
+//     console.log(snap.docs[0].data().height)
+// })
+
 
 
 //nyttige funksjoner

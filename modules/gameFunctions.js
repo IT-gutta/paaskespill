@@ -1,5 +1,5 @@
 const variables = require('./variables')
-let map = variables.map
+let storage = variables.storage
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
 const world = variables.world
@@ -49,8 +49,8 @@ function update(player, map, g){
         else player.sprite.counter ++
 
         if(player.mouse.counter > player.mouse.delay){
-            if(player.mouse.keys[0]) click(0, player)
-            else if(player.mouse.keys[2]) click(2, player)
+            if(player.mouse.keys[0]) click(0, player, map)
+            else if(player.mouse.keys[2]) click(2, player, map)
         }
         else player.mouse.counter ++
 
@@ -169,8 +169,8 @@ function keysU(keyCode, player, controller){
 function updatePlayerHand(player){
     player.hand = player.inventory.arr[23+player.hotBarSpot]
 }
-function click(keyCode, player){
-    player.mouse.counter = 0
+function click(keyCode, player, map){
+    player.mouse.counter = 0    
     //høyreklikk, sjekker om man kan sette ut blokk
     const [py, px, PY, PX] = [player.mouse.r.y, player.mouse.r.x, player.mouse.y, player.mouse.x]
     if(py < 1 || py > map.length-1 || px < 1 || px > map[0].length-1) return false
@@ -179,10 +179,12 @@ function click(keyCode, player){
             if(px!=Math.floor(player.x) || (py!=Math.floor(player.y) && py!=Math.floor(player.y+1))){
                 if(map[py+1][px]!=0 || map[py-1][px]!=0 || map[py][px+1]!=0 || map[py][px-1]!=0){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
-                        if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
+                        if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
                             //sjekker om spiller holder en blokk i hånden
                             if(player.hand && player.hand.type == "block" && player.hand.number != 0){
+                                
                                 map[py][px] = player.hand.value
+                        
                                 player.hand.number -= 1
                                 updateLightLevels(world.time, true)
 
@@ -202,8 +204,8 @@ function click(keyCode, player){
     }
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
-            if(sight([player.x+0.5, player.y+1], [PX, PY], py, px)){
-                if(mapValue(player.mouse.r, map) != 0) mine(player)
+            if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
+                if(mapValue(player.mouse.r, map) != 0) mine(player, map)
             }
         }
     }
@@ -270,7 +272,7 @@ function pickupItem(player, map, fromCrafting){
         }
     }
 }
-function mine(player){
+function mine(player, map){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
@@ -287,7 +289,7 @@ function mine(player){
     
 }
 //Sjekker om det er blokker mellom spilleren og musa
-function sight(pPos, mPos, py, px){
+function sight(pPos, mPos, py, px, map){
     let a = (mPos[1]-pPos[1])/(mPos[0]-pPos[0])
     for(x=pPos[0]; x<mPos[0]; x+=0.01){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
@@ -308,7 +310,7 @@ function sight(pPos, mPos, py, px){
     return true
 }
 //Sjekker om spilleren har trykket på en block man kan interagere med
-function interaction(player){
+function interaction(player, map){
     if(map[player.mouse.r.y] && map[player.mouse.r.y][player.mouse.r.x]==8){
         player.safe = interactMap[player.mouse.r.y][player.mouse.r.x]
         return 'safeOpened'
