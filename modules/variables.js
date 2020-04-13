@@ -16,13 +16,13 @@ firebase.initializeApp(firebaseConfig);
 storage = firebase.firestore()
 
 
-function getMap(db){
-  return new Promise( (resolve, reject) =>{
-    db.collection("map").get().then(snap =>{
-      resolve(JSON.parse(snap.docs[0].data().stringifiedMap))
-    })
-  })
-}
+// function getMap(db){
+//   return new Promise( (resolve, reject) =>{
+//     db.collection("map").get().then(snap =>{
+//       resolve(JSON.parse(snap.docs[2].data().stringifiedMap))
+//     })
+//   })
+// }
 
 
 
@@ -196,4 +196,4 @@ let interactMap = [
 let interactables = [8]
 
 
-module.exports = {getMap, storage, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller}
+module.exports = {storage, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller}

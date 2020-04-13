@@ -20,9 +20,17 @@ let variables = require('./modules/variables')
 let storage = variables.storage
 let getMap = variables.getMap
 let map
-getMap(storage).then( dat=>{
-  map = dat
+let mapInfo
+storage.collection("map").get().then(snap =>{
+  map = JSON.parse(snap.docs[2].data().stringifiedMap)
+  mapInfo = snap.docs[snap.docs.length-1].data()
+}).then( ()=>{
+  //updater mappet til databasen hvert 15 sekund
+  setInterval(() => {
+    storage.collection("map").doc(mapInfo.index.toString()).set({stringifiedMap: JSON.stringify(map)})
+  }, 30000)
 })
+
 let interactables = variables.interactables
 const g = 0.00004
 const db = require('./modules/db')
@@ -62,7 +70,7 @@ function heartbeat(){
         update(user.player, map, g)      
       }
     }
-      io.emit('heartbeat', map, users)
+    io.emit('heartbeat', map, users)
   }
 }
 
@@ -113,12 +121,12 @@ io.on('connection', socket => {
 
     //interaksjon
     if(button==2 && interactables.indexOf(mapValue(player.mouse, map))){
-      socket.emit(interaction(users[socket.id].player), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
+      socket.emit(interaction(users[socket.id].player, map), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
     }
 
     
     else{
-      click(button, users[socket.id].player)
+      click(button, users[socket.id].player, map)
     }
   })
 
