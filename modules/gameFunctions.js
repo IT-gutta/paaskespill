@@ -195,7 +195,7 @@ function click(keyCode, player, map, world, users){
                                 map[py][px] = player.hand.value
                         
                                 player.hand.number -= 1
-                                updateLightLevels(users, world.time, true, map, world)
+                                // updateLightLevels(users, world.time, true, map, world)
 
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
@@ -286,7 +286,7 @@ function mine(player, map, world){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             pickupItem(player, map, false)
-            updateLightLevels(users, world.time, true, map, world)
+            // updateLightLevels(users, world.time, true, map, world)
         }
     }
     else{

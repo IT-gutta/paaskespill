@@ -95,8 +95,8 @@ function heartbeat(){
         update(user.player, map, g, world, users)      
       }
     }
-    updateTime(world)
-    updateLightLevels(users, world.time, false, map, world)
+    // updateTime(world)
+    // updateLightLevels(users, world.time, false, map, world)
       io.emit('heartbeat', map, users, world)
   }
 }
@@ -168,17 +168,7 @@ io.on('connection', socket => {
     users[socket.id].player.mouse.keys[button] = false
     users[socket.id].player.mining.active = false
   })
-  // socket.on('click', (button, clientX, clientY, canvasWidth, canvasHeight) => {
-  //   px = Math.round(users[socket.id].player.x - 7/32 + (clientX - canvasWidth/2)/32)
-  //   py = Math.round(users[socket.id].player.y + (clientY - canvasHeight/2)/32)
-  //   PX = users[socket.id].player.x + (clientX - canvasWidth/2)/32
-  //   PY = users[socket.id].player.y + (clientY - canvasHeight/2)/32
-  //   if(button==2 && interact.indexOf(map[py][px])!=-1){
-  //     socket.emit(interaction(px, py, users[socket.id].player), px, py, users[socket.id].player.safe)
-  //   }
-  //   else{
-  //     click(button, px, py, PX, PY, users[socket.id].player)
-  //   }
+
   
   //mutering av inventory og safer
 

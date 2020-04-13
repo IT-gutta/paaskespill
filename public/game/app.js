@@ -140,13 +140,14 @@ function draw(map, users, world){
             c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
             // c.fillText(world.lightLevels.map[i][j], canvas.width/2 + 32*(j-player.x-7/32)+16, canvas.height/2 + 32*(i-player.y-32/64)+16, 32, 32)
             // c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.map[i][j]+1)/10}`
-            if(map[i][j]!=0){
-                if(world.lightLevels.map[i][j]!=10){
-                    // c.fillRect(canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+            
+            // if(map[i][j]!=0){
+            //     if(world.lightLevels.map[i][j]!=10){
+            //         // c.fillRect(canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
                     
-                    c.drawImage(shadows[world.lightLevels.map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
-                }
-            }   
+            //         c.drawImage(shadows[world.lightLevels.map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+            //     }
+            // }   
         }
     }
     
