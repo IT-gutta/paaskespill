@@ -1,33 +1,33 @@
 const usefulFuncions = require("./usefulFunctions")
 const getLevel = usefulFuncions.getLevel
 //smeller inn firebase storage
-const firebase = require("firebase")
-const firebaseConfig = {
-  apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
-  authDomain: "paaskespill.firebaseapp.com",
-  databaseURL: "https://paaskespill.firebaseio.com",
-  projectId: "paaskespill",
-  storageBucket: "paaskespill.appspot.com",
-  messagingSenderId: "200950577223",
-  appId: "1:200950577223:web:919978e4905514e8fc5962",
-  measurementId: "G-HXN2PSV4SQ"
-}
-firebase.initializeApp(firebaseConfig);
-db = firebase.firestore()
+
 
 let map
-db.collection("map").get().then(snap =>{
-  // console.log(JSON.parse(snap.docs[0].data().stringifiedMap))
-  map = JSON.parse(snap.docs[0].data().stringifiedMap)
-})
-setTimeout( ()=>{console.log(map)}, 1000)
+function getMap(){
+  return new Promise( (resolve, reject) =>{
+    const firebase = require("firebase")
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
+      authDomain: "paaskespill.firebaseapp.com",
+      databaseURL: "https://paaskespill.firebaseio.com",
+      projectId: "paaskespill",
+      storageBucket: "paaskespill.appspot.com",
+      messagingSenderId: "200950577223",
+      appId: "1:200950577223:web:919978e4905514e8fc5962",
+      measurementId: "G-HXN2PSV4SQ"
+    }
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore()
+  
+    db.collection("map").get().then(snap =>{
+      resolve(JSON.parse(snap.docs[0].data().stringifiedMap))
+    })
+  })
+}
+console.log(getMap())
 
-// function getMapVal(){
-//   let map
-//   db.collection("map").get().then(snap =>{
-//     map = JSON.parse(snap.docs[0].data().stringifiedMap)
-//   })
-// }
+
 
 class Player {
   constructor(username) {
@@ -198,4 +198,4 @@ let interactMap = [
 let interactables = [8]
 
 
-module.exports = {map, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller}
+module.exports = {getMap, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller}
