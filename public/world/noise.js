@@ -1,6 +1,20 @@
 const socket = (window.location.href == "http://localhost:3000/world/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 // const button = document.querySelector('button')
 
+const firebaseConfig = {
+    apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
+    authDomain: "paaskespill.firebaseapp.com",
+    databaseURL: "https://paaskespill.firebaseio.com",
+    projectId: "paaskespill",
+    storageBucket: "paaskespill.appspot.com",
+    messagingSenderId: "200950577223",
+    appId: "1:200950577223:web:919978e4905514e8fc5962",
+    measurementId: "G-HXN2PSV4SQ"
+}
+firebase.initializeApp(firebaseConfig);
+db = firebase.firestore()
+
+
 
 //nyttige funksjoner
 const f = num => Math.floor(num)
@@ -302,6 +316,7 @@ function setup(){
     createRandomSeed = createCheckbox("randomSeed", true)
     cavesOn = createCheckbox("Draw caves", false)
     updateBtn = createButton("Update")
+    sendBtn = createButton("Send map to database")
     zoomSlider = createSlider(10, 10000, 1000)
     caveFillPercent = createSlider(400, 550, 480)
 
@@ -317,6 +332,7 @@ function setup(){
     createRandomSeed.position(10, 470)
     cavesOn.position(120, 470)
     updateBtn.position(10, 520)
+    sendBtn.position(100, 520)
     zoomSlider.position(10, 620)
     caveFillPercent.position(10, 670)
     
@@ -334,6 +350,20 @@ function setup(){
     
 
     updateBtn.mousePressed(newMap)
+    sendBtn.mousePressed( ()=>{
+        
+        let sendMap = JSON.stringify(map)
+        
+        db.collection("map").get().then(snap =>{
+            let index = snap.docs.length.toString()
+            db.collection("map").doc(index).set({
+                width: map[0].length,
+                height: map.length,
+                stringifiedMap: sendMap,
+                index: index
+            })
+        })
+    })
     cavesOn.changed(newMap)
 
 

@@ -1,5 +1,19 @@
 const usefulFuncions = require("./usefulFunctions")
 const getLevel = usefulFuncions.getLevel
+//smeller inn firebase storage
+const firebase = require("firebase")
+const firebaseConfig = {
+  apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
+  authDomain: "paaskespill.firebaseapp.com",
+  databaseURL: "https://paaskespill.firebaseio.com",
+  projectId: "paaskespill",
+  storageBucket: "paaskespill.appspot.com",
+  messagingSenderId: "200950577223",
+  appId: "1:200950577223:web:919978e4905514e8fc5962",
+  measurementId: "G-HXN2PSV4SQ"
+}
+firebase.initializeApp(firebaseConfig);
+db = firebase.firestore()
 
 class Player {
   constructor(username) {

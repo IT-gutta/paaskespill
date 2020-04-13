@@ -14,6 +14,7 @@
   "dependencies": {
     "cloc": "^2.5.1",
     "express": "^4.17.1",
+    "firebase": "^7.14.0",
     "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
     "p5": "^1.0.0",
