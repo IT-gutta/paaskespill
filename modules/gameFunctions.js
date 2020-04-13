@@ -411,18 +411,18 @@ function swap(player, index, container, button){
 
 function updateTime(){
     world.time+=1
-    if(world.time==600000){
+    if(world.time==6000){
         world.time = 0
     }
 }
 
 function updateLightLevels(time, change){
     // console.log(lightEmittingBlocks)
-    if(world.lightLevels.sun==Math.floor(5*Math.sin(time/600000*2*Math.PI)+5) && !change) return
+    if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
     console.log(1)
-    world.lightLevels.sun = Math.floor(5*Math.sin(time/600000*2*Math.PI)+5)
+    world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for(i=0; i<map[0].length; i++){
-        var sunLight = (Math.floor(5*Math.sin(time/600000*2*Math.PI)+5))
+        var sunLight = (Math.floor(5*Math.sin(time/6000*2*Math.PI)+5))
         // var sunLight = 0
         for(j=0; j<map.length; j++){
             world.lightLevels.map[j][i] = sunLight
