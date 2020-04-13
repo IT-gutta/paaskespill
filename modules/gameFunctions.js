@@ -2,6 +2,8 @@ const variables = require('./variables')
 let map = variables.map
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
+const world = variables.world
+const lightEmittingBlocks = variables.lightEmittingBlocks
 const Item = variables.Item
 const recipes = require("./recipes")
 const checkRecipe = recipes.checkRecipe
@@ -91,7 +93,7 @@ function update(player, map, g){
         }
 
 
-        if(mapValue({x:player.pos.botLeft.x, y: player.y+2}, map)==0 && mapValue({x:player.pos.botRight.x, y: player.y+2}, map)==0){
+        if(solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)])==-1 && solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)])==-1){
             player.falling = true
         }
 
@@ -182,13 +184,14 @@ function click(keyCode, player){
                             if(player.hand && player.hand.type == "block" && player.hand.number != 0){
                                 map[py][px] = player.hand.value
                                 player.hand.number -= 1
+                                updateLightLevels(world.time, true)
+
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
                                     delete player.inventory.arr[player.hand.index]
                                     player.inventory.arr[player.hand.index] = new Item("empty", 0, null, player.hand.index, player.hand.container, false)
                                     delete player.hand
                                     updatePlayerHand(player)
-                                    
                                 }
                             }
                         }
@@ -272,6 +275,7 @@ function mine(player){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             pickupItem(player, map, false)
+            updateLightLevels(world.time, true)
         }
     }
     else{
@@ -280,6 +284,7 @@ function mine(player){
         player.mining.stage = 0
         player.mining.difficulty = 1
     }
+    
 }
 //Sjekker om det er blokker mellom spilleren og musa
 function sight(pPos, mPos, py, px){
@@ -288,7 +293,7 @@ function sight(pPos, mPos, py, px){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+        if(solidBlocks.indexOf(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)])!=-1){
             return false
         }
     }
@@ -296,7 +301,7 @@ function sight(pPos, mPos, py, px){
         if(Math.floor(pPos[1]+(x-pPos[0])*a)==py && Math.floor(x)==px){
             return true
         }
-        if(!map[Math.floor(pPos[1]+(x-pPos[0])*a)] || map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)]!=0){
+        if(solidBlocks.indexOf(map[Math.floor(pPos[1]+(x-pPos[0])*a)][Math.floor(x)])!=-1){
             return false
         }
     }
@@ -405,6 +410,71 @@ function swap(player, index, container, button){
     }
 }
 
+function updateTime(){
+    world.time+=1
+    if(world.time==6000){
+        world.time = 0
+    }
+}
+
+function updateLightLevels(time, change){
+    // console.log(lightEmittingBlocks)
+    if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
+    console.log(1)
+    world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
+    for(i=0; i<map[0].length; i++){
+        var sunLight = (Math.floor(5*Math.sin(time/6000*2*Math.PI)+5))
+        // var sunLight = 0
+        for(j=0; j<map.length; j++){
+            world.lightLevels.map[j][i] = sunLight
+            if(map[j][i]!=0){
+                sunLight = 0
+            }
+            if(lightEmittingBlocks.indexOf(map[j][i])!=-1){
+                world.lightLevels.map[j][i] = 10
+            } 
+        }
+    }
+    for(i=0; i<map.length; i++){
+        for(j=0; j<map[0].length; j++){
+            rec(j,i, world.lightLevels.map)
+        }
+    }
+}
+
+function rec(x, y, lightmap){
+    if(lightmap[y][x]==1) return
+                if(y<map.length-1){
+                    map[y+1][x]
+                    if(lightmap[y][x]>lightmap[y+1][x]+1){
+                        lightmap[y+1][x] = lightmap[y][x]-1
+                        rec(x,y+1, lightmap)
+                    }
+                }
+                if(y>0){
+                    map[y-1][x]
+                    if(lightmap[y][x]>lightmap[y-1][x]+1){
+                        lightmap[y-1][x] = lightmap[y][x]-1
+                        rec(x,y-1, lightmap)
+                    }
+                }
+                if(x<map[0].length-1){
+                    map[y][x+1]
+                    if(lightmap[y][x]>lightmap[y][x+1]+1){
+                        lightmap[y][x+1] = lightmap[y][x]-1
+                        rec(x+1,y, lightmap)
+                    }
+                }
+                if(x>0){
+                    map[y][x-1]
+                    if(lightmap[y][x]>lightmap[y][x-1]+1){
+                        lightmap[y][x-1] = lightmap[y][x]-1
+                        rec(x-1,y, lightmap)
+                    }
+                }
+}
 
 
-module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap, pickupItem}
+
+
+module.exports = {update, keysD, keysU, click, sight, updateSprites, interaction, updatePlayerHand, swap, pickupItem, updateTime, updateLightLevels}

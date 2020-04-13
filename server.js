@@ -28,6 +28,7 @@ const Item = variables.Item
 const Safe = variables.Safe
 const Player = variables.Player
 const Controller = variables.Controller
+let world = variables.world
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
@@ -49,6 +50,8 @@ const insertIntoCollection = dbFunctions.insertIntoCollection
 const updatePlayerHand = gameFunctions.updatePlayerHand
 const swap = gameFunctions.swap
 const pickupItem = gameFunctions.pickupItem
+const updateTime = gameFunctions.updateTime
+const updateLightLevels = gameFunctions.updateLightLevels
 
 function heartbeat(){
   if(!objectIsEmpty(users)) {
@@ -57,7 +60,9 @@ function heartbeat(){
         update(user.player, map, g)      
       }
     }
-      io.emit('heartbeat', map, users)
+    updateTime()
+    updateLightLevels(world.time, false)
+      io.emit('heartbeat', map, users, world)
   }
 }
 
