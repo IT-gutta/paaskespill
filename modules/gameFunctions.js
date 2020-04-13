@@ -2,7 +2,7 @@ const variables = require('./variables')
 let storage = variables.storage
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
-const world = variables.world
+// const world = variables.world
 const lightEmittingBlocks = variables.lightEmittingBlocks
 const Item = variables.Item
 const recipes = require("./recipes")
@@ -24,7 +24,16 @@ function updateSprites(player){
 }
 
 
-function update(player, map, g){
+function update(player, map, g, world, users){
+    player.indexes = {
+        startX: Math.floor(player.x-player.canWidth/64) > 0 ? Math.floor(player.x-player.canWidth/64) : 0,
+        startY: Math.floor(player.y-player.canHeight/64) > 0 ? Math.floor(player.y-player.canHeight/64) : 0,
+        endX: Math.ceil(player.x+player.canWidth/64) < map[0].length ? Math.ceil(player.x+player.canWidth/64) : map[0].length,
+        endY: Math.ceil(player.y+player.canHeight/64) < map.length ? Math.ceil(player.y+player.canHeight/64) : map.length
+    }
+    
+   
+
         //movement og collision
         if(player.moving){
             if(player.direction=="left"){
@@ -49,8 +58,8 @@ function update(player, map, g){
         else player.sprite.counter ++
 
         if(player.mouse.counter > player.mouse.delay){
-            if(player.mouse.keys[0]) click(0, player, map)
-            else if(player.mouse.keys[2]) click(2, player, map)
+            if(player.mouse.keys[0]) click(0, player, map, world, users)
+            else if(player.mouse.keys[2]) click(2, player, map, world, users)
         }
         else player.mouse.counter ++
 
@@ -169,7 +178,7 @@ function keysU(keyCode, player, controller){
 function updatePlayerHand(player){
     player.hand = player.inventory.arr[23+player.hotBarSpot]
 }
-function click(keyCode, player, map){
+function click(keyCode, player, map, world, users){
     player.mouse.counter = 0    
     //høyreklikk, sjekker om man kan sette ut blokk
     const [py, px, PY, PX] = [player.mouse.r.y, player.mouse.r.x, player.mouse.y, player.mouse.x]
@@ -186,7 +195,7 @@ function click(keyCode, player, map){
                                 map[py][px] = player.hand.value
                         
                                 player.hand.number -= 1
-                                updateLightLevels(world.time, true)
+                                updateLightLevels(users, world.time, true, map, world)
 
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
@@ -205,7 +214,7 @@ function click(keyCode, player, map){
     if(keyCode==0){
         if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
             if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
-                if(mapValue(player.mouse.r, map) != 0) mine(player, map)
+                if(mapValue(player.mouse.r, map) != 0) mine(player, map, world)
             }
         }
     }
@@ -272,12 +281,12 @@ function pickupItem(player, map, fromCrafting){
         }
     }
 }
-function mine(player, map){
+function mine(player, map, world){
     if(player.mining.active && player.mining.current.x == player.mouse.r.x && player.mining.current.y == player.mouse.r.y){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             pickupItem(player, map, false)
-            updateLightLevels(world.time, true)
+            updateLightLevels(users, world.time, true, map, world)
         }
     }
     else{
@@ -412,66 +421,69 @@ function swap(player, index, container, button){
     }
 }
 
-function updateTime(){
+function updateTime(world){
     world.time+=1
     if(world.time==6000){
         world.time = 0
     }
 }
 
-function updateLightLevels(time, change){
+function updateLightLevels(users, time, change, map, world){
     // console.log(lightEmittingBlocks)
     if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
-    console.log(1)
+    
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
-    for(i=0; i<map[0].length; i++){
-        var sunLight = (Math.floor(5*Math.sin(time/6000*2*Math.PI)+5))
-        // var sunLight = 0
-        for(j=0; j<map.length; j++){
-            world.lightLevels.map[j][i] = sunLight
-            if(map[j][i]!=0){
-                sunLight = 0
+    for (let [id, user] of Object.entries(users)) {
+          const indexes = user.player.indexes
+        for(i= indexes.startX; i<indexes.endX; i++){
+            let sunLight = world.lightLevels.sun
+            for(j=indexes.startY; j<indexes.endY; j++){
+                world.lightLevels.map[j][i] = sunLight
+                if(map[j][i]!=0){
+                    sunLight = 0
+                }
+                if(lightEmittingBlocks.indexOf(map[j][i])!=-1){
+                    world.lightLevels.map[j][i] = 10
+                } 
             }
-            if(lightEmittingBlocks.indexOf(map[j][i])!=-1){
-                world.lightLevels.map[j][i] = 10
-            } 
         }
-    }
-    for(i=0; i<map.length; i++){
-        for(j=0; j<map[0].length; j++){
-            rec(j,i, world.lightLevels.map)
-        }
+        for(i=indexes.startY; i<indexes.endY; i++){
+            for(j=indexes.startX; j<indexes.endX; j++){
+                rec(j,i, world.lightLevels.map, map, indexes)
+            }
+        }      
     }
 }
 
-function rec(x, y, lightmap){
+function rec(x, y, lightmap, map, indexes){
     if(lightmap[y][x]==1) return
+    if(x < indexes.startX || x > indexes.endX || y < indexes.startY || y > indexes.endY) return
                 if(y<map.length-1){
-                    map[y+1][x]
+                    //map[y+1][x]
                     if(lightmap[y][x]>lightmap[y+1][x]+1){
                         lightmap[y+1][x] = lightmap[y][x]-1
-                        rec(x,y+1, lightmap)
+                        rec(x,y+1, lightmap, map, indexes)
                     }
                 }
                 if(y>0){
-                    map[y-1][x]
+                    //map[y-1][x]
                     if(lightmap[y][x]>lightmap[y-1][x]+1){
                         lightmap[y-1][x] = lightmap[y][x]-1
-                        rec(x,y-1, lightmap)
+                        rec(x,y-1, lightmap, map, indexes)
                     }
                 }
                 if(x<map[0].length-1){
-                    map[y][x+1]
+                    // map[y][x+1]
                     if(lightmap[y][x]>lightmap[y][x+1]+1){
                         lightmap[y][x+1] = lightmap[y][x]-1
-                        rec(x+1,y, lightmap)
+                        rec(x+1,y, lightmap, map, indexes)
                     }
                 }
                 if(x>0){
-                    map[y][x-1]
+                    // map[y][x-1]
                     if(lightmap[y][x]>lightmap[y][x-1]+1){
                         lightmap[y][x-1] = lightmap[y][x]-1
-                        rec(x-1,y, lightmap)
+                        rec(x-1,y, lightmap, map, indexes)
                     }
                 }
 }

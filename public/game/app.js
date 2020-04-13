@@ -8,7 +8,8 @@ form.onsubmit = (e) => {
     // dette er henriks kommentar
     //Jørgen er kul
     e.preventDefault()
-        socket.emit('new-user', textField.value)
+        socket.emit('new-user', textField.value, w, h)
+        // console.log(w, h)
         form.style.display = "none"
         fpsNumber = (fps[0].checked==true) ? 2 : 1
         console.log(fpsNumber)
@@ -138,12 +139,14 @@ function draw(map, users, world){
             if(j>=map[i].length) break
             c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
             // c.fillText(world.lightLevels.map[i][j], canvas.width/2 + 32*(j-player.x-7/32)+16, canvas.height/2 + 32*(i-player.y-32/64)+16, 32, 32)
-            c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.map[i][j]+1)/10}`
+            // c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.map[i][j]+1)/10}`
             if(map[i][j]!=0){
-                // c.fillRect(canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32.4, 32.4)
-                if(world.lightLevels.map[i][j]!=10)
-                c.drawImage(shadows[world.lightLevels.map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
-            }
+                if(world.lightLevels.map[i][j]!=10){
+                    // c.fillRect(canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+                    
+                    c.drawImage(shadows[world.lightLevels.map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+                }
+            }   
         }
     }
     

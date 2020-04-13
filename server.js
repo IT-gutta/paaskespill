@@ -18,18 +18,32 @@ server.listen(PORT)
 let users = {}
 let variables = require('./modules/variables')
 let storage = variables.storage
-let map
+let map// = variables.map
 let mapInfo
+let world = {
+  lightLevels:{ 
+    map:[],
+    sun:0
+  },
+  time:0
+}
 storage.collection("map").get().then(snap =>{
   mapInfo = snap.docs[snap.docs.length-1].data()
   map = JSON.parse(snap.docs[2].data().stringifiedMap)
   delete mapInfo.stringifiedMap
   console.log(!map, mapInfo, snap.docs.length)
   
+  
+  //fylle opp world.lightLeves.map
+  for(let y = 0; y < map.length; y++){
+    world.lightLevels.map[y] = []
+    for(let x = 0; x < map[0].length; x++){
+      world.lightLevels.map[y][x] = 0
+    }
+  }
 }).then( ()=>{
   //updater mappet til databasen hvert 15 sekund
   setInterval(() => {
-    console.log("hei")
     storage.collection("map").doc(mapInfo.index).set({
       stringifiedMap: JSON.stringify(map),
       height: map.length,
@@ -49,7 +63,7 @@ const Item = variables.Item
 const Safe = variables.Safe
 const Player = variables.Player
 const Controller = variables.Controller
-let world = variables.world
+// let world = variables.world
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
@@ -78,11 +92,11 @@ function heartbeat(){
   if(!objectIsEmpty(users)) {
     for (let [id, user] of Object.entries(users)) {
       for (let i = 0; i < 10; i++) {
-        update(user.player, map, g)      
+        update(user.player, map, g, world, users)      
       }
     }
-    updateTime()
-    updateLightLevels(world.time, false)
+    updateTime(world)
+    updateLightLevels(users, world.time, false, map, world)
       io.emit('heartbeat', map, users, world)
   }
 }
@@ -94,9 +108,9 @@ setInterval(heartbeat, 1000/60)
 io.on('connection', socket => {
   console.log("connected: " + socket.id)
   
-  socket.on('new-user', (username) => {
-    
-    users[socket.id] = {username: username, player: new Player(username), controller: new Controller(), playerID: socket.id}
+  socket.on('new-user', (username, width, height) => {
+    console.log(width, height)
+    users[socket.id] = {username: username, player: new Player(username, width, height), controller: new Controller(), playerID: socket.id}
     
     socket.emit("playerID", socket.id)
 
@@ -131,15 +145,16 @@ io.on('connection', socket => {
     users[socket.id].player.mouse.keys[button] = true
     const player = users[socket.id].player
 
-
+    // console.log(interactables.indexOf(mapValue(player.mouse, map)))
     //interaksjon
-    if(button==2 && interactables.indexOf(mapValue(player.mouse, map))){
+    if(button==2 && interactables.indexOf(mapValue(player.mouse, map)) != -1){
       socket.emit(interaction(users[socket.id].player, map), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
     }
 
     
     else{
-      click(button, users[socket.id].player, map)
+      // console.log(world.time)
+      click(button, users[socket.id].player, map, world, users)
     }
   })
 

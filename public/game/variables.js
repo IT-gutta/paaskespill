@@ -77,7 +77,7 @@ const shadow60 = newImg("../game/assets/backgrounds/shadow60.png")
 const shadow70 = newImg("../game/assets/backgrounds/shadow70.png")
 const shadow80 = newImg("../game/assets/backgrounds/shadow80.png")
 const shadow90 = newImg("../game/assets/backgrounds/shadow90.png")
-const shadow100 = newImg("assets/backgrounds/shadow100.png")
+const shadow100 = newImg("../game/assets/backgrounds/shadow100.png")
 const shadows = [shadow10, shadow20, shadow30, shadow40, shadow50, shadow60, shadow70, shadow80, shadow90, shadow100]
 shadows.reverse()
 
@@ -96,12 +96,15 @@ const tool_base = newImg("../game/assets/tools/tool_base.png")
 
 const bedrock = newImg("../game/assets/blocks/general/bedrock.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, 0, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore]
-
+const safe = newImg("../game/assets/blocks/interactables/safe.png")
 
 const torch = newImg("assets/blocks/special/torch_straight.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, torch, 0, iron_pick]
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore]
+
+
+
+// const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, torch, 0, iron_pick]
 
 
 
