@@ -11,7 +11,7 @@ function updatePlayerInfo(username, player, controller) {
     db.update({username: username}, {$set: {player: player, controller: controller}})
 }
 
-function insertIntoCollection(collection, object) {
+function insertIntoCollection(collection, object){
     const db = require('./db.js')
     // try {
     //     db.insertOne(object, data => {
