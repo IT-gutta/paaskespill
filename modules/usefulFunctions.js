@@ -102,5 +102,7 @@ module.exports = {
   playerMovement, 
   stageIncrement, 
   getLevel, 
-  getMiningDifficulty
+  getMiningDifficulty,
+  f,
+  c
 }

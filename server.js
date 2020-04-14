@@ -89,7 +89,8 @@ const swap = gameFunctions.swap
 const pickupItem = gameFunctions.pickupItem
 const updateTime = gameFunctions.updateTime
 const updateLightLevels = gameFunctions.updateLightLevels
-
+const heartbeatsBeforeUpdateShadows = 5
+let heartbeatCounter = 0
 function heartbeat(){
   if(!objectIsEmpty(users)) {
     for (let [id, user] of Object.entries(users)){
@@ -97,9 +98,15 @@ function heartbeat(){
         update(user.player, map, g, world, users)      
       }
     }
+    heartbeatCounter ++
+    if(heartbeatCounter > heartbeatsBeforeUpdateShadows){
+      updateLightLevels(users, world.time, map, world)
+      heartbeatCounter = 0
+    }
+    
     updateTime(world)
-    updateLightLevels(users, world.time, false, map, world)
-    io.emit('heartbeat', map, users, world)
+    
+    io.emit('heartbeat', users, map[0].length, map.length)
   }
 }
 

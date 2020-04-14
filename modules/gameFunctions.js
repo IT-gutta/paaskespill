@@ -26,12 +26,29 @@ function updateSprites(player){
 
 function update(player, map, g, world, users){
     player.indexes = {
-        startX: Math.floor(player.x-player.canWidth/64) > 0 ? Math.floor(player.x-player.canWidth/64) : 0,
-        startY: Math.floor(player.y-player.canHeight/64) > 0 ? Math.floor(player.y-player.canHeight/64) : 0,
+        startX: Math.floor(player.x-player.canWidth/64)-1 > 0 ? Math.floor(player.x-player.canWidth/64)-1 : 0,
+        startY: Math.floor(player.y-player.canHeight/64)-1 > 0 ? Math.floor(player.y-player.canHeight/64)-1 : 0,
         endX: Math.ceil(player.x+player.canWidth/64) < map[0].length ? Math.ceil(player.x+player.canWidth/64) : map[0].length,
         endY: Math.ceil(player.y+player.canHeight/64) < map.length ? Math.ceil(player.y+player.canHeight/64) : map.length
     }
-    
+    //oppdaterer mappet som skal tegnes
+    player.map = {}
+    for(y=player.indexes.startY; y<=player.indexes.endY; y++){
+        player.map[y] = {}
+        for(x=player.indexes.startX; x<=player.indexes.endX; x++){
+            player.map[y][x] = map[y][x]
+        }
+    }
+    // console.log(typeof(player.map))
+    player.world.lightLevels.map = {}
+    player.world.lightLevels.sun = world.lightLevels.sun
+    player.world.time = world.time
+    for(y=player.indexes.startY; y<=player.indexes.endY; y++){
+        player.world.lightLevels.map[y] = {}
+        for(x=player.indexes.startX; x<=player.indexes.endX; x++){
+            player.world.lightLevels.map[y][x] = world.lightLevels.map[y][x]
+        }
+    } 
    
 
         //movement og collision
@@ -195,7 +212,7 @@ function click(keyCode, player, map, world, users){
                                 map[py][px] = player.hand.value
                         
                                 player.hand.number -= 1
-                                updateLightLevels(users, world.time, true, map, world, users)
+                                updateLightLevels(users, world.time, map, world, users)
 
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
@@ -286,7 +303,7 @@ function mine(player, map, world, users){
         player.mining.stage += stageIncrement(player.hand, player.mining.current, map)
         if(player.mining.stage > 5){
             pickupItem(player, map, false)
-            updateLightLevels(users, world.time, true, map, world)
+            updateLightLevels(users, world.time, map, world)
         }
     }
     else{
@@ -445,9 +462,9 @@ function updateSunAngle(time, maxTime, world){
     world.moonAngle = world.sunAngle + Math.PI
 }
 
-function updateLightLevels(users, time, change, map, world){
+function updateLightLevels(users, time, map, world){
     // console.log(lightEmittingBlocks)
-    if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
+    // if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
     
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for (let [id, user] of Object.entries(users)) {
