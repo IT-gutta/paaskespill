@@ -17,16 +17,16 @@ form.onsubmit = (e) => {
             playerID = id
             console.log(playerID)
         })
-        socket.on('heartbeat', (map, users, world) => {
-            for (let [id, user] of Object.entries(users)) {
-                user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.index]
-            }
-            animationSkipCount+=1
-            if(animationSkipCount==fpsNumber){
-                draw(map, users, world)
-                animationSkipCount = 0
-            }
-        })
+        // socket.on('heartbeat', (map, users, world) => {
+        //     for (let [id, user] of Object.entries(users)) {
+        //         user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.index]
+        //     }
+        //     animationSkipCount+=1
+        //     if(animationSkipCount==fpsNumber){
+        //         draw(map, users, world)
+        //         animationSkipCount = 0
+        //     }
+        // })
     
         window.addEventListener("keydown", e => {
             if(equalsSome(e.keyCode, [65, 68, 32, 66, 16])) socket.emit('keysD', e.keyCode, clientX, clientY, canvas.width, canvas.height)
