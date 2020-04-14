@@ -159,10 +159,8 @@ function draw(users, mapWidth, mapHeight){
     }
     
     //draw miningprogression
-    if(player.mining.active){// && Math.floor(player.mining.stage) < miningImgs.length){
-        //c.drawImage(miningImgs[Math.floor(player.mining.stage)], canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
-        c.fillStyle = `rgba(255, 0, 0, ${player.mining.stage/5})`
-        c.fillRect(canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
+    if(player.mining.active && Math.floor(player.mining.stage) <= 4){
+        c.drawImage(miningImgs[Math.floor(player.mining.stage)], canvas.width/2 + 32*(player.mining.current.x-player.x-7/32), canvas.height/2 + 32*(player.mining.current.y-player.y-32/64), 32, 32)
     }
     
 
