@@ -32,7 +32,7 @@ class Player {
         this.username = username
         this.canWidth = canWidth
         this.canHeight = canHeight
-        this.x = 28
+        this.x = 60
         this.y = 8
         this.sightPos = {x: this.x+16, y: this.y+16}
         this.direction = "front"
@@ -165,6 +165,7 @@ let map = [
 
 const solidBlocks = [1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16]
 const lightEmittingBlocks = [11]
+const lightThroughBlocks = [0, 11]
 const val = {air:0, stone:1, log:2, leaves:3, coal_ore:4, grass:5, iron_ore:6, dirt:7, safe:8, grill:9, iron_pick:12}
 
 
@@ -253,4 +254,4 @@ const world = {
 }
 
 
-module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, Safe, Item, Player, Controller, Zombie}
+module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, lightThroughBlocks, Safe, Item, Player, Controller, Zombie}

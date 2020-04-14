@@ -2,6 +2,7 @@ const variables = require('./variables')
 let storage = variables.storage
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
+const lightThroughBlocks = variables.lightThroughBlocks
 // const world = variables.world
 const lightEmittingBlocks = variables.lightEmittingBlocks
 const Item = variables.Item
@@ -36,7 +37,8 @@ function update(player, map, g, world, users){
     for(y=player.indexes.startY; y<=player.indexes.endY; y++){
         player.map[y] = {}
         for(x=player.indexes.startX; x<=player.indexes.endX; x++){
-            player.map[y][x] = map[y][x]
+            if(!map[y] || map[y][x] == undefined) player.map[y][x] = 0
+            else player.map[y][x] = map[y][x]
         }
     }
     // console.log(typeof(player.map))
@@ -46,9 +48,10 @@ function update(player, map, g, world, users){
     for(y=player.indexes.startY; y<=player.indexes.endY; y++){
         player.world.lightLevels.map[y] = {}
         for(x=player.indexes.startX; x<=player.indexes.endX; x++){
-            player.world.lightLevels.map[y][x] = world.lightLevels.map[y][x]
+            if(!world.lightLevels.map[y] || world.lightLevels.map[y][x] == undefined) player.world.lightLevels.map[y][x] = 0
+            else player.world.lightLevels.map[y][x] = world.lightLevels.map[y][x]
         }
-    } 
+    }
    
 
     //movement og collision
@@ -134,7 +137,9 @@ function update(player, map, g, world, users){
             player.vy+=g
         }
     }
-    player.x+=player.vx
+    if(player.vx < 0 && player.x < 0) player.x = 0
+    else if(player.vx > 0 && player.x > map[0].length-1) player.x = map[0].length-1
+    else player.x+=player.vx
     player.y+=player.vy
 }
 
@@ -464,12 +469,13 @@ function updateLightLevels(users, time, map, world){
     for (let [id, user] of Object.entries(users)) {
         const indexes = user.player.indexes
         for(i= indexes.startX - 2; i<indexes.endX +2; i++){
-            if(i < 0 || i >= world.lightLevels.map.length) continue
+            if(i < 0 || i >= map[0].length) continue
             let sunLight = world.lightLevels.sun
             for(j=indexes.startY -2; j<indexes.endY +2; j++){
-                if(j < 0 || j >= world.lightLevels.map[0].length) continue
+                if(j < 0 || j >= map.length) continue
+
                 world.lightLevels.map[j][i] = sunLight
-                if(map[j][i]!=0){
+                if(!equalsSome(map[j][i], lightThroughBlocks)){
                     sunLight = 0
                 }
                 if(lightEmittingBlocks.indexOf(map[j][i])!=-1){
@@ -489,7 +495,7 @@ function updateLightLevels(users, time, map, world){
 
 function rec(x, y, lightmap, map, indexes){
     if(lightmap[y][x]==1) return
-    if(x < indexes.startX || x > indexes.endX || y < indexes.startY || y > indexes.endY) return
+    if(x < indexes.startX-2 || x > indexes.endX+2 || y < indexes.startY-2 || y > indexes.endY+2) return
     if(y<map.length-1){
         if(lightmap[y][x]>lightmap[y+1][x]+1){
             lightmap[y+1][x] = lightmap[y][x]-1

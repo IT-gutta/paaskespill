@@ -359,8 +359,8 @@ function setup(){
         let sendMap = JSON.stringify(map)
         
         db.collection("map").get().then(snap =>{
-            let index = snap.docs.length.toString()
-            db.collection("map").doc(index).set({
+            let index = snap.docs.length
+            db.collection("map").doc(index.toString()).set({
                 width: map[0].length,
                 height: map.length,
                 stringifiedMap: sendMap,
@@ -404,12 +404,12 @@ function newMap(){
     noiseSeed(seedInp.value())
     randomSeed(seedInp.value())
 
-    noiseMap = new NoiseMap(20000, 5000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
+    noiseMap = new NoiseMap(8000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
     map = noiseMap.create2DArr()
 
   
     if(cavesOn.checked()){
-        caveMap = createCaveMap(20000, 5000, blockSize.value(), caveFillPercent.value()/10)
+        caveMap = createCaveMap(8000, 3000, blockSize.value(), caveFillPercent.value()/10)
         adjustMap(caveMap, map)
     }
 }
