@@ -47,6 +47,9 @@ const playerSprites = {
 const air = newImg("../game/assets/blocks/general/air.png")
 
 const grass = newImg("../game/assets/blocks/general/grass.png")
+const zombie = {left: newImg("assets/mobs/zombie_left"), right: newImg("assets/mobs/zombie_left")}
+
+const air = newImg("assets/blocks/general/air.png")
 
 const dirt = newImg("../game/assets/blocks/general/dirt.png")
 
@@ -67,6 +70,10 @@ const plutonium_ore = newImg("../game/assets/blocks/ores/plutonium_ore.png")
 const silver_ore = newImg("../game/assets/blocks/ores/silver_ore.png")
 
 const uranium_ore = newImg("../game/assets/blocks/ores/uranium_ore.png")
+const sun = newImg("assets/backgrounds/sun.png")
+const moon = newImg("assets/backgrounds/moon.png")
+
+const inventory = newImg("assets/ui/inventory.png")
 
 const shadow10 = newImg("../game/assets/backgrounds/shadow10.png")
 const shadow20 = newImg("../game/assets/backgrounds/shadow20.png")

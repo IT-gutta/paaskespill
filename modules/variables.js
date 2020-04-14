@@ -110,6 +110,19 @@ class Player {
   }
 }
 
+class Zombie{
+  constructor(x, y){
+    this.x = x
+    this.y = y
+    this.health = 100
+    this.damage = 10
+    this.speed = 0.00005
+    this.img = "zombie"
+  }
+}
+
+let mobs = []
+
 class Controller {
   constructor() {
     this.left = false,
@@ -228,8 +241,10 @@ const world = {
     sun:0
   },
 
-  time:0
+  time:0,
+  sunAngle: 0, 
+  moonAngle: 0
 }
 
 
-module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, Safe, Item, Player, Controller}
+module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, Safe, Item, Player, Controller, Zombie}
