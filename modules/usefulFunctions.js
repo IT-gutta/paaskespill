@@ -89,4 +89,19 @@ const s = num => Math.sqrt(num)
 const pow = (num, ex) => Math.pow(num, ex)
 const dist = (p1, p2) => s(pow(p2.x-p1.x, 2) + pow(p2.y-p1.y, 2))
 
-module.exports = {random, timer, objectIsEmpty, userExists, equalsSome, equalsAll, mapValue, updateMousePos, playerMovement, stageIncrement, getLevel, getMiningDifficulty}
+module.exports = {
+  random, 
+  timer, 
+  objectIsEmpty, 
+  userExists, 
+  equalsSome, 
+  equalsAll, 
+  mapValue, 
+  updateMousePos, 
+  playerMovement, 
+  stageIncrement, 
+  getLevel, 
+  getMiningDifficulty,
+  f,
+  c
+}

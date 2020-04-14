@@ -16,13 +16,13 @@ form.onsubmit = (e) => {
             playerID = id
             console.log(playerID)
         })
-        socket.on('heartbeat', (map, users, world) => {
+        socket.on('heartbeat', (users, mapWidth, mapHeight) => {
             for (let [id, user] of Object.entries(users)) {
                 user.player.img = playerSprites[user.player.sprite.playerSprite][user.player.movement][user.player.direction][user.player.sprite.index]
             }
             animationSkipCount+=1
             if(animationSkipCount==fpsNumber){
-                draw(map, users, world)
+                if(playerID) draw(users, mapWidth, mapHeight)
                 animationSkipCount = 0
             }
         })
@@ -118,13 +118,16 @@ form.onsubmit = (e) => {
         
 }
 
-function draw(map, users, world){
+function draw(users, mapWidth, mapHeight){
 
     c.textAlign = "center"
     
     const player = users[playerID].player
     const inv = player.inventory.arr
-   
+    const map = player.map
+    const world = player.world
+    const lightMap = world.lightLevels.map
+    // console.log(player.x, player.y)
     c.clearRect(0,0,w,h)
     c.drawImage(sky, 0, 0, w, h)
     c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.sun+1)/10}`
@@ -132,12 +135,19 @@ function draw(map, users, world){
     c.drawImage(sun, h/2*Math.cos(world.sunAngle)*(1+Math.abs(Math.cos(world.sunAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.sunAngle)+h/2, 128, 128)
     c.drawImage(moon, h/2*Math.cos(world.moonAngle)*(1+Math.abs(Math.cos(world.moonAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.moonAngle)+h/2, 128, 128)
     //draws tilemap
-    for(i=Math.floor(player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
+    // for (let y = 0; y < map.length; y++) {
+    //     for (let x = 0; x < map[0].length; x++){
+    //         c.drawImage(imgs[map[y][x]], x*32, y*32, 32, 32)
+    //     }
+    // }
+    //ny loop for å drawe
+    for(i=Math.floor(player.y - 32/64 - canvas.height/64); i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
         if(i<0) continue
-        if(i>=map.length) break
-        for(j=Math.floor(player.x - 7/32 - canvas.width/64)-1; j<Math.ceil(player.x - 7/32 + canvas.width/64)+1; j++){
+        if(i>=mapHeight) break
+        for(j=Math.floor(player.x - 7/32 - canvas.width/64); j<Math.ceil(player.x - 7/32 + canvas.width/64)+1; j++){
             if(j<0) continue
-            if(j>=map[i].length) break
+            if(j>=mapWidth) break
+            
             c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
             
             if(map[i][j]!=0){
@@ -171,9 +181,9 @@ function draw(map, users, world){
 
 
   
-    for (let [id, user] of Object.entries(users)){
+  for (let [id, user] of Object.entries(users)){
         if(id != playerID){
-            c.drawImage(user.player.img, canvas.width/2 + 32*(user.player.x-player.x-7/32), canvas.height/2 + 32*(user.player.y-player.y-32/64), 32, 64)
+            if(user.player.img) c.drawImage(user.player.img, canvas.width/2 + 32*(user.player.x-player.x-7/32), canvas.height/2 + 32*(user.player.y-player.y-32/64), 32, 64)
             c.fillText(user.username, canvas.width/2 + 32*(user.player.x-player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-player.y-32/64) - 16)
         }
     }

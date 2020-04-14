@@ -106,7 +106,14 @@ class Player {
         for(let i = 0; i < 9; i++){
             this.crafting.arr.push(new Item("empty", 0, null, i, "crafting", false))
         }
-    }
+        this.world = {
+          lightLevels:{ 
+            map:[],
+            sun:0
+          },
+          time:0
+        }
+  }
 }
 
 class Zombie{

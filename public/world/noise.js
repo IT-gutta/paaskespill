@@ -404,12 +404,12 @@ function newMap(){
     noiseSeed(seedInp.value())
     randomSeed(seedInp.value())
 
-    noiseMap = new NoiseMap(5000, 1500, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
+    noiseMap = new NoiseMap(20000, 5000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
     map = noiseMap.create2DArr()
 
   
     if(cavesOn.checked()){
-        caveMap = createCaveMap(5000, 1500, blockSize.value(), caveFillPercent.value()/10)
+        caveMap = createCaveMap(20000, 5000, blockSize.value(), caveFillPercent.value()/10)
         adjustMap(caveMap, map)
     }
 }
