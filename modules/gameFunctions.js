@@ -463,9 +463,11 @@ function updateLightLevels(users, time, map, world){
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for (let [id, user] of Object.entries(users)) {
         const indexes = user.player.indexes
-        for(i= indexes.startX; i<indexes.endX; i++){
+        for(i= indexes.startX - 2; i<indexes.endX +2; i++){
+            if(i < 0 || i >= world.lightLevels.map.length) continue
             let sunLight = world.lightLevels.sun
-            for(j=indexes.startY; j<indexes.endY; j++){
+            for(j=indexes.startY -2; j<indexes.endY +2; j++){
+                if(j < 0 || j >= world.lightLevels.map[0].length) continue
                 world.lightLevels.map[j][i] = sunLight
                 if(map[j][i]!=0){
                     sunLight = 0
@@ -475,8 +477,10 @@ function updateLightLevels(users, time, map, world){
                 }
             }
         }
-        for(i=indexes.startY; i<indexes.endY; i++){
-            for(j=indexes.startX; j<indexes.endX; j++){
+        for(i=indexes.startY -2; i<indexes.endY +2; i++){
+            if(i < 0 || i >= world.lightLevels.map.length) continue
+            for(j=indexes.startX -2; j<indexes.endX +2; j++){
+                if(j < 0 || j >= world.lightLevels.map[0].length) continue
                 rec(j,i, world.lightLevels.map, map, indexes)
             }
         }      

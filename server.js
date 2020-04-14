@@ -87,7 +87,7 @@ const swap = gameFunctions.swap
 const pickupItem = gameFunctions.pickupItem
 const updateTime = gameFunctions.updateTime
 const updateLightLevels = gameFunctions.updateLightLevels
-const heartbeatsBeforeUpdateShadows = 10
+const heartbeatsBeforeUpdateShadows = 30
 let heartbeatCounter = 0
 function heartbeat(){
     if(!objectIsEmpty(users)) {
