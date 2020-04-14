@@ -17,7 +17,7 @@ const stageIncrement = usefulFunctions.stageIncrement
 
 function updateSprites(player){
     if(player.direction == "front") player.sprite.index = 0
-    else {
+    else{
         player.sprite.index = player.sprite.index == 3 ? 0 : player.sprite.index + 1
     }
     player.sprite.counter = 0
@@ -34,91 +34,91 @@ function update(player, map, g, world, users){
     
    
 
-        //movement og collision
-        if(player.moving){
-            if(player.direction=="left"){
-                if(player.movement == "running") player.vx = -0.01
-                else player.vx = -0.005
-            }
-            else{
-                if(player.movement == "running") player.vx = 0.01
-                else player.vx = 0.005
-            }
+    //movement og collision
+    if(player.moving){
+        if(player.direction=="left"){
+            if(player.movement == "running") player.vx = -0.01
+            else player.vx = -0.005
         }
         else{
-            if(player.falling){
-                player.vx *= 0.95
-            }
-            else{
-                player.vx *= 0.9
-            }
+            if(player.movement == "running") player.vx = 0.01
+            else player.vx = 0.005
         }
-
-        if(player.sprite.counter > player.sprite.delay) updateSprites(player)
-        else player.sprite.counter ++
-
-        if(player.mouse.counter > player.mouse.delay){
-            if(player.mouse.keys[0]) click(0, player, map, world, users)
-            else if(player.mouse.keys[2]) click(2, player, map, world, users)
-        }
-        else player.mouse.counter ++
-
-        //klatring i stige
-        // if(map[Math.floor(player.y + 2)][Math.floor(player.x + 1)] == 11 || map[Math.floor(player.y + 1)][Math.floor(player.x + 1)] ==11 || map[Math.floor(player.y + 2)][Math.floor(player.x)] ==11 || map[Math.floor(player.y + 1)][Math.floor(player.x)] == 11){
-        //     if(player.controller.up){
-        //         player.vy = -0.005
-        //     }
-        // }
-
-
-        // viktige punkter på spilleren
-        player.pos.topRight = {x: player.x+1-9/32, y: player.y+20/64}
-        player.pos.midRight = {x: player.x+1-9/32, y: player.y+1+20/64}
-        player.pos.botRight = {x: player.x+1-9/32, y: player.y+1.99}
-        player.pos.topLeft = {x: player.x+9/32, y: player.y+20/64}
-        player.pos.midLeft = {x: player.x+9/32, y: player.y+1+20/64}
-        player.pos.botLeft = {x: player.x+9/32, y: player.y+1.99}
-
-
-        //kollisjon høyre side
-        if(player.vx>0){
-            if(equalsSome(mapValue(player.pos.topRight, map), solidBlocks) || equalsSome(mapValue(player.pos.midRight, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)){
-                player.vx = 0
-            }
-        }
-
-        //kollissjon venstre side
-        if(player.vx<0){
-            if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.midLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botLeft, map), solidBlocks)){
-                player.vx = 0
-            }
-        }
-
-        //kollisjon når spilleren beveger seg oppover
-        if(player.vy<0){
-            if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.topRight, map), solidBlocks)){
-                player.vy = 0
-            }
-        }
-
-
-        if(solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)])==-1 && solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)])==-1){
-            player.falling = true
-        }
-
-
+    }
+    else{
         if(player.falling){
-            if((equalsSome(mapValue(player.pos.botLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)) && player.vy>0){
-                player.falling = false
-                player.y = Math.round(player.y)
-                player.vy = 0
-            }
-            else{
-                player.vy+=g
-            }
+            player.vx *= 0.95
         }
-        player.x+=player.vx
-        player.y+=player.vy
+        else{
+            player.vx *= 0.9
+        }
+    }
+
+    if(player.sprite.counter > player.sprite.delay) updateSprites(player)
+    else player.sprite.counter ++
+
+    if(player.mouse.counter > player.mouse.delay){
+        if(player.mouse.keys[0]) click(0, player, map, world, users)
+        else if(player.mouse.keys[2]) click(2, player, map, world, users)
+    }
+    else player.mouse.counter ++
+
+    //klatring i stige
+    // if(map[Math.floor(player.y + 2)][Math.floor(player.x + 1)] == 11 || map[Math.floor(player.y + 1)][Math.floor(player.x + 1)] ==11 || map[Math.floor(player.y + 2)][Math.floor(player.x)] ==11 || map[Math.floor(player.y + 1)][Math.floor(player.x)] == 11){
+    //     if(player.controller.up){
+    //         player.vy = -0.005
+    //     }
+    // }
+
+
+    // viktige punkter på spilleren
+    player.pos.topRight = {x: player.x+1-9/32, y: player.y+20/64}
+    player.pos.midRight = {x: player.x+1-9/32, y: player.y+1+20/64}
+    player.pos.botRight = {x: player.x+1-9/32, y: player.y+1.99}
+    player.pos.topLeft = {x: player.x+9/32, y: player.y+20/64}
+    player.pos.midLeft = {x: player.x+9/32, y: player.y+1+20/64}
+    player.pos.botLeft = {x: player.x+9/32, y: player.y+1.99}
+
+
+    //kollisjon høyre side
+    if(player.vx>0){
+        if(equalsSome(mapValue(player.pos.topRight, map), solidBlocks) || equalsSome(mapValue(player.pos.midRight, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)){
+            player.vx = 0
+        }
+    }
+
+    //kollissjon venstre side
+    if(player.vx<0){
+        if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.midLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botLeft, map), solidBlocks)){
+            player.vx = 0
+        }
+    }
+
+    //kollisjon når spilleren beveger seg oppover
+    if(player.vy<0){
+        if(equalsSome(mapValue(player.pos.topLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.topRight, map), solidBlocks)){
+            player.vy = 0
+        }
+    }
+
+
+    if(solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botLeft.x)])==-1 && solidBlocks.indexOf(map[Math.round(player.y+2)][Math.floor(player.pos.botRight.x)])==-1){
+        player.falling = true
+    }
+
+
+    if(player.falling){
+        if((equalsSome(mapValue(player.pos.botLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)) && player.vy>0){
+            player.falling = false
+            player.y = Math.round(player.y)
+            player.vy = 0
+        }
+        else{
+            player.vy+=g
+        }
+    }
+    player.x+=player.vx
+    player.y+=player.vy
 }
 
 
@@ -410,7 +410,7 @@ function swap(player, index, container, button){
         if(container1 == "crafting" || container2 == "crafting"){
             updateCraftedItem(player)
         }
-      }
+    }
   
     //hvis spilleren ikke har valgt et Item for bytte enda, og det ikke er et tomt item der du trykker
     else if(player[container].arr[index].type != "empty" && button == 0){
@@ -435,24 +435,16 @@ function spawnMob(){
 }
 
 function updateSunAngle(time, maxTime, world){
-    // if(time<=maxTime/2-1){
-    //     world.sunAngle = Math.asin(time/(maxTime/4)-1) + Math.PI/2
-    // }
-    // else{
-    //     world.sunAngle = Math.asin(time/(maxTime/4)-3) + Math.PI/2*3
-    // }
     world.sunAngle = (time/maxTime)*2*Math.PI - Math.PI
     world.moonAngle = world.sunAngle + Math.PI
 }
 
 function updateLightLevels(users, time, change, map, world){
-    // console.log(lightEmittingBlocks)
     if(world.lightLevels.sun==Math.floor(5*Math.sin(time/6000*2*Math.PI)+5) && !change) return
     
     world.lightLevels.sun = Math.floor(5*Math.sin(time/6000*2*Math.PI)+5)
     for (let [id, user] of Object.entries(users)) {
         const indexes = user.player.indexes
-        // console.log(indexes.startX, indexes.endX, map[0].length)
         for(i= indexes.startX; i<indexes.endX; i++){
             let sunLight = world.lightLevels.sun
             for(j=indexes.startY; j<indexes.endY; j++){
@@ -476,34 +468,30 @@ function updateLightLevels(users, time, change, map, world){
 function rec(x, y, lightmap, map, indexes){
     if(lightmap[y][x]==1) return
     if(x < indexes.startX || x > indexes.endX || y < indexes.startY || y > indexes.endY) return
-                if(y<map.length-1){
-                    //map[y+1][x]
-                    if(lightmap[y][x]>lightmap[y+1][x]+1){
-                        lightmap[y+1][x] = lightmap[y][x]-1
-                        rec(x,y+1, lightmap, map, indexes)
-                    }
-                }
-                if(y>0){
-                    //map[y-1][x]
-                    if(lightmap[y][x]>lightmap[y-1][x]+1){
-                        lightmap[y-1][x] = lightmap[y][x]-1
-                        rec(x,y-1, lightmap, map, indexes)
-                    }
-                }
-                if(x<map[0].length-1){
-                    // map[y][x+1]
-                    if(lightmap[y][x]>lightmap[y][x+1]+1){
-                        lightmap[y][x+1] = lightmap[y][x]-1
-                        rec(x+1,y, lightmap, map, indexes)
-                    }
-                }
-                if(x>0){
-                    // map[y][x-1]
-                    if(lightmap[y][x]>lightmap[y][x-1]+1){
-                        lightmap[y][x-1] = lightmap[y][x]-1
-                        rec(x-1,y, lightmap, map, indexes)
-                    }
-                }
+    if(y<map.length-1){
+        if(lightmap[y][x]>lightmap[y+1][x]+1){
+            lightmap[y+1][x] = lightmap[y][x]-1
+            rec(x,y+1, lightmap, map, indexes)
+        }
+    }
+    if(y>0){
+        if(lightmap[y][x]>lightmap[y-1][x]+1){
+            lightmap[y-1][x] = lightmap[y][x]-1
+            rec(x,y-1, lightmap, map, indexes)
+        }
+    }
+    if(x<map[0].length-1){
+        if(lightmap[y][x]>lightmap[y][x+1]+1){
+            lightmap[y][x+1] = lightmap[y][x]-1
+            rec(x+1,y, lightmap, map, indexes)
+        }
+    }
+    if(x>0){
+        if(lightmap[y][x]>lightmap[y][x-1]+1){
+            lightmap[y][x-1] = lightmap[y][x]-1
+            rec(x-1,y, lightmap, map, indexes)
+        }
+    }
 }
 
 

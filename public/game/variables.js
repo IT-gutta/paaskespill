@@ -105,12 +105,6 @@ const torch = newImg("../game/assets/blocks/special/torch_straight.png")
 
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore]
 
-
-
-// const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, torch, 0, iron_pick]
-
-
-
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 const w = window.innerWidth

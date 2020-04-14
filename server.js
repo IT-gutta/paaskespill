@@ -19,40 +19,39 @@ let users = {}
 let variables = require('./modules/variables')
 let storage = variables.storage
 let map //= variables.map
-// let world = variables.world
 let mapInfo
 let world = {
-  lightLevels:{ 
-    map:[],
-    sun:0
-  },
-  time:0
+    lightLevels:{ 
+        map:[],
+        sun:0
+    },
+    time:0
 }
 storage.collection("map").get().then(snap =>{
-  let antall = snap.docs.length
-  mapInfo = snap.docs[antall-1].data()
-  map = JSON.parse(mapInfo.stringifiedMap)
-  delete mapInfo.stringifiedMap
-  console.log(!map, mapInfo, snap.docs.length)
+    let antall = snap.docs.length
+    mapInfo = snap.docs[antall-1].data()
+    map = JSON.parse(mapInfo.stringifiedMap)
+    delete mapInfo.stringifiedMap
+    console.log(!map, mapInfo, snap.docs.length)
   
   
-  //fylle opp world.lightLeves.map
-  for(let y = 0; y < map.length; y++){
-    world.lightLevels.map[y] = []
-    for(let x = 0; x < map[0].length; x++){
-      world.lightLevels.map[y][x] = 0
+    //fylle opp world.lightLeves.map
+    for(let y = 0; y < map.length; y++){
+        world.lightLevels.map[y] = []
+        for(let x = 0; x < map[0].length; x++){
+        world.lightLevels.map[y][x] = 0
+        }
     }
-  }
 }).then( ()=>{
-  //updater mappet til databasen hvert 15 sekund
-  // setInterval(() => {
-  //   storage.collection("map").doc(mapInfo.index).set({
-  //     stringifiedMap: JSON.stringify(map),
-  //     height: map.length,
-  //     width: map[0].length,
-  //     index: mapInfo.index
-  //   })
-  // }, 30000)
+    //updater mappet til databasen hvert 15 sekund
+    // setInterval(() => {
+    //   storage.collection("map").doc(mapInfo.index).set({
+    //     stringifiedMap: JSON.stringify(map),
+    //     height: map.length,
+    //     width: map[0].length,
+    //     index: mapInfo.index
+    //   })
+    // }, 30000)
 })
 
 let interactables = variables.interactables
@@ -65,7 +64,6 @@ const Item = variables.Item
 const Safe = variables.Safe
 const Player = variables.Player
 const Controller = variables.Controller
-// let world = variables.world
 const gameFunctions = require('./modules/gameFunctions')
 const usefulFunctions = require('./modules/usefulFunctions')
 const dbFunctions = require('./modules/dbFunctions')
@@ -91,16 +89,16 @@ const updateTime = gameFunctions.updateTime
 const updateLightLevels = gameFunctions.updateLightLevels
 
 function heartbeat(){
-  if(!objectIsEmpty(users)) {
-    for (let [id, user] of Object.entries(users)){
-      for (let i = 0; i < 10; i++) {
-        update(user.player, map, g, world, users)      
-      }
+    if(!objectIsEmpty(users)) {
+        for (let [id, user] of Object.entries(users)){
+            for (let i = 0; i < 10; i++){
+                update(user.player, map, g, world, users)      
+            }
+        }
+        updateTime(world)
+        updateLightLevels(users, world.time, false, map, world)
+        io.emit('heartbeat', map, users, world)
     }
-    updateTime(world)
-    updateLightLevels(users, world.time, false, map, world)
-    io.emit('heartbeat', map, users, world)
-  }
 }
 
 
@@ -108,106 +106,103 @@ function heartbeat(){
 setInterval(heartbeat, 1000/60)
 
 io.on('connection', socket => {
-  console.log("connected: " + socket.id)
+    console.log("connected: " + socket.id)
   
-  socket.on('new-user', (username, width, height) => {
-    console.log(width, height)
-    users[socket.id] = {username: username, player: new Player(username, width, height), controller: new Controller(), playerID: socket.id}
-    
-    socket.emit("playerID", socket.id)
+    socket.on('new-user', (username, width, height) => {
+        console.log(width, height)
+        users[socket.id] = {username: username, player: new Player(username, width, height), controller: new Controller(), playerID: socket.id}
+        
+        socket.emit("playerID", socket.id)
 
-    console.log(socket.id)
+        console.log(socket.id)
+    })
 
-  })
+    // change hotBarItem og hover, key er 1, 2, 3, 4 etc...
+    socket.on("changeItem", key => {
+        users[socket.id].player.hotBarSpot = key
 
-  // change hotBarItem og hover, key er 1, 2, 3, 4 etc...
-  socket.on("changeItem", key => {
-    users[socket.id].player.hotBarSpot = key
+        // begge disse er pekere som peker til et sted i minnet, siden de peker til sammme sted når man setter den ene lik den andre,
+        // vil en endring av den ene resultere i en endring av den andre også, ingen av de har liksom sin egen verdi, programmet henter fram en verdi
+        // fra denne minneplassen når man spør om det, og det er verdien som befinner seg i minnet som blir endret dersom man endrer objektet
+        updatePlayerHand(users[socket.id].player)
+    })
 
-    // begge disse er pekere som peker til et sted i minnet, siden de peker til sammme sted når man setter den ene lik den andre,
-    // vil en endring av den ene resultere i en endring av den andre også, ingen av de har liksom sin egen verdi, programmet henter fram en verdi
-    // fra denne minneplassen når man spør om det, og det er verdien som befinner seg i minnet som blir endret dersom man endrer objektet
-    updatePlayerHand(users[socket.id].player)
-  })
+    socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
+        if(!userExists(users, socket.id)) return
+        keysD(keyCode, users[socket.id].player, users[socket.id].controller)
+        updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
+    })
 
-  socket.on('keysD', (keyCode, clientX, clientY, canvasWidth, canvasHeight) => {
-    if(!userExists(users, socket.id)) return
-    keysD(keyCode, users[socket.id].player, users[socket.id].controller)
-    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
-  })
+    socket.on('keysU', keyCode => {
+        if(!userExists(users, socket.id)) return
+        keysU(keyCode, users[socket.id].player, users[socket.id].controller)
+    })
 
-  socket.on('keysU', keyCode => {
-    if(!userExists(users, socket.id)) return
-    keysU(keyCode, users[socket.id].player, users[socket.id].controller)
-  })
+    socket.on('mousedown', (button, clientX, clientY, canvasWidth, canvasHeight) => {
+        if(!userExists(users, socket.id)) return
+        updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
+        users[socket.id].player.mouse.keys[button] = true
+        const player = users[socket.id].player
 
-  socket.on('mousedown', (button, clientX, clientY, canvasWidth, canvasHeight) => {
-    if(!userExists(users, socket.id)) return
-    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
-    users[socket.id].player.mouse.keys[button] = true
-    const player = users[socket.id].player
-
-    // console.log(interactables.indexOf(mapValue(player.mouse, map)))
-    //interaksjon
-    if(button==2 && interactables.indexOf(mapValue(player.mouse, map)) != -1){
-      socket.emit(interaction(users[socket.id].player, map), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
-    }
+        //interaksjon
+        if(button==2 && interactables.indexOf(mapValue(player.mouse, map)) != -1){
+            socket.emit(interaction(users[socket.id].player, map), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
+        }
 
     
-    else{
-      // console.log(world.time)
-      click(button, users[socket.id].player, map, world, users)
-    }
-  })
+        else{
+            click(button, users[socket.id].player, map, world, users)
+        }
+    })
 
-  socket.on("mousemove", (clientX, clientY, canvasWidth, canvasHeight) => {
-    if(!userExists(users, socket.id)) return
-    updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
-  })
+    socket.on("mousemove", (clientX, clientY, canvasWidth, canvasHeight) => {
+        if(!userExists(users, socket.id)) return
+        updateMousePos(users[socket.id].player, clientX, clientY, canvasWidth, canvasHeight)
+    })
 
-  socket.on("mouseup", button => {
-    if(!userExists(users, socket.id)) return
-    users[socket.id].player.mouse.keys[button] = false
-    users[socket.id].player.mining.active = false
-  })
+    socket.on("mouseup", button => {
+        if(!userExists(users, socket.id)) return
+        users[socket.id].player.mouse.keys[button] = false
+        users[socket.id].player.mining.active = false
+    })
 
   
   //mutering av inventory og safer
 
 
-  socket.on("closeInventory", () =>{
-    const player = users[socket.id].player
-    //fjerner highlight
-    if(player.selectedSwap) player[player.selectedSwap.container].arr[player.selectedSwap.index].highlighted = false
+    socket.on("closeInventory", () =>{
+        const player = users[socket.id].player
+        //fjerner highlight
+        if(player.selectedSwap) player[player.selectedSwap.container].arr[player.selectedSwap.index].highlighted = false
 
-    player.selectedSwap = null
-    player.safe = null
+        player.selectedSwap = null
+        player.safe = null
 
-    //sørger for at player.hand er oppdatert
-    updatePlayerHand(player)
-  })
-
-
-  socket.on('swap', (index, container, button) => {
-    if(!userExists(users, socket.id)) return
-    swap(users[socket.id].player, index, container, button)
-  })
-
-  socket.on('pickUpCraftedItem', ()=>{
-    pickupItem(users[socket.id].player, map, true)
-  })
-
-  socket.on('disconnect', () => {
-    if(!userExists(users, socket.id)) return
-    // updatePlayerInfo(socket[id].username)
-    delete users[socket.id]
-    console.log(socket.id + " disconnected.")
-  })
+        //sørger for at player.hand er oppdatert
+        updatePlayerHand(player)
+    })
 
 
-  socket.on('new-insert', (collection, data) => {
-    console.log("new insert!!", collection)
-    insertIntoCollection(collection, data)
-  })
+    socket.on('swap', (index, container, button) => {
+        if(!userExists(users, socket.id)) return
+        swap(users[socket.id].player, index, container, button)
+    })
+
+    socket.on('pickUpCraftedItem', ()=>{
+        pickupItem(users[socket.id].player, map, true)
+    })
+
+    socket.on('disconnect', () => {
+        if(!userExists(users, socket.id)) return
+        // updatePlayerInfo(socket[id].username)
+        delete users[socket.id]
+        console.log(socket.id + " disconnected.")
+    })
+
+
+    socket.on('new-insert', (collection, data) => {
+        console.log("new insert!!", collection)
+        insertIntoCollection(collection, data)
+    })
 
 })
