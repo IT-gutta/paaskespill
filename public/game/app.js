@@ -129,6 +129,8 @@ function draw(map, users, world){
     c.drawImage(sky, 0, 0, w, h)
     c.fillStyle = `rgba(0, 0, 0, ${1-(world.lightLevels.sun+1)/10}`
     c.fillRect(0,0,w,h)
+    c.drawImage(sun, h/2*Math.cos(world.sunAngle)*(1+Math.abs(Math.cos(world.sunAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.sunAngle)+h/2, 128, 128)
+    c.drawImage(moon, h/2*Math.cos(world.moonAngle)*(1+Math.abs(Math.cos(world.moonAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.moonAngle)+h/2, 128, 128)
     //draws tilemap
     for(i=Math.floor(player.y - 32/64 - canvas.height/64)-1; i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
         if(i<0) continue

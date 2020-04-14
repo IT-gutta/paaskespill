@@ -1,19 +1,19 @@
 const usefulFuncions = require("./usefulFunctions")
 const getLevel = usefulFuncions.getLevel
 //smeller inn firebase storage
-const firebase = require("firebase")
-const firebaseConfig = {
-  apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
-  authDomain: "paaskespill.firebaseapp.com",
-  databaseURL: "https://paaskespill.firebaseio.com",
-  projectId: "paaskespill",
-  storageBucket: "paaskespill.appspot.com",
-  messagingSenderId: "200950577223",
-  appId: "1:200950577223:web:919978e4905514e8fc5962",
-  measurementId: "G-HXN2PSV4SQ"
-}
-firebase.initializeApp(firebaseConfig);
-db = firebase.firestore()
+// const firebase = require("firebase")
+// const firebaseConfig = {
+//   apiKey: "AIzaSyC_qo-PKhtoAUMq-8hz3N5pW8nwbVLMRTE",
+//   authDomain: "paaskespill.firebaseapp.com",
+//   databaseURL: "https://paaskespill.firebaseio.com",
+//   projectId: "paaskespill",
+//   storageBucket: "paaskespill.appspot.com",
+//   messagingSenderId: "200950577223",
+//   appId: "1:200950577223:web:919978e4905514e8fc5962",
+//   measurementId: "G-HXN2PSV4SQ"
+// }
+// firebase.initializeApp(firebaseConfig);
+// db = firebase.firestore()
 
 class Player {
   constructor(username) {
@@ -93,6 +93,19 @@ class Player {
     }
   }
 }
+
+class Zombie{
+  constructor(x, y){
+    this.x = x
+    this.y = y
+    this.health = 100
+    this.damage = 10
+    this.speed = 0.00005
+    this.img = "zombie"
+  }
+}
+
+let mobs = []
 
 class Controller {
   constructor() {
@@ -210,8 +223,10 @@ const world = {
     sun:0
   },
 
-  time:0
+  time:0,
+  sunAngle: 0, 
+  moonAngle: 0
 }
 
 
-module.exports = {map, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller, world, lightEmittingBlocks}
+module.exports = {map, interactables, interactMap, solidBlocks, Safe, Item, Player, Controller, world, lightEmittingBlocks, Zombie}

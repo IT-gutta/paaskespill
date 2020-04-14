@@ -45,6 +45,8 @@ const playerSprites = {
     }
 }
 
+const zombie = {left: newImg("assets/mobs/zombie_left"), right: newImg("assets/mobs/zombie_left")}
+
 const air = newImg("assets/blocks/general/air.png")
 
 const grass = newImg("assets/blocks/general/grass.png")
@@ -64,6 +66,9 @@ const iron_ore = newImg("assets/blocks/ores/iron_ore.png")
 const safe = newImg("assets/blocks/interactables/safe.png")
 
 const sky = newImg("assets/backgrounds/sky.png")
+
+const sun = newImg("assets/backgrounds/sun.png")
+const moon = newImg("assets/backgrounds/moon.png")
 
 const inventory = newImg("assets/ui/inventory.png")
 
