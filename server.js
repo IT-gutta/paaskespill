@@ -89,7 +89,7 @@ const swap = gameFunctions.swap
 const pickupItem = gameFunctions.pickupItem
 const updateTime = gameFunctions.updateTime
 const updateLightLevels = gameFunctions.updateLightLevels
-const heartbeatsBeforeUpdateShadows = 5
+const heartbeatsBeforeUpdateShadows = 10
 let heartbeatCounter = 0
 function heartbeat(){
   if(!objectIsEmpty(users)) {
@@ -103,7 +103,7 @@ function heartbeat(){
       updateLightLevels(users, world.time, map, world)
       heartbeatCounter = 0
     }
-    
+
     updateTime(world)
     
     io.emit('heartbeat', users, map[0].length, map.length)

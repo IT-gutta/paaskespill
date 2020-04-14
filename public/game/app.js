@@ -23,7 +23,7 @@ form.onsubmit = (e) => {
             }
             animationSkipCount+=1
             if(animationSkipCount==fpsNumber){
-                draw(users, mapWidth, mapHeight)
+                if(playerID) draw(users, mapWidth, mapHeight)
                 animationSkipCount = 0
             }
         })
