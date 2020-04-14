@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
 const form = document.querySelector('form')
 const textField = document.getElementById('textField')
-const socket = (window.location.href == "http://localhost:3000/game/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
+const socket = window.location.href == ("http://localhost:3000/game/" || "http://localhost:3000/world/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
 let playerID
 
 
