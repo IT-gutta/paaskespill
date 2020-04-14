@@ -4,7 +4,6 @@ let selectedInventoryIndex = 0
 let inventorySwap = false
 let animationSkipCount = 0
 let fpsNumber = 0
-let form = document.querySelector("form")
 form.onsubmit = (e) => {
     // dette er henriks kommentar
     //Jørgen er kul
