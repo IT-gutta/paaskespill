@@ -427,14 +427,14 @@ function updateTime(world){
         world.time = 0
     }
     if(world.time%600==0) spawnMob()
-    updateSunAngle(world.time, dayLength)
+    updateSunAngle(world.time, dayLength, world)
 }
 
 function spawnMob(){
     
 }
 
-function updateSunAngle(time, maxTime){
+function updateSunAngle(time, maxTime, world){
     // if(time<=maxTime/2-1){
     //     world.sunAngle = Math.asin(time/(maxTime/4)-1) + Math.PI/2
     // }
@@ -443,7 +443,6 @@ function updateSunAngle(time, maxTime){
     // }
     world.sunAngle = (time/maxTime)*2*Math.PI - Math.PI
     world.moonAngle = world.sunAngle + Math.PI
-    // console.log(world.sunAngle, time, time/maxTime)
 }
 
 function updateLightLevels(users, time, change, map, world){
