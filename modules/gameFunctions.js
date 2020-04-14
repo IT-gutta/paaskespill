@@ -3,6 +3,7 @@ let storage = variables.storage
 let interactMap = variables.interactMap
 const solidBlocks = variables.solidBlocks
 const lightThroughBlocks = variables.lightThroughBlocks
+const speed = variables.speed
 // const world = variables.world
 const lightEmittingBlocks = variables.lightEmittingBlocks
 const Item = variables.Item
@@ -57,12 +58,12 @@ function update(player, map, g, world, users){
     //movement og collision
     if(player.moving){
         if(player.direction=="left"){
-            if(player.movement == "running") player.vx = -0.01
-            else player.vx = -0.005
+            if(player.movement == "running") player.vx = -speed*2
+            else player.vx = -speed
         }
         else{
-            if(player.movement == "running") player.vx = 0.01
-            else player.vx = 0.005
+            if(player.movement == "running") player.vx = speed*2
+            else player.vx = speed
         }
     }
     else{
@@ -165,7 +166,7 @@ function keysD(keyCode, player, controller){
     else if(keyCode==32){
         if(!player.falling){
             player.falling = true
-            player.vy = -0.01
+            player.vy = -0.01*4
         }
     }
     //shift, aka sprint

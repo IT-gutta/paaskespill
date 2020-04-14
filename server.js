@@ -63,7 +63,7 @@ storage.collection("map").get().then(snap =>{
 
 
 let interactables = variables.interactables
-const g = 0.00004
+const g = 0.00004*16
 const db = require('./modules/db')
 
 
@@ -95,12 +95,12 @@ const swap = gameFunctions.swap
 const pickupItem = gameFunctions.pickupItem
 const updateTime = gameFunctions.updateTime
 const updateLightLevels = gameFunctions.updateLightLevels
-const heartbeatsBeforeUpdateShadows = 30
+const heartbeatsBeforeUpdateShadows = 60
 let heartbeatCounter = 0
 function heartbeat(){
     if(!objectIsEmpty(users)) {
         for (let [id, user] of Object.entries(users)){
-            for (let i = 0; i < 10; i++){
+            for (let i = 0; i < 5; i++){
                 update(user.player, map, g, world, users)      
             }
         }
@@ -117,9 +117,7 @@ function heartbeat(){
   }
 }
 
-
-
-setInterval(heartbeat, 1000/60)
+setInterval(heartbeat, 1000/30)
 
 io.on('connection', socket => {
     console.log("connected: " + socket.id)

@@ -67,7 +67,7 @@ class Player {
         this.sprite = {
             index: 2,
             playerSprite: "boy",
-            delay: 100,
+            delay: 25,
             counter: 0
         }
 
@@ -75,7 +75,7 @@ class Player {
             x: undefined,
             y: undefined,
             counter: 0,
-            delay: 50,
+            delay: 15,
             keys: {
                 0: false,
                 2: false
@@ -253,5 +253,5 @@ const world = {
     moonAngle: 0
 }
 
-
-module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, lightThroughBlocks, Safe, Item, Player, Controller, Zombie}
+const speed = 0.02
+module.exports = {map, world, storage, interactables, interactMap, solidBlocks, lightEmittingBlocks, lightThroughBlocks, speed, Safe, Item, Player, Controller, Zombie}
