@@ -47,7 +47,7 @@ const playerSprites = {
 const air = newImg("../game/assets/blocks/general/air.png")
 
 const grass = newImg("../game/assets/blocks/general/grass.png")
-const zombie = {left: newImg("assets/mobs/zombie_left"), right: newImg("assets/mobs/zombie_left")}
+const zombie = {left: newImg("../game/assets/mobs/zombie_left"), right: newImg("../game/assets/mobs/zombie_left")}
 
 const dirt = newImg("../game/assets/blocks/general/dirt.png")
 
@@ -68,10 +68,8 @@ const plutonium_ore = newImg("../game/assets/blocks/ores/plutonium_ore.png")
 const silver_ore = newImg("../game/assets/blocks/ores/silver_ore.png")
 
 const uranium_ore = newImg("../game/assets/blocks/ores/uranium_ore.png")
-const sun = newImg("assets/backgrounds/sun.png")
-const moon = newImg("assets/backgrounds/moon.png")
-
-const inventory = newImg("assets/ui/inventory.png")
+const sun = newImg("../game/assets/backgrounds/sun.png")
+const moon = newImg("../game/assets/backgrounds/moon.png")
 
 const shadow10 = newImg("../game/assets/backgrounds/shadow10.png")
 const shadow20 = newImg("../game/assets/backgrounds/shadow20.png")
@@ -103,7 +101,7 @@ const bedrock = newImg("../game/assets/blocks/general/bedrock.png")
 
 const safe = newImg("../game/assets/blocks/interactables/safe.png")
 
-const torch = newImg("assets/blocks/special/torch_straight.png")
+const torch = newImg("../game/assets/blocks/special/torch_straight.png")
 
 const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore]
 
