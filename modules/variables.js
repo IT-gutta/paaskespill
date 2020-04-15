@@ -165,7 +165,7 @@ let map = [
 
 const solidBlocks = [1, 2, 3, 4, 5, 6, 7, 8, 10, 13, 14, 15, 16]
 const lightEmittingBlocks = [11]
-const lightThroughBlocks = [0, 11]
+const lightThroughBlocks = [0, 11, 99]
 const val = {air:0, stone:1, log:2, leaves:3, coal_ore:4, grass:5, iron_ore:6, dirt:7, safe:8, grill:9, iron_pick:12}
 
 

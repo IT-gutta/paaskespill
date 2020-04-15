@@ -148,7 +148,7 @@ function draw(users, mapWidth, mapHeight){
             if(j<0) continue
             if(j>=mapWidth) break
             
-            c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
+            if(map[i][j]) c.drawImage(imgs[map[i][j]], canvas.width/2 + 32*(j-player.x-7/32), canvas.height/2 + 32*(i-player.y-32/64), 32, 32)
             
             if(map[i][j]!=0){
                 if(world.lightLevels.map[i][j]!=10){

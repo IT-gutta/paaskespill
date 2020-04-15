@@ -46,7 +46,7 @@ function adjustMap(caveMap, map){
     
     for(let y = 0; y < map.length; y++){
         for(let x = 0; x < map[0].length; x++){
-            if(caveMap[y][x] == 0 && !equalsSome(map[y][x], [2, 3, 10])) map[y][x] = 0
+            if(caveMap[y][x] == 0 && !equalsSome(map[y][x], [0, 2, 3, 10])) map[y][x] = 0
         }
     }
     

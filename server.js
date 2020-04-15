@@ -1,6 +1,12 @@
 const express = require('express')
 const app = express()
-const server = require('http').Server(app)
+const server = require('http').createServer(app)//(function (req, res) {
+//     console.log(req.socket.address())
+//     res.writeHead(200, {'Content-Type': 'text/plain'});
+//     res.end('Hello ' + req.connection.remoteAddress + '!');
+//     // Client address in request -----^
+//   })
+
 const io = require('socket.io')(server)
 
 app.use(express.static('public'))
@@ -13,6 +19,7 @@ app.set('json spaces', 2); // number of spaces for indentation
 const PORT = process.env.PORT || 3000
 
 server.listen(PORT)
+console.log(server.listening, server.address())
 
 // ----variables
 let users = {}
@@ -27,7 +34,7 @@ let world = {
     },
     time:0
 }
-storage.collection("map").get().then(snap =>{
+storage.collection("map").orderBy("index").get().then(snap =>{
     let antall = snap.docs.length
     console.log("Antall docs i db: " +antall)
     mapInfo = snap.docs[antall-1].data()
@@ -35,6 +42,7 @@ storage.collection("map").get().then(snap =>{
     if(Object.keys(mapInfo).length == 0) console.log("Couldnt get a map from the db, fix and restart")
     else{
         map = JSON.parse(mapInfo.stringifiedMap)
+        console.log(mapInfo.index)
         delete mapInfo.stringifiedMap
         
     
@@ -46,7 +54,7 @@ storage.collection("map").get().then(snap =>{
             world.lightLevels.map[y][x] = 0
             }
         }
-        console.log("Map width: "+map[0].length,"Map height: " +map.length)
+        console.log("Map width: "+map[0].length,", Map height: " +map.length)
 
         //updater mappet til databasen hvert 30 sekund
         setInterval(() => {

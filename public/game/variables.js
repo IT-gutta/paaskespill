@@ -2,7 +2,7 @@ const canvas = document.querySelector("canvas")
 const c = canvas.getContext("2d")
 const form = document.querySelector('form')
 const textField = document.getElementById('textField')
-const socket = window.location.href == ("http://localhost:3000/game/" || "http://localhost:3000/world/") ? io.connect('localhost:3000') : io.connect('https://paaskespill.herokuapp.com/')
+const socket = io.connect("localhost:3000")//document.href == "http://localhost:3000/game" || document.href == "http://localhost:3000/world" ? io.connect("localhost:3000") : io.connect('172.105.65.55:3000')
 let playerID
 
 
@@ -84,6 +84,7 @@ const shadow100 = newImg("../game/assets/backgrounds/shadow100.png")
 const shadows = [shadow10, shadow20, shadow30, shadow40, shadow50, shadow60, shadow70, shadow80, shadow90, shadow100]
 shadows.reverse()
 
+const caveWallImg = newImg("assets/backgrounds/caveWall.png")
 
 const sky = newImg("../game/assets/backgrounds/sky.png")
 

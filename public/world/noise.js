@@ -152,11 +152,7 @@ class NoiseMap{
         this.frequency = 1
 
         for(let x = 0; x < f(this.width/blockSize); x++){
-            // if(x > f(this.width/(blockSize*2))){
-            //     if(this.scale > scale/4) this.scale-=5
-            //     if(this.persistance > 0.4) this.persistance-=0.01
-            //     this.octaves = 6
-            // }
+            
             this.amplitude = 1
             this.frequency = 1
             this.noiseHeight = 0
@@ -177,16 +173,10 @@ class NoiseMap{
             this.noiseMap.push(this.noiseHeight)
         }
 
-        //normalize values
-        // let max = 0.5
-        // let min = 0.2
+        
         for(let i = 0; i < this.noiseMap.length; i++){
-            // if(i > this.noiseMap.length/2 && max < 1) max+=0.001
-            // if(i > this.noiseMap.length/2 && min < 0.5) min+=0.001
-
             this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 0.2/*1-max*/, 0.8/*1-min*/)   
         }
-        // console.log(this.noiseMap)
     }
     draw(){
         beginShape()
@@ -360,6 +350,7 @@ function setup(){
         
         db.collection("map").get().then(snap =>{
             let index = snap.docs.length
+            console.log(index)
             db.collection("map").doc(index.toString()).set({
                 width: map[0].length,
                 height: map.length,
@@ -404,12 +395,12 @@ function newMap(){
     noiseSeed(seedInp.value())
     randomSeed(seedInp.value())
 
-    noiseMap = new NoiseMap(8000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
+    noiseMap = new NoiseMap(20000, 6000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
     map = noiseMap.create2DArr()
 
   
     if(cavesOn.checked()){
-        caveMap = createCaveMap(8000, 3000, blockSize.value(), caveFillPercent.value()/10)
+        caveMap = createCaveMap(20000, 6000, blockSize.value(), caveFillPercent.value()/10)
         adjustMap(caveMap, map)
     }
 }
@@ -427,7 +418,7 @@ function draw(){
         beginShape()
         for(let y = Math.floor(yVal/(sizeValue*zoom)); y < Math.floor(yVal+height/(sizeValue*zoom)); y++){
             for(let x = Math.floor(xVal/(sizeValue*zoom)); x < Math.floor(xVal + width/(sizeValue*zoom)); x++){
-                if(map[y] && map[y][x]) drawingContext.drawImage(imgs[map[y][x]], x*sizeValue*zoom - xVal, y*sizeValue*zoom - yVal, sizeValue*zoom, sizeValue*zoom)
+                if(map[y] && map[y][x] && map[y][x]!=99) drawingContext.drawImage(imgs[map[y][x]], x*sizeValue*zoom - xVal, y*sizeValue*zoom - yVal, sizeValue*zoom, sizeValue*zoom)
             }
         }
         endShape()

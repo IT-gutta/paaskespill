@@ -27,6 +27,7 @@ function updateSprites(player){
 
 
 function update(player, map, g, world, users){
+    
     player.indexes = {
         startX: Math.floor(player.x-player.canWidth/64)-1 > 0 ? Math.floor(player.x-player.canWidth/64)-1 : 0,
         startY: Math.floor(player.y-player.canHeight/64)-1 > 0 ? Math.floor(player.y-player.canHeight/64)-1 : 0,
