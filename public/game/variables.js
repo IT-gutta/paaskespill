@@ -103,13 +103,13 @@ const safe = newImg("../game/assets/blocks/interactables/safe.png")
 
 const torch = newImg("../game/assets/blocks/special/torch_straight.png")
 
-const iron_ingot = newImg("assets/materials/iron_ingot.png")
-const silver_ingot = newImg("assets/materials/silver_ingot.png")
-const gold_ingot = newImg("assets/materials/gold_ingot.png")
+const iron_nugget = newImg("assets/materials/iron_nugget.png")
+const silver_nugget = newImg("assets/materials/silver_nugget.png")
+const gold_nugget = newImg("assets/materials/gold_nugget.png")
 const coal = newImg("assets/materials/coal.png")
 const uranium = newImg("assets/materials/uranium.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore, iron_ingot, gold_ingot, silver_ingot, uranium, coal]
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore, iron_nugget, gold_nugget, silver_nugget, uranium, coal]
 
 const stage1 = newImg("assets/mining/stage1.png")
 const stage2 = newImg("assets/mining/stage2.png")
