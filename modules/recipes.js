@@ -44,9 +44,17 @@ function addRecipeSingleItem(val, type, outComeValue, quantity){
 }
 //pickaxe
 addRecipe([1,1,1,0,9,0,0,9,0], "pickaxe", 12, 1)
+//torches
+addRecipe([0,0,0,0,21,0,0,9,0], "block", 11, 4)
 
 //1 wood til 4 sticks
 addRecipeSingleItem(2, "material", 9, 4)
+//iron og coal og gold og silver til ingots
+addRecipeSingleItem(4, "material", 21, 2)
+addRecipeSingleItem(6, "material", 17, 2)
+addRecipeSingleItem(13, "material", 18, 2)
+addRecipeSingleItem(14, "material", 19, 2)
+addRecipeSingleItem(16, "material", 20, 2)
 
 //safe
 addRecipe([1,1,1,17,18,17,1,1,1], "interactable", 8, 1)

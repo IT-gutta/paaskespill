@@ -19,3 +19,4 @@
 18 - gold_ingot
 19 - silver_ingot
 20 - uranium
+21 - coal

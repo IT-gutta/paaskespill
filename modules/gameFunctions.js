@@ -9,6 +9,7 @@ const speed = variables.speed
 // const world = variables.world
 const lightEmittingBlocks = variables.lightEmittingBlocks
 const Item = variables.Item
+const Safe = variables.Safe
 const recipes = require("./recipes")
 const checkRecipe = recipes.checkRecipe
 
@@ -223,10 +224,7 @@ function click(keyCode, player, map, world, users){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
                             //sjekker om spiller trykker på en interactable
-                            if(world.interactMap[py] && world.interactMap[py][px]){
-                                interact(player, world.interactMap[py][px])
-                            }
-                            else if(player.hand){
+                            if(player.hand){
                                 //sjekker om spiller holder en blokk i hånden
                                 if(player.hand.type == "block"){
                                                                 
@@ -237,7 +235,8 @@ function click(keyCode, player, map, world, users){
                                 }
                                 else if(player.hand.type == "interactable"){
                                     map[py][px] = player.hand.value
-                                    world.interactMap[py][px] = player.hand
+                                    if(!world.interactMap[py]) world.interactMap[py] = {}
+                                    if(player.hand.value == 8) world.interactMap[py][px] = new Safe(px, py)
                                     player.hand.number -= 1
                                 }
 
@@ -289,7 +288,7 @@ function craftingMinus(player){
 function pickupItem(player, map, fromCrafting){
     //hvis det ikke finnes noe i "ferdig-craft" ruten
     if(fromCrafting && !player.craftedItem) return
-    
+
     //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
     for(let i = player.inventory.arr.length-1; i >= 0; i--){
         //hvis det finnes en stack med itemet fra før der det er plass
@@ -364,7 +363,7 @@ function sight(pPos, mPos, py, px, map){
 }
 //Sjekker om spilleren har trykket på en block man kan interagere med
 function interaction(player, interactMap){
-    if(interactMap[player.mouse.r.y][player.mouse.r.x].value == 8){
+    if(interactMap[player.mouse.r.y][player.mouse.r.x].name == "Safe"){
         player.safe = interactMap[player.mouse.r.y][player.mouse.r.x]
         return "safeOpened"
     }
