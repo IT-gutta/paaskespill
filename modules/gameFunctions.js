@@ -1,8 +1,6 @@
 const variables = require('./variables')
 let storage = variables.storage
 let interactMap = variables.interactMap
-let mobs = variables.mobs
-const Zombie = variables.Zombie
 const solidBlocks = variables.solidBlocks
 const lightThroughBlocks = variables.lightThroughBlocks
 const speed = variables.speed
@@ -55,14 +53,7 @@ function update(player, map, g, world, users){
             else player.world.lightLevels.map[y][x] = world.lightLevels.map[y][x]
         }
     }
-
-    player.world.sunAngle = world.sunAngle
-    player.world.moonAngle = world.moonAngle
-
-    let r = Math.random()
-    // console.log(world.mobs)
-    if(r<0.005) spawnMob(player, world.mobs)
-    player.mobs = world.mobs
+   
 
     //movement og collision
     if(player.moving){
@@ -458,23 +449,11 @@ function updateTime(world){
     if(world.time==dayLength){
         world.time = 0
     }
+    if(world.time%600==0) spawnMob()
     updateSunAngle(world.time, dayLength, world)
 }
 
-function spawnMob(player, mobs){
-    let r1 = Math.floor(Math.random()*(player.indexes.endY-player.indexes.startY) + player.indexes.startY) 
-    let r2 = Math.floor(Math.random()*(player.indexes.endX-player.indexes.startX) + player.indexes.startX)
-    if(player.world.lightLevels.map[r1][r2]<10){
-        mobs.push(new Zombie(r2, r1))
-        let mob = mobs[mobs.length-1]
-        setTimeout(
-            function(){
-                mobs[0].kill(mobs)
-            },
-            3000
-        )
-        // console.log(mobs.length)
-    }
+function spawnMob(){
     
 }
 

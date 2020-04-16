@@ -47,7 +47,7 @@ const playerSprites = {
 const air = newImg("../game/assets/blocks/general/air.png")
 
 const grass = newImg("../game/assets/blocks/general/grass.png")
-const zombie = {left: newImg("../game/assets/mobs/zombie_left.png"), right: newImg("../game/assets/mobs/zombie_left.png")}
+const zombie = {left: newImg("../game/assets/mobs/zombie_left"), right: newImg("../game/assets/mobs/zombie_left")}
 
 const dirt = newImg("../game/assets/blocks/general/dirt.png")
 
