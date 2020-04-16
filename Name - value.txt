@@ -1,0 +1,21 @@
+0 - air
+1 - stone
+2 - log
+3 - leaves
+4 - coal_ore
+5 - grass
+6 - iron_ore
+7 - dirt
+8 - safe
+9 - tool_base / stick
+10 - bedrock
+11 - torch
+12 - iron_pick
+13 - gold_ore
+14 - silver_ore
+15 - plutonium_ore
+16 - uranium_ore
+17 - iron_ingot
+18 - gold_ingot
+19 - silver_ingot
+20 - uranium
