@@ -42,8 +42,22 @@ function addRecipeSingleItem(val, type, outComeValue, quantity){
         addRecipe(arr, type, outComeValue, quantity)
     }
 }
-//pickaxe
-addRecipe([1,1,1,0,9,0,0,9,0], "pickaxe", 12, 1)
+function addToolRecipe(recipe, valArr, type, outComeArr){
+    for(let i = 0; i < valArr.length; i++){
+        let rec = []
+        for(let j = 0; j < recipe.length; j++){
+            if(recipe[j] == 1)rec[j] = valArr[i]
+            else if(recipe[j] == 2) rec[j] = 9
+            else rec[j] = 0
+        }
+        addRecipe(rec, type, outComeArr[i])
+    }
+}
+//pickaxes
+addToolRecipe([1,1,1,0,2,0,0,2,0], [1, 2, 17], "pickaxe", [12, 23, 22])
+addToolRecipe([0,1,1,0,2,1,0,2,0], [1, 2, 17], "axe", [25, 26, 24])
+addToolRecipe([1,1,0,1,2,0,0,2,0], [1, 2, 17], "axe", [25, 26, 24])
+addToolRecipe([0,1,0,0,2,0,0,2,0], [1, 2, 17], "shovel", [28, 29, 27])
 //torches
 addRecipe([0,0,0,0,21,0,0,9,0], "block", 11, 4)
 
