@@ -185,8 +185,8 @@ function draw(users, mapWidth, mapHeight){
             c.fillText(user.username, canvas.width/2 + 32*(user.player.x-player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-player.y-32/64) - 16)
         }
     }
-    for(i=0; i<player.mobs.length; i++){
-        c.drawImage(zombie.left, canvas.width/2 + 32*(player.mobs[i].x-player.x-7/32), canvas.height/2 + 32*(player.mobs[i].y-player.y-32/64), 32, 64)
+    for(i=0; i<player.world.mobs.length; i++){
+        c.drawImage(zombie.left, canvas.width/2 + 32*(player.world.mobs[i].x-player.x-7/32), canvas.height/2 + 32*(player.world.mobs[i].y-player.y-32/64), 32, 64)
     }
 
     //font for inventory og hotbar

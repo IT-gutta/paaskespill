@@ -25,7 +25,10 @@ let world = {
         map:[],
         sun:0
     },
-    time:0
+    time:0,
+    sunAngle: 0, 
+    moonAngle: 0,
+    mobs: []
 }
 storage.collection("map").orderBy("index").get().then(snap =>{
     let antall = snap.docs.length
@@ -105,16 +108,17 @@ function heartbeat(){
             }
         }
         
-    heartbeatCounter ++
-    if(heartbeatCounter > heartbeatsBeforeUpdateShadows){
-      updateLightLevels(users, world.time, map, world)
-      heartbeatCounter = 0
-    }
+        
+        heartbeatCounter ++
+        if(heartbeatCounter > heartbeatsBeforeUpdateShadows){
+            updateLightLevels(users, world.time, map, world)
+            heartbeatCounter = 0
+        }
 
-    updateTime(world)
-    
-    io.emit('heartbeat', users, map[0].length, map.length)
-  }
+        updateTime(world)
+        
+        io.emit('heartbeat', users, map[0].length, map.length)
+    }
 }
 
 setInterval(heartbeat, 1000/30)
