@@ -50,8 +50,8 @@ function update(player, map, g, world, users){
     player.world.sunAngle = world.sunAngle
     player.world.moonAngle = world.moonAngle
     player.world.mobs = world.mobs
-   
     player.world.time = world.time
+    
     for(y=player.indexes.startY; y<=player.indexes.endY; y++){
         player.world.lightLevels.map[y] = {}
         for(x=player.indexes.startX; x<=player.indexes.endX; x++){
