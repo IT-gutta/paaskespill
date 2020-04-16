@@ -27,7 +27,7 @@ let world = {
     },
     time:0
 }
-storage.collection("map").get().then(snap =>{
+storage.collection("map").orderBy("index").get().then(snap =>{
     let antall = snap.docs.length
     console.log("Antall docs i db: " +antall)
     mapInfo = snap.docs[antall-1].data()
