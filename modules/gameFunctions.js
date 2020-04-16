@@ -47,6 +47,10 @@ function update(player, map, g, world, users){
     // console.log(typeof(player.map))
     player.world.lightLevels.map = {}
     player.world.lightLevels.sun = world.lightLevels.sun
+    player.world.sunAngle = world.sunAngle
+    player.world.moonAngle = world.moonAngle
+    player.world.mobs = world.mobs
+   
     player.world.time = world.time
     for(y=player.indexes.startY; y<=player.indexes.endY; y++){
         player.world.lightLevels.map[y] = {}
@@ -55,9 +59,6 @@ function update(player, map, g, world, users){
             else player.world.lightLevels.map[y][x] = world.lightLevels.map[y][x]
         }
     }
-
-    player.world.sunAngle = world.sunAngle
-    player.world.moonAngle = world.moonAngle
 
     let r = Math.random()
     // console.log(world.mobs)

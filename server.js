@@ -25,7 +25,10 @@ let world = {
         map:[],
         sun:0
     },
-    time:0
+    time:0,
+    sunAngle: 0, 
+    moonAngle: 0,
+    mobs: []
 }
 storage.collection("map").orderBy("index").get().then(snap =>{
     let antall = snap.docs.length

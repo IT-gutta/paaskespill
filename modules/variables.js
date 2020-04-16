@@ -114,7 +114,6 @@ class Player {
             time:0,
             sunAngle:0,
             moonAngle:0
-            
         }
   }
 }
