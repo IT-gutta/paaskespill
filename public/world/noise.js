@@ -364,7 +364,8 @@ function setup(){
                 width: map[0].length,
                 height: map.length,
                 stringifiedMap: sendMap,
-                index: index
+                index: index,
+                interactMap: "{}"
             })
         })
     })

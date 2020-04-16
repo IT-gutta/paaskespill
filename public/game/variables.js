@@ -93,8 +93,6 @@ const safe_inside = newImg("../game/assets/ui/safe_inside.png")
 
 const crafting = newImg("../game/assets/ui/crafting.png")
 
-const iron_pick = newImg("../game/assets/tools/iron_pick.png")
-
 const tool_base = newImg("../game/assets/tools/tool_base.png")
 
 const bedrock = newImg("../game/assets/blocks/general/bedrock.png")
@@ -103,7 +101,25 @@ const safe = newImg("../game/assets/blocks/interactables/safe.png")
 
 const torch = newImg("../game/assets/blocks/special/torch_straight.png")
 
-const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, iron_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore]
+const iron_nugget = newImg("assets/materials/iron_nugget.png")
+const silver_nugget = newImg("assets/materials/silver_nugget.png")
+const gold_nugget = newImg("assets/materials/gold_nugget.png")
+const coal = newImg("assets/materials/coal.png")
+const uranium = newImg("assets/materials/uranium.png")
+
+const iron_pick = newImg("../game/assets/tools/iron_pick.png")
+const stone_pick = newImg("../game/assets/tools/stone_pick.png")
+const wood_pick = newImg("../game/assets/tools/wood_pick.png")
+const iron_shovel = newImg("../game/assets/tools/iron_shovel.png")
+const stone_shovel = newImg("../game/assets/tools/stone_shovel.png")
+const wood_shovel = newImg("../game/assets/tools/wood_shovel.png")
+const iron_axe = newImg("../game/assets/tools/iron_axe.png")
+const stone_axe = newImg("../game/assets/tools/stone_axe.png")
+const wood_axe = newImg("../game/assets/tools/wood_axe.png")
+
+const imgs = [air, stone, log, leaves, coal_ore, grass, iron_ore, dirt, safe, tool_base, bedrock, torch, stone_pick, gold_ore, silver_ore, plutonium_ore, uranium_ore, iron_nugget, gold_nugget, silver_nugget, uranium, coal, iron_pick, wood_pick, iron_axe, stone_axe, wood_axe, iron_shovel, stone_shovel, wood_shovel]
+
+
 
 const stage1 = newImg("assets/mining/stage1.png")
 const stage2 = newImg("assets/mining/stage2.png")

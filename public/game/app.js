@@ -112,7 +112,7 @@ form.onsubmit = (e) => {
         })
         
 
-        socket.on("safeOpened",(px, py, safe) => {
+        socket.on("safeOpened",() => {
             showSafe = true
         })
         
@@ -206,7 +206,6 @@ function draw(users, mapWidth, mapHeight){
                     c.lineWidth = 4
                     c.strokeRect(100 + i%8*80 + (canvas.width - 1300)/2 - 5, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2 - 5, 50, 50)
                 }
-
                 c.fillText(inv[i].number, 95 + (i%8)*80 + (canvas.width - 1300)/2, 100 + Math.floor(i/8)*80 + (canvas.height-480)/2)
             }
         }

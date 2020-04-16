@@ -21,14 +21,15 @@ let storage = variables.storage
 let map //= variables.map
 let mapInfo
 let world = {
-    lightLevels:{ 
+    lightLevels:{
         map:[],
         sun:0
     },
     time:0,
     sunAngle: 0, 
     moonAngle: 0,
-    mobs: []
+    mobs: [],
+    interactMap: {}
 }
 storage.collection("map").orderBy("index").get().then(snap =>{
     let antall = snap.docs.length
@@ -41,7 +42,7 @@ storage.collection("map").orderBy("index").get().then(snap =>{
         delete mapInfo.stringifiedMap
         
     
-    
+        world.interactMap = JSON.parse(mapInfo.interactMap)
         //fylle opp world.lightLeves.map
         for(let y = 0; y < map.length; y++){
             world.lightLevels.map[y] = []
@@ -57,12 +58,13 @@ storage.collection("map").orderBy("index").get().then(snap =>{
             stringifiedMap: JSON.stringify(map),
             height: map.length,
             width: map[0].length,
-            index: mapInfo.index
+            index: mapInfo.index,
+            interactMap: JSON.stringify(world.interactMap)
         }).then( ()=>{console.log("Oppdaterte map i databasen til nåværende")})
         }, 30000)
     }
 })
-    
+
 
 
 let interactables = variables.interactables
@@ -163,8 +165,10 @@ io.on('connection', socket => {
         const player = users[socket.id].player
 
         //interaksjon
-        if(button==2 && interactables.indexOf(mapValue(player.mouse, map)) != -1){
-            socket.emit(interaction(users[socket.id].player, map), player.mouse.r.x, player.mouse.r.y, users[socket.id].player.safe)
+        if(button==2 && world.interactMap[player.mouse.r.y] && world.interactMap[player.mouse.r.y][player.mouse.r.x]){
+            let inter = interaction(users[socket.id].player, world.interactMap)
+            socket.emit(inter)
+            // console.log(inter)
         }
 
     
