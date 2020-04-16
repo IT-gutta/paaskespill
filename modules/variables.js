@@ -107,11 +107,14 @@ class Player {
             this.crafting.arr.push(new Item("empty", 0, null, i, "crafting", false))
         }
         this.world = {
-          lightLevels:{ 
-            map:[],
-            sun:0
-          },
-          time:0
+            lightLevels:{ 
+                map:[],
+                sun:0
+            },
+            time:0,
+            sunAngle:0,
+            moonAngle:0
+            
         }
   }
 }
@@ -124,10 +127,20 @@ class Zombie{
         this.damage = 10
         this.speed = 0.00005
         this.img = "zombie"
+        this.dead = false
     }
+    kill(mobs){
+        this.dead = true
+        for(i=0; i<mobs.length; i++){
+            if(mobs[i].dead){
+                mobs.splice(i, 1)
+            }
+        }
+    }
+
 }
 
-let mobs = []
+// let mobs = []
 
 class Controller {
     constructor() {
@@ -250,7 +263,8 @@ const world = {
 
     time:0,
     sunAngle: 0, 
-    moonAngle: 0
+    moonAngle: 0,
+    mobs: []
 }
 
 const speed = 0.02
