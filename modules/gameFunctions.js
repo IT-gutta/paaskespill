@@ -51,7 +51,7 @@ function update(player, map, g, world, users){
     player.world.moonAngle = world.moonAngle
     player.world.mobs = world.mobs
     player.world.time = world.time
-    
+
     for(y=player.indexes.startY; y<=player.indexes.endY; y++){
         player.world.lightLevels.map[y] = {}
         for(x=player.indexes.startX; x<=player.indexes.endX; x++){
@@ -137,7 +137,7 @@ function update(player, map, g, world, users){
         player.falling = true
     }
 
-
+    //kollisjon når spilleren faller og treffer bakken
     if(player.falling){
         if((equalsSome(mapValue(player.pos.botLeft, map), solidBlocks) || equalsSome(mapValue(player.pos.botRight, map), solidBlocks)) && player.vy>0){
             player.falling = false
