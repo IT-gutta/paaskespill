@@ -43,7 +43,7 @@ function addRecipeSingleItem(val, type, outComeValue, quantity){
         addRecipe(recipes, arr, type, outComeValue, quantity)
     }
 }
-
+addRecipeSingleItem()
 
 
 module.exports = {checkRecipe}
