@@ -222,13 +222,24 @@ function click(keyCode, player, map, world, users){
                 if(map[py+1][px]!=0 || map[py-1][px]!=0 || map[py][px+1]!=0 || map[py][px-1]!=0){
                     if(Math.sqrt(Math.pow(player.x+1-7/32 - PX, 2) + Math.pow(player.y+16/32 - PY, 2))<=5){
                         if(sight([player.x+0.5, player.y+1], [PX, PY], py, px, map)){
-                            //sjekker om spiller holder en blokk i hånden
-                            if(player.hand && player.hand.type == "block" && player.hand.number != 0){
-                                
-                                map[py][px] = player.hand.value
-                        
-                                player.hand.number -= 1
-                                updateLightLevels(users, world.time, map, world, users)
+                            //sjekker om spiller trykker på en interactable
+                            if(world.interactMap[py] && world.interactMap[py][px]){
+                                interact(player, world.interactMap[py][px])
+                            }
+                            else if(player.hand){
+                                //sjekker om spiller holder en blokk i hånden
+                                if(player.hand.type == "block"){
+                                                                
+                                    map[py][px] = player.hand.value
+
+                                    player.hand.number -= 1
+                                    if(player.hand.value == 11) updateLightLevels(users, world.time, map, world, users)
+                                }
+                                else if(player.hand.type == "interactable"){
+                                    map[py][px] = player.hand.value
+                                    world.interactMap[py][px] = player.hand
+                                    player.hand.number -= 1
+                                }
 
                                 //hvis spiller har brukt opp den siste av en blokk skal den fjernes
                                 if(player.hand.number <= 0){
@@ -278,6 +289,7 @@ function craftingMinus(player){
 function pickupItem(player, map, fromCrafting){
     //hvis det ikke finnes noe i "ferdig-craft" ruten
     if(fromCrafting && !player.craftedItem) return
+    
     //adde til inventory, sjekker først om man kan legge den inn i en eksisterende bunke
     for(let i = player.inventory.arr.length-1; i >= 0; i--){
         //hvis det finnes en stack med itemet fra før der det er plass
@@ -328,7 +340,6 @@ function mine(player, map, world, users){
         player.mining.stage = 0
         player.mining.difficulty = 1
     }
-    
 }
 //Sjekker om det er blokker mellom spilleren og musa
 function sight(pPos, mPos, py, px, map){
@@ -352,12 +363,12 @@ function sight(pPos, mPos, py, px, map){
     return true
 }
 //Sjekker om spilleren har trykket på en block man kan interagere med
-function interaction(player, map){
-    if(map[player.mouse.r.y] && map[player.mouse.r.y][player.mouse.r.x]==8){
+function interaction(player, interactMap){
+    if(interactMap[player.mouse.r.y][player.mouse.r.x].value == 8){
         player.safe = interactMap[player.mouse.r.y][player.mouse.r.x]
-        return 'safeOpened'
+        return "safeOpened"
     }
-    return ("", "")
+    return false
 }
 
 
@@ -542,6 +553,14 @@ function rec(x, y, lightmap, map, indexes){
             lightmap[y][x-1] = lightmap[y][x]-1
             rec(x-1,y, lightmap, map, indexes)
         }
+    }
+}
+
+
+function interact(player, value){
+    //safe
+    if(value == 8){
+
     }
 }
 

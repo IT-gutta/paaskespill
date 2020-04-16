@@ -74,7 +74,7 @@ function getLevel(val){
 }
 function getMiningDifficulty(val){
     // for øyeblikket bare returnere 1 uansett hva slags blokk det er kanskje?
-    if(val == 10) return Infinity
+    if(val == 10 || val == 8) return Infinity
     return 1
 }
 

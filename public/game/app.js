@@ -112,7 +112,7 @@ form.onsubmit = (e) => {
         })
         
 
-        socket.on("safeOpened",(px, py, safe) => {
+        socket.on("safeOpened",() => {
             showSafe = true
         })
         
