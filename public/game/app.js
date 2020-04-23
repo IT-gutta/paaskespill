@@ -134,13 +134,8 @@ function draw(users, mapWidth, mapHeight){
     c.fillRect(0,0,w,h)
     c.drawImage(sun, h/2*Math.cos(world.sunAngle)*(1+Math.abs(Math.cos(world.sunAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.sunAngle)+h/2, 128, 128)
     c.drawImage(moon, h/2*Math.cos(world.moonAngle)*(1+Math.abs(Math.cos(world.moonAngle)*(w/h-1)))-64+w/2, h/2*Math.sin(world.moonAngle)+h/2, 128, 128)
-    //draws tilemap
-    // for (let y = 0; y < map.length; y++) {
-    //     for (let x = 0; x < map[0].length; x++){
-    //         c.drawImage(imgs[map[y][x]], x*32, y*32, 32, 32)
-    //     }
-    // }
-    //ny loop for å drawe
+    
+    //draws tilemap with shadows
     for(i=Math.floor(player.y - 32/64 - canvas.height/64); i<Math.ceil(player.y - 32/64 + canvas.height/64)+1; i++){
         if(i<0) continue
         if(i>=mapHeight) break
@@ -185,9 +180,11 @@ function draw(users, mapWidth, mapHeight){
             c.fillText(user.username, canvas.width/2 + 32*(user.player.x-player.x-7/32) + 16, canvas.height/2 + 32*(user.player.y-player.y-32/64) - 16)
         }
     }
-    for(i=0; i<player.mobs.length; i++){
-        c.drawImage(zombie.left, canvas.width/2 + 32*(player.mobs[i].x-player.x-7/32), canvas.height/2 + 32*(player.mobs[i].y-player.y-32/64), 32, 64)
-    }
+
+    //tegne inn mobs
+    // for(i=0; i<player.mobs.length; i++){
+    //     c.drawImage(zombie.left, canvas.width/2 + 32*(player.mobs[i].x-player.x-7/32), canvas.height/2 + 32*(player.mobs[i].y-player.y-32/64), 32, 64)
+    // }
 
     //font for inventory og hotbar
     c.font = "20px Arial bold"
