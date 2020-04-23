@@ -113,9 +113,10 @@ class Player {
             },
             time:0,
             sunAngle:0,
-            moonAngle:0
+            moonAngle:0,
+            mobs: [0]
         }
-  }
+    }
 }
 
 class Zombie{
@@ -188,8 +189,7 @@ class Safe{
 
 //map med ting man kan iteragere med 
 
-let interactables = [8]
-
 
 const speed = 0.02
+let interactables = [8]
 module.exports = {storage, interactables, solidBlocks, lightEmittingBlocks, lightThroughBlocks, speed, Safe, Item, Player, Controller, Zombie}

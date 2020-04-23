@@ -110,16 +110,17 @@ function heartbeat(){
             }
         }
         
-    heartbeatCounter ++
-    if(heartbeatCounter > heartbeatsBeforeUpdateShadows){
-      updateLightLevels(users, world.time, map, world)
-      heartbeatCounter = 0
-    }
+        
+        heartbeatCounter ++
+        if(heartbeatCounter > heartbeatsBeforeUpdateShadows){
+            updateLightLevels(users, world.time, map, world)
+            heartbeatCounter = 0
+        }
 
-    updateTime(world)
-    
-    io.emit('heartbeat', users, map[0].length, map.length)
-  }
+        updateTime(world)
+        
+        io.emit('heartbeat', users, map[0].length, map.length)
+    }
 }
 
 setInterval(heartbeat, 1000/30)
