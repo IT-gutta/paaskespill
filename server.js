@@ -41,8 +41,8 @@ storage.collection("map").orderBy("index").get().then(snap =>{
         map = JSON.parse(mapInfo.stringifiedMap)
         delete mapInfo.stringifiedMap
         
-    
         world.interactMap = JSON.parse(mapInfo.interactMap)
+        
         //fylle opp world.lightLeves.map
         for(let y = 0; y < map.length; y++){
             world.lightLevels.map[y] = []

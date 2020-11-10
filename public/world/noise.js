@@ -96,46 +96,16 @@ const oreChunkTypes = [
     [0,1,0,1,1,1,0,0,0],
     [0,1,0,1,1,1,1,1,0],
 ]
-//bare sånn at ikke det skal flickere
-// let dirtDepth = []
-// let bedrockLevel2 = []
-// let bedrockLevel3 = []
-// let treeBools = []
-// let oreBools = []
+
 
 const oreRate = 0.03
 const treeRate = 0.3
 
-// function updateRandomPlacements(width, height, blockSize){
-//     //dirtDepth
-//     dirtDepth = []
-//     bedrockLevel2 = []
-//     bedrockLevel3 = []
-//     treeBools = []
-//     oreBools = []
-//     for(let i = 0; i < f(width/blockSize); i++){
-//         dirtDepth[i] = randInt(6, 8)
-//         bedrockLevel2[i] = random()<0.7 ? true : false
-//         treeBools[i] = random()<treeRate ? true : false
-//         oreBools[i] = []
-//         for(let y = 0; y < f(height/blockSize); y++){
-//             oreBools[i][y] = [random()<oreRate ? true : false, randInt(0, oreChunkTypes.length), randInt(0, ores.length)]
-//         }
-//     }
-//     //bedrock level 3
-//     for(let i = 0; i < f(width/blockSize); i++){
-//         bedrockLevel3[i] = random()<0.4 && bedrockLevel2[i] && (bedrockLevel2[i-1] || bedrockLevel2[i+1]) ? true : false
-//     }
-// }
 
 
 const mp5 = new p5()
 class NoiseMap{
     constructor(width, height, scale, octaves, lacunarity, persistance, blockSize, canWidth){
-
-        //ikke viktige, kun for litt customizing av hvor blokker skal plasseres
-        // if(dirtDepth.length != f(width/blockSize)) updateRandomPlacements(width, height, blockSize)
-
 
         this.width = width
         this.height = height
@@ -152,11 +122,6 @@ class NoiseMap{
         this.frequency = 1
 
         for(let x = 0; x < f(this.width/blockSize); x++){
-            // if(x > f(this.width/(blockSize*2))){
-            //     if(this.scale > scale/4) this.scale-=5
-            //     if(this.persistance > 0.4) this.persistance-=0.01
-            //     this.octaves = 6
-            // }
             this.amplitude = 1
             this.frequency = 1
             this.noiseHeight = 0
@@ -177,16 +142,10 @@ class NoiseMap{
             this.noiseMap.push(this.noiseHeight)
         }
 
-        //normalize values
-        // let max = 0.5
-        // let min = 0.2
         for(let i = 0; i < this.noiseMap.length; i++){
-            // if(i > this.noiseMap.length/2 && max < 1) max+=0.001
-            // if(i > this.noiseMap.length/2 && min < 0.5) min+=0.001
 
-            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 0.2/*1-max*/, 0.8/*1-min*/)   
+            this.noiseMap[i] = mp5.map(this.noiseMap[i], this.minVal, this.maxVal, 0.2, 0.8)   
         }
-        // console.log(this.noiseMap)
     }
     draw(){
         beginShape()
@@ -303,8 +262,8 @@ function placeOreChunk(map, x, y){
 
 let img = new Image()
 img.src = "../game/assets/blocks/general/dirt.png"
-let scale, octaves, lacunarity, persistance, xPos, yPos, blockSize, noiseMap, map, caveMap
-let prevX, prevY, mouseIsPressed, slideSpeed, seedInp, createRandomSeed, updateBtn
+let scale, octaves, lacunarity, persistance, xPos, yPos, blockSize, noiseMap, map, caveMap,
+prevX, prevY, mouseIsPressed, slideSpeed, seedInp, createRandomSeed, updateBtn, mapWidthInp, mapHeightInp
 function setup(){
     createCanvas(window.innerWidth-5, window.innerHeight-5)
     colorMode(HSB)
@@ -323,6 +282,9 @@ function setup(){
     sendBtn = createButton("Send map to database")
     zoomSlider = createSlider(10, 10000, 1000)
     caveFillPercent = createSlider(400, 550, 480)
+    mapWidthInp = createInput("5000", "number")
+    mapHeightInp = createInput("2000", "number")
+
 
     scale.position(10, 20)
     octaves.position(10, 70)
@@ -339,6 +301,8 @@ function setup(){
     sendBtn.position(100, 520)
     zoomSlider.position(10, 620)
     caveFillPercent.position(10, 670)
+    mapWidthInp.position(10, 750)
+    mapHeightInp.position(170, 750)
     
     scale.style("width", "200px")
     octaves.style("width","200px")
@@ -350,6 +314,8 @@ function setup(){
     slideSpeed.style("width", "200px")
     zoomSlider.style("width", "200px")
     caveFillPercent.style("width", "200px")
+    mapWidthInp.style("width", "150px")
+    mapHeightInp.style("width", "150px")
     textSize(20)
     
 
@@ -405,12 +371,12 @@ function newMap(){
     noiseSeed(seedInp.value())
     randomSeed(seedInp.value())
 
-    noiseMap = new NoiseMap(8000, 3000, scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
+    noiseMap = new NoiseMap(Number(mapWidthInp.value()), Number(mapHeightInp.value()), scale.value(), octaves.value(), lacunarity.value()/100, persistance.value()/1000, blockSize.value(), width)
     map = noiseMap.create2DArr()
 
   
     if(cavesOn.checked()){
-        caveMap = createCaveMap(8000, 3000, blockSize.value(), caveFillPercent.value()/10)
+        caveMap = createCaveMap(Number(mapWidthInp.value()), Number(mapHeightInp.value()), blockSize.value(), caveFillPercent.value()/10)
         adjustMap(caveMap, map)
     }
 }
@@ -444,4 +410,6 @@ function draw(){
     text(`Slidespeed: ${slideSpeed.value()}`, 10, 370)
     text(`Zoom: ${zoom}`, 10, 620)
     text(`Cavefillpercent: ${caveFillPercent.value()/10}`, 10, 670)
+    text(`Map width`, 10, 720)
+    text(`Map height`, 170, 720)
 }

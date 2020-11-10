@@ -462,7 +462,7 @@ function swap(player, index, container, button){
     delete cItem
     }
 }
-let dayLength = 30000
+let dayLength = Math.floor(30000/4)
 function updateTime(world){
     world.time+=1
     if(world.time==dayLength){
@@ -556,12 +556,7 @@ function rec(x, y, lightmap, map, indexes){
 }
 
 
-function interact(player, value){
-    //safe
-    if(value == 8){
 
-    }
-}
 
 
 
